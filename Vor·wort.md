@@ -10,4 +10,3 @@
 - Wenn weitere Ressourcen oder Quellen genutzt wurden, wird das bei der Aufgabe erwähnt
 
 ## Hinweise
-Es wurde für die Bearbeitung der Aufgaben Typed Racket verwendet, weil...

@@ -185,7 +185,6 @@ denn bie eingabe von `(test 0 (p))` ist die Kondition `(= x 0)` stets erfüllt, 
 Bei **normal order**, werden die Funktionsargumente erst ausgewertet, wenn sie tatsächlich im Funktionskörper aufgerufen werden. Bei diesem Verfahren wird `(p)` aber nie aufgerufen, wodurch das Programm mit `0` als Ergebnisse terminiert.
 
 Bei **applicative order**, werden die Funktionsargumente bereits ausgewertet, wenn die Funktion aufgerufen wird. Auf diese Weise wird die Funktion `(p)` aufgerufen und es kommt zur endlosen Rekursion, trotz dass ihr theoretischer Rückgabewert im späteren Funktionskörper nicht benötigt wird.
-<br>**Anmerkung:** Die meisten Programmiersprachen arbeiten nach diesem Verfahren. 
 
 ## Aufgabe 8
 Ein Nutzer schreibt sich ein `if` neu, da es ja `cond` gibt:
@@ -259,7 +258,7 @@ erkennt Racket solche endrekursiven Funktionen und optimiert diese dahingehend, 
 ## Aufgabe 11
 Wann liefern `foldr` und `foldl` das gleiche Ergebnis? Geben Sie jeweils ein selbst gewähltes Beispiel für beide Fälle (ergibt das gleiche, ergibt etwas anderes) an. Wie unterscheiden sich beide Funktionen in ihrem Laufzeitverhalten (Geschwindigkeit, Speicherbedarf etc.)?
 
-### Antwort:
+### Antwort
 In der Funktionalität unterscheiden sich `foldr` und `foldl` darin, in welcher Richtung die Liste durchlaufen wird.
 - `foldl`: 1. Element -> Letztes Element
 - `foldr`: Letztes Element -> 1. Element
@@ -499,4 +498,16 @@ Schreiben Sie ein `map` und ein `foldr` in Typed Racket.
 und die Liste wurde mit `reversed` invertiert. 
 - Auf diese Weise muss zwar bei der Rekursion nicht jedes Mal aufwendig an das Ende der Liste gesprungen werden, dafür findet allerdings eine Aufwendige Invertierung der Liste statt. 
 
-## 20 Todo
+## Aufgabe 20
+Schreiben Sie ein Makro `infix`, mit dem Sie die Addition zweier Zahlen in Infix-Schreibweise errechnen lassen können. Anwendungsbeispiel: `(infix 1 + 2)`
+
+### Code
+```
+#lang racket
+
+(define-syntax-rule (infix num1 op num2)
+  (op num1 num2))
+```
+
+### Anmerkungen
+- Das Makro ermöglicht die Infix-Notation für arithmetische Operationen, statt die übliche Präfix-Schreibweise

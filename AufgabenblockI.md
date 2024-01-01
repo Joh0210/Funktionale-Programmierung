@@ -416,8 +416,167 @@ in dem sie für jedes Element von rechts nach links Prüft, ob es sich um eine L
 - Diese Funktion wird so lange aufgerufen, bis jedes Element der Liste keine Liste mehr ist.
 
 
-## 16 Todo!
-## 17 Todo!
+## Aufgabe 16
+Beschreiben Sie den Unterschied zwischen der Nutzung von `thunk` und den Promises (`delay` und `force`). 
+Wann ist das Ergebnis gleich und wann unterscheidet es sich? 
+Für welchen Anwendungszweck würden Sie welche Version einsetzen? 
+Warum kann man delay nicht als Funktion schreiben?
+
+### Antwort
+Beide stellen Mechanismen da welche dazu dienen die Auswertung von Ausdrücken zu verzögern.
+
+`thunk` ist hierbei eine eingewickelte Berechnung, also eine Funktion, welche in einem lambda-Ausdruck eingewickelt ist (z.B. `(lambda () (+ 2 3))`). 
+Wird das `thunk`, also der lambda-Ausdruck nun als Argument an eine Funktion übergeben, so wird die eingewickelte Funktion trotz applicative order nicht direkt ausgewertet, 
+sondern erst, wenn die Funktion tatsächlich im Funktionskörper benötigt wird. Wird das Ergebnis im Funktionskörper allerdings mehrfach benötigt, 
+wird an jeder stelle an welcher das `thunk` benötigt wird, die Berechnung neu durchgeführt, also es findet keine Zwischenspeicherung des Ergebnisses statt.
+<br>Diese Auswertungsstrategie bezeichnet man als `normal order`.
+
+Bei einem Promise wird die Auswertung der Berechnung zwar ebenfalls verzögert, bis an den Punkt, an dem sie eigentlich benötigt wird. 
+Allerdings wird das Ergebnis der Berechnung in dem Promise zwischengespeichert. Sollte das Ergebnis also erneut benötigt werden, 
+muss die Berechnung also nicht erneut durchgeführt werden, sondern kann aus dem Speicher gelesen werden. 
+<br>Diese Auswertungsstrategie bezeichnet man als `lazy evaluation`.
+
+#### Wann ist das Ergebnis gleich und wann unterscheidet es sich?
+Die reinen Ergebnisse der Auswertungen sind so lange identisch, solange es bei der Auswertung der Berechnung zu keinen Seiteneffekten oder Zustandsänderungen kommt, oder die Berechnung nur einmal stattfindet.
+<br>Sollte die Funktion nämlich einen Seiteneffekt haben, oder eine Zustandsänderung auslösen, so würde eine erneute Auswertung ein anderes Ergebnis auslösen, oder den Zustand noch weiter verändern.
+Da bei `lazy evaluation` die Auswertung maximal einmal stattfindet, und bei `normal order` auch mehrfach geschehen kann, würde das also zu verschiedene Resultaten führen.
+
+Bei ihrem Ressourcenverbrauch können sich die beiden Verfahren jedoch unterscheiden, da Promises entsprechend Speicher benötigen, und das Ergebnis zwischenzuspeichern, jedoch wird bei einem erneuten Abfrangen keine weitere Berechnung druchgeführt.
+<br>Das `thunk` braucht zwar keinen zusätzlichen Speicher, jedoch würde ein erneuter Aufruf wieder eine potenziell aufwendige Berechnung durchführen.
+
+#### Für welchen Anwendungszweck würden Sie welche Version einsetzen?
+Beide Funktionen sollten also verwendet werden, wenn eine Berechnung relativ aufwendig ist und nur unter gewissen Konditionen benötigt wird.
+Bei der wahl zwischen `thunk` und Promises kann als grobe Orienteering gesagt werden, 
+wenn das Ergebnis der Berechnung an vielen Stellen benötigt wird, und nur einen geringen Speicheraufwand hat, sollten Promises verwendet werden. Wird das Ergebnis nur einmal benötigt, oder der Speicheraufwand ist im Verhältnis zum Rechenaufwand zu groß, sollte `thunk` verwendet werden.
+
+#### Warum kann man delay nicht als Funktion schreiben?
+In Racket arbeiten alle Funktionen nach `applicative order`, also die Argumente der Funktion werden direkt bei Aufruf der Funktion ausgewertet. 
+Somit würde die Funktion, die man an das `delay` übergeben möchte, direkt ausgewertet werden und das Ziel von wäre verfehlt. 
+
+Das eigentliche `delay` ist daher als special form implementiert, welches seine Argumente nicht auswertet. Auf diese Weise findet die auswertung erst durch den Aufruf von `force` statt. 
+<br>(Special Forms sind in der Lage ihre Argumente nicht, oder auch nur teilweise auszuwerten, wie z.B. `and`)
+
+**Anmerkung**: Wenn die Funktion, die man an eine selbstgebaute `delay`-Funktion übergeben will, in als `thunk` eingewickelt ist, 
+würde die Auswertung auch verzögert werden und man könnte die selbstgebaute `delay`-Funktion nutzen.  
+```
+(define (my-delay thunk)
+  (mcons #f thunk))
+```
+
+
+## Aufgabe 17
+Implementierten Sie eine Funktion `fib-stream`, die einen Strom von zwei-elementigen Listen `(n (fib(n)))` erzeugt, wobei `n` die natürlichen Zahlen durchläuft. 
+Die Funktion soll nicht jede Fibonacci-Zahl unabhängig berechnen.
+```
+> (define a (fib-stream))
+> a
+((0 0) . #<promise>)
+> (tail a)
+((1 1) . #<promise>)
+> (tail (tail a))
+((2 1) . #<promise>)
+> (tail (tail (tail a)))
+((3 2) . #<promise>)
+> (tail (tail (tail (tail a))))
+((4 3) . #<promise>)
+> (tail (tail (tail (tail (tail a)))))
+((5 5) . #<promise>)
+```
+
+### Anmerkungen
+- Es wurden 2 versionen des Programms erstellt, 
+wobei die Variante 1 eine relativ schöne wirkt, jedoch sehr inperformant ist, 
+da es zum einen viel Speicher aber auch eine große Menge an Rechenleistung benötigt 
+<br> so kann z.B. die Funktion `(get-at a 100)` an meinem Testgerät nicht zu Ende ausgewertet werden, wobei `a` der Stream ist und `100`, die stelle, die bei dem Stream erfragt wird.
+- Die Variante 2 ist hierbei bei weiten performanter, so kann auch `(get-at a 100000)` nach kurzer verzögerung ausgewertet werden. Damit das so schnell funktioniert werden die ergebnisse der `fib` funktion in einer Hash-Table gespeichert.   
+
+### Code 
+#### Variante 1
+```
+#lang racket
+
+; Stream Logik:
+
+(define the-empty-stream '())
+(define head car)
+(define stream-empty? empty?)
+
+(define-syntax stream-cons
+  (syntax-rules ()
+      ((cons-stream x y)
+       (cons x (delay y)))))
+
+(define (tail s) (force (cdr s)))
+  
+; fib-stream:
+
+(define (fib-stream)
+  (define (interation s1 s2)
+    (cond
+      ((stream-empty? s1) s2)
+      ((stream-empty? s2) s1)
+      (else (stream-cons (list
+                          (+ (first (head s2)) 1)
+                          (+ (second (head s1)) (second (head s2))))
+                         (interation
+                          (tail s1)
+                          (tail s2))))))
+  
+  (stream-cons (list 0 0)
+               (stream-cons (list 1 1)
+                            (interation (fib-stream) (tail (fib-stream))))))
+```
+
+#### Variante 2
+```
+#lang racket
+
+; Stream Logik:
+
+(define the-empty-stream '())
+(define head car)
+(define stream-empty? empty?)
+
+(define-syntax stream-cons
+  (syntax-rules ()
+      ((cons-stream x y)
+       (cons x (delay y)))))
+
+(define (tail s) (force (cdr s)))
+
+; memory-fib:
+(define fib
+    (let ((table (make-hash)))
+      (lambda (n)
+        (let ((previously-computed-result (hash-ref table n #f)))
+          (or previously-computed-result 
+              (let ((result 
+                     (cond
+                       ((= n 0) 0)
+                       ((= n 1) 1)
+                       (else (+ (fib (- n 1)) (fib (- n 2)))))))
+                (hash-set! table n result)
+                result))))))
+
+
+; fib-stream:
+
+(define (fib-stream)
+  (define (fib-stream-inner n)
+    (stream-cons (list n (fib n)) (fib-stream-inner (+ n 1))))
+  (fib-stream-inner 0))
+```
+
+#### Für Tests:
+```
+#lang racket
+
+(define (get-at s n)
+  (cond
+    ((<= n 0) (head s))
+    (else (get-at (tail s) (- n 1)))))
+```
+
 
 ## Aufgabe 18
 Gegeben sei die folgende Funktion in Typed Racket:

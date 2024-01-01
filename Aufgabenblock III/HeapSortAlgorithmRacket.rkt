@@ -1,24 +1,21 @@
 #lang racket
 
-(define (get-steps lst is-min-heap)
-  ; Gibt das x. Element einer Liste zurück
-  (define (get-at lst pos)
-    (cond
-      ((empty? lst) (error "IndexOutOfBoundsException"))
-      ((<= pos 0) (first lst))
-      (else (get-at (rest lst) (- pos 1)))))
+; Generische Variante von "get-steps" um alle Datentypen zu unterstützen
+; Es muss eine Funktion "translate-comparator" übergeben werden welche die Number-Comparators (>= <= > < =)
+; für die jeweiligen Datentypen übersetzt
+; Warnung: Inkonsistente Typen werden hier theoretisch unterstützt, jedoch muss die "translate-comparator"-Funktion damit klar kommen.
+(define (get-steps-generic lst is-min-heap translate-comparator)
 
   ; Ermittelt die Position einer Parent-Node einer Node in einem binären Heap
   ; -1 falls die Node die Root Node ist 
   (define (get-parent-pos child-pos)
     (cond
       (( <= child-pos 0) -1)
-      (else (floor (/ (- child-pos 1) 2.0)))))
+      (else (inexact->exact(floor (/ (- child-pos 1) 2.0))))))
 
   ; Ermittelt ob die Heap-Condition des Binären Heaps gebrochen ist
   ; #f falls die Heap-Condtion nicht gebrochen ist
   ; Position der Child-Node an der die Heap-Condtion nicht erfüllt ist
-  ; Support für Strings und Numbers
   ; Sollte es 2 Kandidaten geben, die mit dem Parent getauscht werden können,
   ; wird der kleinere (minheap)/größere (maxheap)genommen.
   (define (heapify-broken? lst)
@@ -26,16 +23,13 @@
       (cond
         ((empty? lst) #f)
         ((<= pos 0) #f)
-        ((equal? is-min-heap
-                 ((cond ((number? (first lst)) >=) ((string? (first lst)) string>=?)(else (error "TypeException")))
-                  (get-at lst pos) (get-at lst (get-parent-pos pos))))
+        (((translate-comparator (cond (is-min-heap >=) (else <=))) (list-ref lst pos) (list-ref lst (get-parent-pos pos)))
          (broken-at? lst (- pos 1)))
         ; Fehlerfall:
         ((and (odd? pos) (= pos (- (length lst) 1))) pos)
         ; wähle das kleinere (minheap) der beiden Kinder (größere für dem Maxheap) 
-        ((equal? is-min-heap
-                 ((cond ((number? (first lst)) <=) ((string? (first lst)) string<=?)(else (error "TypeException")))
-                  (get-at lst pos) (get-at lst ((cond ((odd? pos) +) (else -)) pos 1)))) pos)
+        (((translate-comparator (cond (is-min-heap <=) (else >=)))
+                  (list-ref lst pos) (list-ref lst ((cond ((odd? pos) +) (else -)) pos 1))) pos)
         ; die Position aller Linken Child-Nodes sind immer Ungerade
         (else ((cond ((odd? pos) +) (else -)) pos 1))))
     (broken-at? lst (- (length lst) 1)))
@@ -51,7 +45,7 @@
 
     (define (swap-inner2 pre pos1 pos2 lst)
       (cond
-        ((<= pos1 0) (swap-inner1 (append pre (list (get-at lst pos2))) (first lst) (- pos2 1) (rest lst)))
+        ((<= pos1 0) (swap-inner1 (append pre (list (list-ref lst pos2))) (first lst) (- pos2 1) (rest lst)))
         (else (swap-inner2 (append pre (list (first lst))) (- pos1 1) (- pos2 1) (rest lst)))))
 
     (cond
@@ -86,10 +80,39 @@
 
   ; Interner Aufruf der Funktion
   (cond
-    ((empty? lst) null)
-    ((<= (length lst) 1) (list lst))
+    ((empty? lst) null) ; kann nicht sortiert werden
+    ((<= (length lst) 1) (list lst)) ; ist bereits sortiert 
     (else (delete-step (insert-step null null lst))))
   )
+
+
+; Die Standartfunktion unterstütz ausschließlich Numbers und Strings
+; Alternative Datentypen können jedoch mit "get-steps-generic" verarbeitet werden.
+(define (get-steps lst is-min-heap)
+
+  ; Erstellt eine Funktion die number-comparator zu string-comparator überfürt,
+  ; falls es sich bei der Liste um Strings handelt.
+  (define (get-comparator-translater)
+    (cond
+      ((number? (first lst)) (lambda (comparator) comparator))
+      ((string? (first lst))
+       (lambda (comparator) (cond
+         ((equal? comparator >=) string>=?)
+         ((equal? comparator <=) string<=?)
+         ((equal? comparator >) string>?)
+         ((equal? comparator <) string<?)
+         (else equal?))))
+      (else (error "TypeException: Diese Funktion untersützt nur Listen aus nur Numbers oder nur Strings.\nVerwende statdessen die Funktion \"get-steps-generic\""))))
+
+  (cond
+    ((empty? lst) null) ; kann nicht sortiert werden
+    ((<= (length lst) 1) (list lst)) ; ist bereits sortiert 
+    ((nor (andmap number? lst) (andmap string? lst))
+     (error "TypeException: Diese Funktion untersützt nur Listen aus nur Numbers oder nur Strings.\nVerwende statdessen die Funktion \"get-steps-generic\""))
+    (else (get-steps-generic lst is-min-heap (get-comparator-translater)))))
+  
+  
+
 
 
 (get-steps null #t)
@@ -98,5 +121,18 @@
 (get-steps (list 6 3 5 2 4 1 7) #t)
 (get-steps (list 7 2 3 4 5) #t)
 (get-steps (list 7 2 3 4 5) #f)
+(get-steps (list 1 1 1 1 1 1) #t)
+(get-steps (list 1 1 1 1 1 1) #f)
+(get-steps (list "T" "T" "T" "T" "T" "T") #t)
+(get-steps (list "T" "T" "T" "T" "T" "T") #f)
 (get-steps (list "Hallo" "Test" "A" "B" "K" "X") #t)
 (get-steps (list "Hallo" "Test" "A" "B" "K" "X") #f)
+(get-steps (list "Hallo" "Test" "A" "B" "K" "X") #f)
+(get-steps-generic (list
+                    (list "Hallo" "Test" "A" "B" "K" "X")
+                    (list "E" "A" "AX")
+                    (list "E" "A" "A" "AX")
+                    (list 1 1 1 1 1 1))
+                   #f (lambda (comparator) (lambda (a b) (comparator (length a) (length b)))))
+; (get-steps (list (cons 1 2) (cons 1 2) (cons 1 2) (cons 1 2)) #f)
+; (get-steps (list 1 1 1 1 1 "A") #f)

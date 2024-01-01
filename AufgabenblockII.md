@@ -76,9 +76,310 @@ Aufgrund von mangelnder Erfahrung mit dem Paradigma, erwarte ich keine der Auswe
 Da ich primär mit objektorientierten Sprachen gearbeitet habe, kommt mir **Applicative Order** natürlicher vor. 
 Jedoch kann ich mir vorstellen, dass es anders wäre, wenn ich primär mit Sprachen gearbeitet hätte, welche **Normal Order/Lazy Evaluation** verwenden.
 
-## 2 Todo!
-## 3 Todo!
-## 4 Todo!
+## Aufgabe 2
+Gegeben folgende Racket-Code, der ein simples Bankkonto realisieren soll. Es soll möglich sein, ein neues Bankkonte einzurichten und Geld ein- und auszuzahlen.
+```
+(define (make-account money)
+  (lambda (movement)
+    (set! money (+ money movement))
+    money))
+
+(define a (make-account 10))
+(define b (make-account 100))
+```
+
+Und gegeben die folgende Interaktion mit der Racket-REPL:
+```
+> a
+#<procedure>
+> b
+#<procedure>
+> (a 10)
+20
+> (b 10)
+110
+> (b 10)
+120
+```
+Erläutern Sie anhand der Interaktion und des Programmcodes, wie in Racket Abschlussobjekte und zustandsorientierte Programmierung genutzt werden können, 
+um Eigenschaften objektorientierter Programmierung umzusetzen. 
+Sehen Sie Grenzen in der Umsetzung objektorientierter Programmierung in Racket? Wenn ja, welche und warum?
+
+### Umsetzung
+Racket selbst ist zwar eine funktionale Sprache, jedoch ermöglicht es durch Abschlussobjekte und Zustandsorientierung 
+die implementierung von objektorientierten Konzepten.
+
+Abschlussobjekte (Closures) sind Funktionen, mit einem Verweis auf ihre Definitionsumgebung. 
+Also ist das "Objekt", dass durch die Funktion `(make-account 10)` erstellt wird also eigentlich auch nur eine Funktion, was auch in der REPL ausgabe sichtbar ist:
+```
+> a
+#<procedure>
+```
+
+Da diese Funktion Zugriff auf ihre Definitionsumgebung hat, können dort Daten hinterlegt werden, welche von dem "Abschlussobjekte" genutzt werden können. 
+Diese Daten repräsentieren also die Attribute des Objektes. In diesem Beispiel hat "Objekte" die durch `make-account` erstellt werden nur ein Attribut `money`.
+
+Abschlussobjekte haben zusätzlich auch noch Funktionen, also Methoden, welche das Objekt ausführen kann. 
+In diesem Fall haben die Objekte nur eine einzige Funktion, welche einen gewissen Betrag auf das Konto überweisen kann, oder abheben kann. 
+Da es nur die eine Funktion gibt, ist das die Funktion, welche das Objekt darstellt. 
+
+Möchte man die Funktion also mit einem Objekt aufrufen, nutzt man es als Funktion des Klammerausdrucks und den Parameter (`movement`) als 1. Argument
+```
+; 10 (€) einzalen:
+(a 10)
+
+; 10 (€) abheben:
+(a -10)
+
+; Kontostand prüfen:
+(a 0)
+```
+
+Für gewöhnlich unterstütze ein Abschlussobjekt jedoch mehrere Funktionen. In dem Fall werden diese innerhalb der erzeugenden Funktion definiert. 
+Zusätzlich wird noch eine Funktion definiert, welche als Argument eine "Message" übergeben bekommt, 
+anhand derer die richtige Funktion in einer Sprungtabelle ausgewählt und mit den restlichen Parametern aufgerufen wird. 
+Diese Auswahlfunktion ist dann die Funktion, welche das Objekt darstellt.
+
+```
+(define (make-account)
+  (define money 0)  
+
+  (define (withdraw amount)
+    (cond ((>= money amount)
+           (set! money (- money amount))
+           money)
+          (else "Guthaben nicht ausreichend!")))
+
+  (define (deposit amount)
+    (set! money (+ money amount))
+    money)
+
+  (define (balance)
+    money)
+
+  (define (dispatch m)
+    (cond
+      ((equal? m 'withdraw) withdraw)
+      ((equal? m 'deposit) deposit)
+      ((equal? m 'balance) balance)
+      (else "Unbekannte Nachricht!")))
+
+  dispatch)
+  
+; Erzeugung: 
+(define acc1 (make-account))
+
+; Einzahlen:
+((acc1 'deposit) 100)
+```
+
+Auf diese Weise gibt es gewissermaßen auch Polymorphie oder sogenanntes "Duck-Typing" (wie in Python),
+bei dem es der Funktion egal ist, um welche art von Objekt es sich handelt, solange es die eingegebene Funktion unterstützt.
+"If it walks like a duck, swims like a duck, and quacks like a duck, then it probably is a duck." [Ursprung der Redewendung ist nicht eindeutig auf eine bestimmte Person zurückzuführen]
+
+Abschlussobjekte alleine würden jedoch nicht ausreichen, um Objektorientierung nachstellen zu können, denn sie können erstmal nur Nachrichten empfangen, Nachrichten an andere Objekte senden, Auskunft über den eigenen Zustand geben und neue Objekte erzeugen.
+Erst mit der Zustandsorientierung können die Attribute der Objekte manipuliert werden. Mit `set!` lassen sich Funktionen implementieren, welche die Attribute des Objektes anpassen könne, um so den Zustand des Objektes zu manipulieren.
+<br>In dem gegebenen Beispiel findet z.B. eine Einzahlung statt, wodurch der die Variable, welche den Kontostand repräsentiert, verändert wird. 
+```
+> (b 10)
+110
+> (b 10)
+120
+```
+
+### Grenzen und Schwächen
+- **Vererbung**: Mir ist keine möglichkeit eingefallen, mit der auf Vererbung mit Abschlussobjekte ohne größere Umwege umsetzbar wäre.
+<br>Ich glaube es wäre möglich das Parent-Objekt, als Attribut im Child-Objekt zu speichern, und unbekannte Massages des Childes an den Parent weiterzuleiten, jedoch ist das verhältnismäßig aufwendig.
+- **Typprüfung**: Objektorientierte Programmiersprachen, wie Java, nutzen in der regel ein statisches Typsystem welches auch selbsterstellte Klassen als Typ wahrnimmt. 
+Die einzige Typprüfung, die hier jedoch existiert, ist das, oben erwähnte "Duck-Typing", was dazu führt das potenziell komplett falsche Objekte einer Funktion übergeben werden können, 
+potenziell ohne das es zu einem tatsächlichen Error kommt, sondern einfach nur falsche Ausgaben stattfinden. Jedoch haben auch andere Sprachen, wie z.B. Python, die selbe gefahr.
+<br>Bei dem Versuch Abschlussobjekte mit TypedRacket zu verwenden kam es zu einigen Komplikationen, weswegen hier nicht so viel dazu gesagt werden kann, 
+außer dass es TypedRacket mit Abschlussobjekten sehr kompliziert werden kann.
+- **Funktionales Paradigma**: Racket selbst ist eine funktionale Sprache, was sich auch bei der erzeugung der Objekte wieder spiegelt. 
+Es ist zwar möglich, jedoch deutlich komplexer als in anderen Sprachen. 
+
+Zusätzlich sollte erwähnt werden, wenn man das funktionale Paradigma nutzen möchte, ist es oft sinnvoll die Nutzung von Objekten zu minimieren, da vor allem Seiteneffekte dem funktionalen Paradigma wiederstreben.
+<br>An manchen stellen kann es Sinnvoll sein, objektorientierte Struktureden in dem funktionalen Paradigma umzusetzen, um z.B. Leistung zu sprachen oder mit der Umwelt zu interagieren. 
+Ist es jedoch geplant große komplexe objektorientierte Struktureden umzusetzen, ist es wahrscheinlich schlauer direkt eine Sprache zu wählen, welche darauf ausgelegt ist.
+
+## Aufgabe 3 
+Implementieren Sie eine Funktion mk-mp3-control, die ein Objekt zurückliefert, das die Kontrolleinheit eines MP3-Spielers repräsentiert. 
+(Es sollen aber nicht wirklich Dateien abgespielt werden.) 
+Das Objekt soll folgende Informationen speichern/zurückliefern: 
+- Eine Liste, der gespeicherten MP3-Dateien (mit Dateiname und Dauer des Stücks), 
+- die Anzahl der Titel
+- der aktuelle Titel, der gerade abgespielt wird oder vorgewählt ist
+- den Abspielstatus, also ob derzeit ein Titel (welcher?) abgespielt wird oder stop, wenn kein Titel abgespielt wird. 
+
+Folgende Botschaften soll das Objekt verstehen: 
+- laden: Hinzufügen einer neuen MP3-Datei an das Ende der Titelliste, 
+- loeschen: Löschen einer Datei aus der Liste, Übergabe der Nummer des zu löschenden Titels
+- abspielen/stop: Ändern des Abspielstatus, 
+- vor/zurück: Titel erhöhen oder erniedrigen, sind keine Titel vorhanden oder ist das Ende oder 1 erreicht, so wird die Nachricht ignoriert, 
+- unbekannte Nachrichten werden ignoriert.
+
+### Code
+```
+#lang racket
+
+; Lieder 
+(define (mk-lied date-name lied-name dauer)
+  (define (zu-string)
+    (string-append date-name ": " lied-name " (" dauer "min)"))
+
+  (define (dispatch m)
+    (cond
+      ((equal? m 'zu-string) zu-string)
+      ((equal? m 'datei-name) (lambda () date-name))
+      ((equal? m 'lied-name) (lambda () lied-name))
+      ((equal? m 'dauer) (lambda () dauer))
+      (else (const "Unbekannte Nachricht!"))))
+  dispatch)
+
+(define (zu-string lied)
+  ((lied 'zu-string)))
+
+(define (datei-name lied)
+  ((lied 'datei-name)))
+
+(define (lied-name lied)
+  ((lied 'lied-name)))
+
+(define (dauer lied)
+  ((lied 'dauer)))
+
+; MP3 Players
+(define (mk-mp3-control)
+  (define lieder null)
+  (define status "stop")
+  (define ausgewählt 0)
+
+  (define (ausgewaehlt-name)
+    (cond
+      ((<= (length lieder) 0)
+       "Du hast kein Lied zum abspielen")
+      (else
+       (lied-name (list-ref lieder ausgewählt)))))
+
+  (define (lieder-liste)
+    (map (lambda (l) (zu-string l)) lieder))
+  
+  (define (abspielen/stop)    
+    (cond
+      ((<= (length lieder) 0)
+       (set! status "stop")
+       "Du hast kein Lied zum abspielen")
+      ((equal? status "stop")
+       (set! status "spielt musik")
+       "Die Weidergabe wird fortgesetzt")
+      (else
+       (set! status "stop")
+       "Die Weidergabe wird pausiert")))
+
+  (define (get-status)
+    (cond ((equal? status "stop") "stop") (else (string-append "Es wird gespielt: " (ausgewaehlt-name)))))
+  
+  (define (laden lied)
+    (cond
+      ; Keine dopplungen 
+      ((findf
+        (lambda (l) (equal? (datei-name l) (datei-name lied)))
+        lieder) (string-append (datei-name lied) " ist schon enthalten"))
+      ; lied hinzufügen
+      (else (set! lieder (append lieder (list lied)))
+            (string-append (datei-name lied) " hinzugefügt"))))
+
+  (define (loeschen n)
+    (define (auswahl-anpassen)
+      (cond
+        ((= (+ ausgewählt 1) n) (string-append " - Ausgewählt ist jetzte: " (ausgewaehlt-name)))
+        ((> ausgewählt n) (set! ausgewählt (- ausgewählt 1)) "")
+        (else "")))
+    
+    (define (loeschen-inner lst acc n)
+      (cond
+        ((empty? lst) acc)
+        ((<= n 0) (append acc (rest lst)))
+        (else (loeschen-inner (rest lst) (append acc (list (first lst))) (- n 1)))))
+    
+    (cond
+      ((and (>= n 1) (<= n (length lieder)))
+       (set! lieder (loeschen-inner lieder null (- n 1)))
+       (string-append "Das " (number->string n) ". lied wurde entfernt" (auswahl-anpassen)))
+      (else "So viele Lieder gibt es nicht")))
+
+  (define (vor)
+    (cond
+      ((>= (+ ausgewählt 1) (length lieder)) "Ende erreicht")
+      (else
+       (set! ausgewählt (+ ausgewählt 1))
+       (string-append "Ausgewählt: " (ausgewaehlt-name)))))
+
+  (define (zurück)
+    (cond
+      ((< (- ausgewählt 1) 0) "Anfang erreicht")
+      (else
+       (set! ausgewählt (- ausgewählt 1))
+       (string-append "Ausgewählt: " (ausgewaehlt-name)))))
+  
+  (define (dispatch m)
+    (cond
+      ((equal? m 'lieder-liste) lieder-liste)
+      ((equal? m 'lieder-liste-roh) (lambda () lieder))
+      ((equal? m 'anzahl) (lambda () (length lieder)))
+      ((equal? m 'ausgewaehlt) ausgewaehlt-name)
+      ((equal? m 'status) get-status)
+      ((equal? m 'abspielen/stop) abspielen/stop)
+      ((equal? m 'laden) laden)
+      ((equal? m 'loeschen) loeschen)
+      ((equal? m 'vor) vor)
+      ((equal? m 'zurück) zurück)
+      (else (const "Unbekannte Nachricht!"))))
+  dispatch)
+
+(define (lieder-liste mp3-control)
+  ((mp3-control 'lieder-liste)))
+
+(define (lieder-liste-roh mp3-control)
+  ((mp3-control 'lieder-liste-roh)))
+
+(define (anzahl mp3-control)
+  ((mp3-control 'anzahl)))
+
+(define (ausgewaehlt mp3-control)
+  ((mp3-control 'ausgewaehlt)))
+
+(define (status mp3-control)
+  ((mp3-control 'status)))
+
+(define (abspielen/stop mp3-control)
+  ((mp3-control 'abspielen/stop)))
+
+(define (laden mp3-control lied)
+  ((mp3-control 'laden) lied))
+
+(define (loeschen mp3-control nummer)
+  ((mp3-control 'loeschen) nummer))
+
+(define (vor mp3-control)
+  ((mp3-control 'vor)))
+
+(define (zurück mp3-control)
+  ((mp3-control 'zurück)))
+```
+
+### Anmerkungen
+- Dieser Code ist ein perfektes Beispiel dafür, 
+dass die Objektorientierung in Racket sehr schnell sehr umfangreichen code erzeugen kann, 
+selbst wenn nur wenig funktionalität umgesetzt werden soll, welche keinen hohen Komplexitätsgrad hat.
+
+## Aufgabe 4
+Recherchieren Sie, ob Sie Programmiersprachen finden, die `dynamic scope` umsetzen und nennen Sie diese. 
+Falls Sie keine finden, wie kann man `dynamic scope` in anderen Programmiersprachen nachbauen?
+
+### Antwort
+
+
 ## 5 Todo!
 ## 6 Todo!
 ## 7 Todo!

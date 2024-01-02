@@ -425,7 +425,7 @@ Warum kann man delay nicht als Funktion schreiben?
 ### Antwort
 Beide stellen Mechanismen da welche dazu dienen die Auswertung von Ausdrücken zu verzögern.
 
-`thunk` ist hierbei eine eingewickelte Berechnung, also eine Funktion, welche in einem lambda-Ausdruck eingewickelt ist (z.B. `(lambda () (+ 2 3))`). 
+`thunk` ist hierbei eine eingewickelte Berechnung, also eine Funktion, welche in z.B. einem lambda-Ausdruck eingewickelt ist (z.B. `(lambda () (+ 2 3))`). 
 Wird das `thunk`, also der lambda-Ausdruck nun als Argument an eine Funktion übergeben, so wird die eingewickelte Funktion trotz applicative order nicht direkt ausgewertet, 
 sondern erst, wenn die Funktion tatsächlich im Funktionskörper benötigt wird. Wird das Ergebnis im Funktionskörper allerdings mehrfach benötigt, 
 wird an jeder stelle an welcher das `thunk` benötigt wird, die Berechnung neu durchgeführt, also es findet keine Zwischenspeicherung des Ergebnisses statt.
@@ -446,7 +446,7 @@ Bei ihrem Ressourcenverbrauch können sich die beiden Verfahren jedoch untersche
 
 #### Für welchen Anwendungszweck würden Sie welche Version einsetzen?
 Beide Funktionen sollten also verwendet werden, wenn eine Berechnung relativ aufwendig ist und nur unter gewissen Konditionen benötigt wird.
-Bei der wahl zwischen `thunk` und Promises kann als grobe Orienteering gesagt werden, 
+Bei der Wahl zwischen `thunk` und Promises kann als grobe Orienteering gesagt werden, 
 wenn das Ergebnis der Berechnung an vielen Stellen benötigt wird, und nur einen geringen Speicheraufwand hat, sollten Promises verwendet werden. Wird das Ergebnis nur einmal benötigt, oder der Speicheraufwand ist im Verhältnis zum Rechenaufwand zu groß, sollte `thunk` verwendet werden.
 
 #### Warum kann man delay nicht als Funktion schreiben?

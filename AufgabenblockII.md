@@ -1,6 +1,6 @@
 # Aufgabenblock II
 
-## Aufgabe 1 -> Todo: Ergänzen?
+## Aufgabe 1 
 Wenn Sie eine neue Sprache erlernen, erwarten Sie eher `applicative order` oder `normal order`? Zeigen Sie die Vorzüge Ihrer Erwartung auf. Welche Auswertungsstrategie ist für Sie natürlicher? Begründen Sie Ihre Antwort. (Ergänzen Sie Ihre Antwort im Laufe des Semester ggf. noch einmal, nachdem Sie den Lambda-Kalkül kennengelern haben.)
 
 ### Wiederholung
@@ -378,12 +378,277 @@ Recherchieren Sie, ob Sie Programmiersprachen finden, die `dynamic scope` umsetz
 Falls Sie keine finden, wie kann man `dynamic scope` in anderen Programmiersprachen nachbauen?
 
 ### Antwort
+- Perl [Die Programmiersprache Perl von Eike Grote, Version  2.07: S. 150-158 [link](http://www.cpan.org/authors/id/E/EI/EIKEG/doc/perl-tutorial-DE_2.07.pdf)]
+- LISP [LISP : Eine Einführung in die Programmierung von Herbert Stoyan, Günter Görz, ISBN-13: 978-3-540-16914-7; S175-177. S182-183]
 
+## Aufgabe 5
+Wie wird in Racket/Scheme `lexical scope` umgesetzt und warum ist `dynamic scope` eine schlechte Idee? 
+Illustrieren Sie Ihr Argument an einem selbst entwickelten Beispiel.
 
-## 5 Todo!
-## 6 Todo!
-## 7 Todo!
-## 8 Todo!
+### Umsetzung von lexical scope 
+Bei `lexical scope` wird der Gültigkeitsbereich von Variablen durch deren Umgebung definiert. 
+Eine Variable gehört hier zu der Umgebung einer Funktion wenn sie:
+1. Als Argument der Funktion übergeben wurde.
+2. Im Funktionskörper der Funktion definiert wurde. (Definitionen im Funktionskörper einer Unterfunktion zählen hier nicht dazu!)
+3. In der Umgebung einer übergeordneten Funktion (oder der globalen Umgebung) enthalten ist. 
+<br>(Wenn eine neue Variable mit demselben Bezeichner durch 1. oder 2. erstellt wird, wird in der Umgebung der neu zugewiesene verwendet und der höheren Umgebung ignoriert)
+
+### Warum ist dynamic scope eine schlechte Idee?
+Bei `lexical scope` wird der Gültigkeitsbereich von Variablen durch deren Umgebung definiert,
+sodass Funktionen Zugriff auf Variablen haben, die als Argument übergeben wurden, in einer übergeordneten Umgebung oder in dieser Funktion definiert sind.
+
+Im gegensatz dazu ist Gültigkeit und der Wert einer Variable durch die Aufrufreihenfolge bestimmt. 
+
+`lexical scope` sorgt also für eine bessere:
+- **Wartbarkeit**: Durch `lexical scope` ist das Nachvollziehen von Zuordnungen leichter, da lediglich Zuweisungen innerhalb der Funktion und der übergeordneten Umgebung nachvollzogen werden müssen, was die Wartbarkeit stark vereinfachen dürfte.
+- **Fehlervermeidung**: Durch Funktionsaufrufe im `dynamic scope` können ungewollte Seiteneffekte eintreten, welche für schwer findbare Fehler sorgen können, da die Funktionen individuell das richtige Ergebnis sorgen, jedoch in kombination nicht.
+- **Modularität**: Da im `lexical scope` Funktion nur die Variablen in ihrer Umgebung manipulieren können, können sie also ohne potenzielle Seiteneffekte als in einer Bibliothek für andere Programme genutzt werden.
+
+### Anmerkungen
+- um `dynamic scope` zu simulieren, wurden alle Variablen-erstellungen nach der 1. durch `!set` ersetzt
+
+### Code
+#### Dynamic
+```
+#lang racket
+
+(define x 10)
+
+(define (mach-was)
+  (cond
+    (x "Zweig 1")
+    (else "Zweig 2")))
+
+; Aus einer Library kopiert: 
+(define (super-wichtige-rechnung)
+  ; + 100 Zeilen Code
+  (set! x #f) ; eigentlich define. x würde in den nachvollgenden Zeilen gebraucht werden
+  ; + 70 Zeilen Code
+  (define y "test") ; y würde in den nachvollgenden Zeilen gebraucht werden
+  ; + 20 Zeilen Code
+  (string-append "Super wichtige Rechnung!"))
+
+(mach-was) ; -> "Zweig 1"
+; +30 Zeilen
+(super-wichtige-rechnung)
+; +14 Zeilen
+(mach-was) ; -> "Zweig 2"
+```
+
+Die Funktion `mach-was` liefert bei den beiden Aufrufen jeweils ein anderes Ergebnis, 
+ohne dass eine bewusste anpassung von `x` stattfand.
+
+```
+; +30 Zeilen
+(super-wichtige-rechnung)
+; +14 Zeilen
+```
+Innerhalb der 45 Zeilen liefert jede Funktion für sich getestet jedoch das richtige Ergebnis.
+Nach einigen Tests stellt sich heraus dass die Funktion `super-wichtige-rechnung` für den ungewollten Seiteneffekt sorgt.
+<br>Folglich: Fehleranfällig und schlechte Modularität
+
+Zudem, wenn man in einer Funktion eine neue Variable hinzufügen will und super-wichtige-rechnung als Unterfunktion nutzen muss (oder super-wichtige-rechnung allgemein nutzt und eine globale Variable hinzufügen will),
+muss der nutzer wissen, dass neben `x` auch `y` nicht verwendet werden darf, da es sonst wieder ungewollt überschrieben werden würde.
+Um das herauszufinden, müssen jedoch die komplette Funktion `super-wichtige-rechnung` mit über 190 Zeilen untersucht werden.
+<br>Folglich: schlechte Wartbarkeit und Modularität
+
+#### Lexical
+
+```
+#lang racket
+
+; 2.5 Lexical
+
+(define x 10)
+
+(define (mach-was)
+  (cond
+    (x "Zweig 1")
+    (else "Zweig 2")))
+
+; Aus einer Library kopiert: 
+(define (super-wichtige-rechnung)
+  ; + 100 Zeilen Code
+  (define x #f) ; x würde in den nachvollgenden Zeilen gebraucht werden
+  ; + 70 Zeilen Code
+  (define y "test") ; y würde in den nachvollgenden Zeilen gebraucht werden
+  ; + 20 Zeilen Code
+  (string-append "Super wichtige Rechnung!"))
+
+(mach-was) ; -> "Zweig 1"
+; +30 Zeilen
+(super-wichtige-rechnung)
+; +14 Zeilen
+(mach-was) ; -> "Zweig 1"
+```
+
+Diese Lexical-Version liefert das erwartete Ergebnis.
+
+## Aufgabe 6
+Überlegen Sie ein Beispiel, in dem verzögerte Auswertung sinnvoll sein kann. 
+Wie würden Sie die verzögerte Auswertung umsetzen? Begründen Sie Ihr Vorgehen.
+
+### Antwort:
+Verzögerte Auswertung sollte verwendet werden, wenn eine Berechnung relativ aufwendig ist und nur unter gewissen Konditionen benötigt wird.
+
+Hierfür gibt es die Wahl zwischen `thunk` und Promises:
+- `thunk` ist eine eingewickelte Berechnung, also eine Funktion, welche in einem z.B. lambda-Ausdruck eingewickelt ist (z.B. `(lambda () (+ 2 3))`).
+<br>Möchte man das Ergebnis der Funktion an einer entsprechenden Stelle haben, so muss das `thunk` einfach ausgewertet werden.
+<br>Wird `thunk` allerdings mehrfach ausgewertet, findet die Berechnung an jeder Stelle neu statt.
+- Promises werden durch `delay` erstellt. Sie beinhalten die Funktion, welche potenziell Ausgeführt werden muss. 
+<br> Um an das Ergebnis der Funktion zu gelangen, muss das Promises die `force` funktion übergeben werden, welche die Berechnung anschließend durchführt.
+<br> Wird das Ergebnis des Promises erneut benötigt muss die Berechnung jedoch nicht erneut durchgeführt werden, da es zwischengespeichert wurde. Das hat allerdings einen gewissen Speicherverbrauch zur Folge.
+
+Wenn das Ergebnis der Berechnung an vielen Stellen benötigt wird, und nur einen geringen Speicheraufwand hat, sollten also Promises verwendet werden. Wird das Ergebnis nur einmal benötigt, oder der Speicheraufwand ist im Verhältnis zum Rechenaufwand zu groß, sollte `thunk` verwendet werden.
+
+Genauere Erklärungen hierzu auch in Block I, Aufgabe 16.
+
+### Code
+
+#### Normale Auswertung
+```
+#lang racket
+
+(define (entscheidung kondition res)
+  (cond
+    (kondition res)
+    (else "wird nicht benötigt")))
+
+(define (aufwendige-berechnung)
+  (sleep 3)
+  "wird benötigt")
+
+(entscheidung #t (aufwendige-berechnung)) ; Es wird 3 sec gewartet
+(entscheidung #t (aufwendige-berechnung)) ; Es wird 3 sec gewartet
+(entscheidung #f (aufwendige-berechnung)) ; Es wird 3 sec gewartet
+```
+
+#### Verzögerte Auswertung: thunk
+```
+#lang racket
+
+(define (entscheidung kondition thunk)
+  (cond
+    (kondition (thunk))
+    (else "wird nicht benötigt")))
+
+(define aufwendige-berechnung (lambda ()
+  (sleep 3)
+  "wird benötigt"))
+
+(entscheidung #t aufwendige-berechnung) ; Es wird 3 sec gewartet
+(entscheidung #t aufwendige-berechnung) ; Es wird 3 sec gewartet
+(entscheidung #f aufwendige-berechnung) ; Es wird nicht gewartet
+```
+
+#### Verzögerte Auswertung: promise
+```
+#lang racket
+
+(define (entscheidung kondition promise)
+  (cond
+    (kondition (force promise))
+    (else "wird nicht benötigt")))
+
+(define aufwendige-berechnung (delay
+  (sleep 3)
+  "wird benötigt"))
+
+(entscheidung #t aufwendige-berechnung) ; Es wird 3 sec gewartet
+(entscheidung #t aufwendige-berechnung) ; Es wird nicht gewartet
+(entscheidung #f aufwendige-berechnung) ; Es wird nicht gewartet
+```
+
+## Aufgabe 7
+Nehmen Sie zum Zitat "Objects are a poor man’s closures. Closures are a poor man’s objects." 
+Stellung und vergleichen die vorgestellten Möglichkeiten der Objektorientierung mit einer Ihnen bekannten objektorientierten Programmiersprache.
+
+### Stellungnahme 
+Das Zitat vermittelt, dass es eine gewisse Gemeinsamkeit zwischen Abschlussobjekten und normalen Objekten besteht, und quasi das gleiche Repräsentieren und austauschbar sind.
+
+Durch den abschnitt "a poor man’s" wird jedoch noch zusätzlich dargestellt, dass normale Objekte und Abschlussobjekte keineswegs gleich sind. 
+So wird beschrieben, dass ein Entwickler welche Objekte nutzen möchte, jedoch nur Abschlussobjekte hat, diese zwar als alternative nutzen kann, es jedoch einige Unterschiede gibt, welche zu anpassungen bei der Implementierung führen können.
+Selbiges gilt für Objekte statt Abschlussobjekte.
+
+### Vergleich
+Objekte in Java sind Instanzen von Klassen, welche Daten (Attribute) bündeln und zugehörige Methoden, die auf diesen Daten operieren. 
+Durch die jeweiligen Konzepte der Sprache unterstützen Objekte Datenkapselung, Vererbung und Polymorphismus.
+
+Abschlussobjekte in Racket hingegen sind eigentlich nur Funktionen, die auf einen bestimmten Kontext bezug nehmen.
+Durch den Bezug auf ihr Umfeld können sie lokale Variablen erfassen und diese innerhalb ihres Gültigkeitsbereichs verwenden, und mittels Zustandsorientierung auch manipulieren. 
+
+Wie das Zitat vermittelt kann man Abschlussobjekte als "Objekte", dessen lokale Variablen die Attribute repräsentieren, und dessen unterfunktionen die Methoden.
+<br>Beide Konzepte ermöglichen somit Organisation und Strukturierung von Code.
+
+Jedoch gibt es auch ein paar Unterschiede:
+
+Objekte in Java dienen meist dazu, Daten und Methoden zu kapseln um Entitäten (der realen Welt) und deren Beziehungen untereinander zu Modellierung.
+
+Abschlussobjekte in Racket sind allerdings darauf ausgelegt, Funktionalitäten mit Kontextbezug zu schaffen. 
+Entitäten zu modellieren ist damit zwar möglich, doch vor allem bei größeren Strukturen auch deutlich aufwendiger.
+<br>Da sie allerdings ihren kompletten Kontext erfassen, ermöglichen sie teilweise flexiblere und abstraktere Lösungen als es mit Objekten möglich wäre.
+
+## Aufgabe 8
+Überlegen Sie sich einen Anwendungsfall für Ströme (streams) und illustrieren Ihren Anwendungsfall an einer Implementierung in Racket. 
+Die Implementierung muss nicht voll funktionsfähig sein, es reicht ein Prototyp oder Pseudo-Code.
+
+### Antwort
+Den Haupteinsatz von Streams in Racket sehe ich in der Verarbeitung von endlos-kontinuierlichen oder extrem großen Datenmengen mit lazy-steams. 
+Bei kleinen, finiten Datenmengen ist es in der Regel ohne Probleme möglich, diese als Liste zu speichern und bei Funktionen alle Elemente der Liste mit einzubeziehen. 
+
+Bei endlosen oder extrem großen Mengen ist das jedoch tendenziell nicht möglich. Lässt diese Menge sich jedoch (Mathematisch) Beschreiben oder kontinuierlich auslesen, 
+lässt sie sich als lazy-steam darstellen, welcher für einige Verarbeitungen genutzt werden kann.
+<br>**Anmerkung**: Verarbeitungen welche den ganzen Stream benötigten würden, funktionieren natürlich immer noch nicht
+
+### Code
+```
+; Stream Logik:
+
+(define the-empty-stream '())
+(define head car)
+(define stream-empty? empty?)
+
+(define-syntax stream-cons
+  (syntax-rules ()
+      ((cons-stream x y)
+       (cons x (delay y)))))
+
+(define (tail s) (force (cdr s)))
+
+; Funktion für endlose Menge
+; findet das 1. Element des streams für das "bedingung" gilt
+; ist die abbruchbedingung erfüllt, wird die suche abgebrochen. (const #f) falls man sich 100% sicher ist, dass element existiert.
+(define (findf-endlos steam bedingung abbruchbedingung)
+  (cond
+    ((abbruchbedingung (head steam)) #f)
+    ((bedingung (head steam)) (head steam))
+    (else (findf-endlos (tail steam) bedingung abbruchbedingung))))
+
+; endlose Menge
+(define (natürliche-zahlen)
+  (define (natürliche-zahlen-inner a)
+    (stream-cons a (natürliche-zahlen-inner (+ a 1))))
+  
+  (natürliche-zahlen-inner 1))
+
+; Testfunktion
+(define (prim? n)
+  (define (iterate i)
+    (cond
+      ((> (sqr i)  n) #t) 
+      ((= (modulo n i) 0) #f)
+      (else (iterate (+ i 2)))))
+
+  (cond ((<= n 1) #f) 
+        ((= n 2) #t)  
+        ((even? n) #f) 
+        (else (iterate 3))))
+
+; Erste Primzahl > 100
+(findf-endlos (natürliche-zahlen)
+              (conjoin prim? (lambda (n) (> n 100)))
+              (const #f))
+```
 
 ## Aufgabe 9
 Nennen und erläutern Sie mindestens drei Gründe, warum es sinnvoll sein kann, ein Typsystem zu verwenden. Erläutern Sie anschließend den Unterschied zwischen einer dynamischen Typprüfung und einer statischen Typprüfung. Sie können für Ihre Antwort neben Racket auch noch auf andere Ihnen bekannte Programmiersprachen zurückgreifen.

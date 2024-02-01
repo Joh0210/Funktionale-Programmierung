@@ -20,7 +20,6 @@
 ;((5 5) . #<promise>)
 
 ; Stream Logik:
-
 (define the-empty-stream '())
 (define head car)
 (define stream-empty? empty?)
@@ -33,7 +32,6 @@
 (define (tail s) (force (cdr s)))
   
 ; fib-stream:
-
 (define (fib-stream)
   (define (interation s1 s2)
     (cond

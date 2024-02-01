@@ -3,10 +3,18 @@
 ; 1.12.1
 ; Zeigen Sie an zwei selbst erstellten Beispielen die Nutzung von Funktionen höherer Ordnung auf.
 
-; Man hat eine Liste an Messdaten eines Sensors. Da der Sensor manchmal werte über 100 ausgibt,
-; welche das System nicht weiter verarbeiten kann, müssen alle Werte über 100 auf 100 gesetzt werden: 
+; Prüfen, ob eine Liste ein Element enthält:
 
-(define (adjust_limit lst)
-  (map (lambda (a) (cond ((<= a 100) a) (else 100))) lst))
+; Direkte Auswertung:
+(ormap (lambda (a) (equal? a 3)) (list 1 2 3 4 5))
+(ormap (lambda (a) (equal? a #t)) (list "AB" #t 3 "S"))
+(ormap (lambda (a) (equal? a "A")) '())
 
-(adjust_limit (list 39 192 10 23 100 91 894 29))
+; Eingebacken:
+(define (my-find lst x)
+  (ormap (lambda (a) (equal? a x)) lst))
+
+
+(my-find (list 1 2 3 4 5) 3)
+(my-find (list "AB" #t 3 "S") #t)
+(my-find '() "A")

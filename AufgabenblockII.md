@@ -58,16 +58,22 @@ Auch wenn das Beispiel sehr künstlich ist, zeigt es das Problem welches **Norma
 Entsprechen zu erwarten ist **Applicative Order**, jedoch muss der Entwickler hierbei auf Seiteneffekte, Exception-Handling, etc. bereits bei Aufruf der Funktion achten.
 
 #### Funktional
-Erwartung von **Normal Order/Lazy Evaluation**.
+Erwartung von **Lazy Evaluation**, jedoch ist **Applicative Order** wahrscheinlich.
 
-Funktionale Programmiersprachen unterstützen zwar auch teilweise Objektmanipulation und Zustandsänderungen, jedoch beschreibt das grundlegende Paradigma, dass das Ergebnis einer Funktion nur von den Eingabedaten abhängig ist. 
-Somit sollte der Wert der Argumente also unabhängig davon sein, an welcher Stelle sie im Programmcode aufgerufen werden. 
+Funktionale Programmiersprachen unterstützen zwar auch teilweise Objektmanipulation und Zustandsänderungen, jedoch beschreibt das grundlegende Paradigma, dass das Ergebnis einer Funktion nur von den Eingabedaten abhängig ist.
+Somit sollte der Wert der Argumente also unabhängig davon sein, an welcher Stelle sie im Programmcode aufgerufen werden.
 
 Funktionen die doch Seiteneffekte haben, z.B. das Löschen aller Dateien einer Datenbank, sollen in der Regel nur unter gewissen Konditionen aufgerufen werden.
 Damit diese Funktionen als Argument übergeben werden können und nicht direkt bei dem Funktionsaufruf ausgewertet werden, ist also **Normal Order/Lazy Evaluation** zu erwarten.
+Durch das Lambda-Kalkül ließ sich dies zeigen, da **Normal Order/Lazy Evaluation** öfters auf ein Ergebnis kommt und sofern **Applicative Order** zum Ergebnis führt auch **Normal Order/Lazy Evaluation** zu dem Ergenbis führt.
 
-Auf diese Weise lassen sich auch Ressourcen Sparen, da wenn ein Argument nicht benötigt wird, auch nicht berechnet wird. 
-Hierbei wird **Lazy Evaluation** eher statt **Normal Order** erwartet, da bei einer **Lazy Evaluation** das Argument maximal ein mal berechnet wird, und so bei erneuter Abfrage im Funktionsrumpf nicht erneut berechnet werden muss, sondern den entsprechenden wert übergeben bekommt. Bei **Normal Order** würde diese Auswertung der Funktion bei jeder Abfrage des Arguments stattfinden.   
+In der Praxis wird zwar auch in funktionalen Sprachen häufiger **Applicative Order** verwendet, da **Normal Order** tendenziell weniger effizient ist.
+
+Als Alternative wird deshalb **Lazy Evaluation** statt **Normal Order** erwartet, da bei einer **Lazy Evaluation** das Argument maximal ein mal berechnet wird, und so bei erneuter Abfrage im Funktionsrumpf nicht erneut berechnet werden muss, sondern den entsprechenden wert übergeben bekommt. 
+Bei **Normal Order** würde diese Auswertung der Funktion bei jeder Abfrage des Arguments stattfinden. 
+
+Mit **Lazy Evaluation** lassen sich somit Ressourcen Sparen, da wenn ein Argument nicht benötigt wird, auch nicht berechnet wird und sonst maximal einmal berechnet wird. 
+Diese Methode hat jedoch einen zusätzlichen Speicherverbrauch als Folge.    
 
 #### Logisch
 Aufgrund von mangelnder Erfahrung mit dem Paradigma, erwarte ich keine der Auswertungsstrategien, sondern setze mich erst mit dem Paradigma auseinander.

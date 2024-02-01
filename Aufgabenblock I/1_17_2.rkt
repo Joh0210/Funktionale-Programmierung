@@ -20,7 +20,6 @@
 ;((5 5) . #<promise>)
 
 ; Stream Logik:
-
 (define the-empty-stream '())
 (define head car)
 (define stream-empty? empty?)
@@ -48,7 +47,6 @@
 
 
 ; fib-stream:
-
 (define (fib-stream)
   (define (fib-stream-inner n)
     (stream-cons (list n (fib n)) (fib-stream-inner (+ n 1))))

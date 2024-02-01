@@ -1,7 +1,7 @@
 #lang racket
 
 ; 1.4
-; Schreiben SIe eine Funktion my-max, die die höchste Zahl einer Liste von Zahlen ermittelt und nutzen Sie dazu eine fold-Funktion.
+; Schreiben Sie eine Funktion my-max, die die höchste Zahl einer Liste von Zahlen ermittelt und nutzen Sie dazu eine fold-Funktion.
 
 (define (my-max lst)
   (define (max-of-two a b)
@@ -10,7 +10,7 @@
       (else b)))
 
   (cond
-    ((or (empty? lst) (not (andmap number? lst))) (error"ungueltige eingabe für die Funktion \"my-max\". Benötigt nicht leeren Liste von Zahlen"))
+    ((or (empty? lst) (not (andmap number? lst))) (error"ungueltige eingabe für die Funktion \"my-max\". Nicht leere Liste an Zahlen benötigt!"))
     (else (foldl max-of-two (first lst) (rest lst)))))
 
 (my-max (list -10))

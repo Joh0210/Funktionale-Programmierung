@@ -96,10 +96,10 @@
         (else (loeschen-inner (rest lst) (append acc (list (first lst))) (- n 1)))))
     
     (cond
-      ((and (>= n 1) (<= n (length lieder)))
+      ((and (exact-positive-integer? n) (<= n (length lieder)))
        (set! lieder (loeschen-inner lieder null (- n 1)))
        (string-append "Das " (number->string n) ". lied wurde entfernt" (auswahl-anpassen)))
-      (else "So viele Lieder gibt es nicht")))
+      (else "Dieses Element existiert nicht")))
 
   (define (vor)
     (cond
@@ -180,14 +180,21 @@
 (laden mp3-player1 lied5)
 (anzahl mp3-player1)
 (lieder-liste mp3-player1)
+(lieder-liste-roh mp3-player1)
 
 (loeschen mp3-player1 2)
 (loeschen mp3-player1 1)
 (loeschen mp3-player1 10)
 (loeschen mp3-player1 -1)
+(loeschen mp3-player1 "A")
+(loeschen mp3-player1 0)
 (anzahl mp3-player1)
 (lieder-liste mp3-player1)
+(ausgewaehlt mp3-player1)
 (status mp3-player1)
 (abspielen/stop mp3-player1)
 (status mp3-player1)
+(vor mp3-player1)
+(ausgewaehlt mp3-player1)
+(zurück mp3-player1)
 (ausgewaehlt mp3-player1)

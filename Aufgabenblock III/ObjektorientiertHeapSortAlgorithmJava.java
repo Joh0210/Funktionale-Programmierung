@@ -5,12 +5,12 @@ import java.util.ArrayList;
  * @param <T> type of comparable entry to sort
  * @author Johannes Freund, Tobias Kapitza
  */
-public class HeapSortAlgorithmJava<T extends Comparable<T>> {
+public class ObjektorientiertHeapSortAlgorithmJava<T extends Comparable<T>> {
     public final T[] orgArray;
     private final ArrayList<ArrayList<T>> steps;
     private int counter = -1;
 
-    public HeapSortAlgorithmJava(T[] orgArray, boolean isMinHeap) {
+    public ObjektorientiertHeapSortAlgorithmJava(T[] orgArray, boolean isMinHeap) {
         this.orgArray = orgArray;
         this.steps = heapSort(orgArray, isMinHeap);
     }
@@ -77,7 +77,7 @@ public class HeapSortAlgorithmJava<T extends Comparable<T>> {
 
         int posElement = step.size() - 1;
         //If the elements are the same, they are unnecessarily exchanged once
-        while(getParentPos(posElement) >= 0 && (step.get(getParentPos(posElement)).compareTo(step.get(posElement)) > 0 == isMinHeap)){
+        while(getParentPos(posElement) >= 0 && (isMinHeap ? (step.get(getParentPos(posElement)).compareTo(step.get(posElement)) > 0) : (step.get(getParentPos(posElement)).compareTo(step.get(posElement)) < 0))){
             T temp = step.get(getParentPos(posElement));
             step.set(getParentPos(posElement), step.get(posElement));
             step.set(posElement, temp);
@@ -123,7 +123,7 @@ public class HeapSortAlgorithmJava<T extends Comparable<T>> {
      */
     private boolean hasSmallerChild(int parentPos, ArrayList<T> step, boolean isMinHeap){
         for(boolean left : new boolean[]{true, false}){
-            if(getChildPos(parentPos, left) <= step.size() - 1 && (step.get(parentPos).compareTo(step.get(getChildPos(parentPos, left))) > 0) == isMinHeap){
+            if(getChildPos(parentPos, left) <= step.size() - 1 && (isMinHeap ? (step.get(parentPos).compareTo(step.get(getChildPos(parentPos, left))) > 0) : (step.get(parentPos).compareTo(step.get(getChildPos(parentPos, left))) < 0))){
                 return true;
             }
         }
@@ -141,6 +141,7 @@ public class HeapSortAlgorithmJava<T extends Comparable<T>> {
         if(getChildPos(parentPos, false) > step.size() - 1){
             return true;
         }
-        return (step.get(getChildPos(parentPos, true)).compareTo(step.get(getChildPos(parentPos, false))) < 0) == isMinHeap;
+        int comparison = step.get(getChildPos(parentPos, true)).compareTo(step.get(getChildPos(parentPos, false)));
+        return isMinHeap ? (comparison < 0) : (comparison > 0);
     }
 }

@@ -8,7 +8,8 @@
 - DrRacket als IDE für Recket
 - Mahara für die Abgabe
 - Unterrichtsmaterialien als Wissen
-- Wenn weitere Ressourcen oder Quellen genutzt wurden, wird das bei der Aufgabe erwähnt
+- Todo: Markdown zu HTML Converter
+
 
 ## Hinweise
 - Mehrfach Implementierungen dienen als "Über den Horizont schauen". Welche Implementierung für die Bewerertung zu breücksichtigen ist steht an der entsprechenden stelle

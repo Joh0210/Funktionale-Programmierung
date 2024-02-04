@@ -55,8 +55,8 @@
       ((> pos1 pos2)(swap-inner2 null pos2 pos1 lst))
       (else lst)))
 
-  ; Wenn die Heap-Condition der liste gebrochen wurde,
-  ; fürt diese Funktion genau einen Schritt aus um sie stückweise wieder her zu stellen.
+  ; Wenn die Heap-Condition der Liste gebrochen wurde,
+  ; fürt diese Funktion genau einen Schritt aus um sie stückweise wieder herzustellen.
   (define (heapify-step lst)
     (swap (get-parent-pos (heapify-broken? lst)) (heapify-broken? lst) lst))
 

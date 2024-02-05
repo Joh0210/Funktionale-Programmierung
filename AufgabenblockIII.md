@@ -37,8 +37,8 @@ Minecraft-Mods sind Erweiterungen, die von der Minecraft-Community in Java oder 
 Minecraft selbst ist ein beliebtes Sandbox-Spiel, bei dem Spieler in einer offenen Welt mit Blöcken bauen und erkunden können. 
 Mods ermöglichen es, diese Erfahrung zu personalisieren und auf die verschiedensten arten zu erweitern.
 
-Seit einem Jahr arbeite ich iterativ-inkrementell an solch einer Erweiterung für das Spiel. Die Mod [Dragon Magic And Relics](https://github.com/Joh0210/DragonMagicAndRelics) fügt dem Spiel eine große Menge an neuen Gegenständen, Rituale und Zauber hinzu.
-<br>Zusätzlich fügt sie eine komplett neue Spielmechanik hinzu, welche den Kern dieser Erweiterung darstellt. Sie ermöglicht es dem Spieler Magie auf eine neue, personalisierte weise zu nutzen.
+Seit einem Jahr arbeite ich iterativ-inkrementell an zwei solcher Erweiterungen für das Spiel. Die Mods [Dragon Magic And Relics](https://github.com/Joh0210/DragonMagicAndRelics) und [FactionsAndCuriosities](https://github.com/Joh0210/FactionsAndCuriosities) fügen dem Spiel eine große Menge an neuen Gegenständen, Rituale und Zauber hinzu.
+<br>Zusätzlich fügen sie eine komplett neue Spielmechanik hinzu, welche den Kern der Erweiterungen darstellt. Diese ermöglichen es dem Spieler Magie auf eine neue, personalisierte weise zu nutzen.
 
 ### Android Algorithmen-Lern App: Heap Sort
 Für das Modul "Mobile Technologien", des 4. Semesters der Softwaretechnologie mit Prof. Dr. Schultes, musste eine bereits existierende Lern-App erweitert werden.
@@ -234,7 +234,7 @@ da die Funktionalität hauptsächlich durch Überschreiben von Parent-Methoden u
 Auch das Reagieren auf Ereignisse in Minecraft nutzt ebenfalls Objekte als Kommunikationsmedium, 
 und nur durch dessen Manipulation lässt sich mit dem Spiel interagieren.
 
-Functionale Programmierung lässt zwar bedingt auch die Nutzung von Objekten zu, jedoch geht es in diesen Fällen hauptsächlich um die bewusste nutzung von Seiteneffekten, 
+Funktionale Programmierung lässt zwar bedingt auch die Nutzung von Objekten zu, jedoch geht es in diesen Fällen hauptsächlich um die bewusste nutzung von Seiteneffekten, 
 welche dem Paradigma der funktionalen Programmierung wieder strebt. 
 
 Jedoch lassen sich potenziell einige Teile mithilfe des funktionalen Paradigmas umsetzen. 
@@ -265,7 +265,7 @@ jedoch würde dies eine Grundlegend andere Architektur bedeuten und hätte wahrs
 was auch für den Erfolg des Spiels hinderlich gewesen sein könnte.
 
 #### Android Algorithmen-Lern App
-Android Navie Apps lassen sich auch mithilfe von funktionalen Programmiersprachen, wie Haskell, implementer [[7]](https://stackoverflow.com/questions/5151858/running-a-haskell-program-on-the-android-os), [[8]](https://github.com/neurocyte/android-haskell-activity).
+Android Native Apps lassen sich auch mithilfe von funktionalen Programmiersprachen, wie Haskell, implementer [[7]](https://stackoverflow.com/questions/5151858/running-a-haskell-program-on-the-android-os), [[8]](https://github.com/neurocyte/android-haskell-activity).
 
 Bei dem Projekt kamen einige objektorientierten Design-Patterns zum einsatz, jedoch in einer deutlich loseren Struktur als z.B. bei Minecraft. 
 Auf diese Weise müssen zwar bestehende Konzepte neu geplant werden, 
@@ -285,10 +285,54 @@ Zusätzlich lässt sich auch sagen das Java zwar immer weniger für die Appentwi
 - [7] **Stackoverflow**: [Running a Haskell program on the Android OS](https://stackoverflow.com/questions/5151858/running-a-haskell-program-on-the-android-os) 2011, https://stackoverflow.com/questions/5151858/running-a-haskell-program-on-the-android-os, 29.12.2023
 - [8] **Neurocyte**: [android-haskell-activity](https://github.com/neurocyte/android-haskell-activity) o.J., https://github.com/neurocyte/android-haskell-activity, 29.12.2023
 
-## 5 Todo!
+## Aufgabe 5
+Entwerfen Sie funktionale Implementierungsskizzen Ihrer Beispiele. 
+Sollte sich keines Ihrer Beispiele dafür eigenen, so überlegen Sie ein fiktives Projekt, Programmieraufgabe, die sich gut mit funktionaler Programmierung umsetzen ließe.
+
+### Minecraft Mod
+Wie bereits in Aufgabenblock III: Aufgabe 4 erwähnt, lassen sich keine Mods rein funktional umsetzen, lediglich einzelne Teilausschnitte. 
+Eine vollständige funktionale Architektur-anpassung und reimplementing von Minecraft überschreitet hier auch bei weitem den Umfang des Projektes.
+<br>Das folgende Flussdiagramm zeigt daher eine funktionale Umsetzung einer komplett neuen Spielmechanik, wie sie in Aufgabenblock III: Aufgabe 3 beschrieben ist.
+
+Bei dem dargestellten Prozess handelt sich um ein Kernelement der von mir erstellten Erweiterung [FactionsAndCuriosities](https://github.com/Joh0210/FactionsAndCuriosities). 
+Es handelt sich dabei um zufällige Ereignisse, sogenannte "Wild Magic", eintreten, wenn der Spieler einen Zauber nutzt.  
+
+Diese Ereignisse müssen als Instanz einer Klasse registriert werden und die Interaktion mit der Welt findet durch Objektmanipulation statt.
+<br>Instanzen der `WildMagic` Klasse verfügen zusätzlich über Funktionen, welche beschreiben, wie gut das Ereignis für den Nutzer ist, wie häufig das Ereignis ist und ob alle Konditionen für das Eintreten erfüllt sind.
+<br>Zusätzlich wird ein Event Handler erstellt, welcher beim Einsetzen eines Zaubers aktiv wird und mithilfe der `WildMagicHelper` einen zufällige, aber gewichtete und ausführbahre "Wild Magic" auswählt und ausführt.
+
+Die Instanzen der `WildMagic` Klasse und der Handler sind zwangsläufig objektorientiert zu erstellen, da sich der Architektur von Minecraft angepasst werden muss (vgl. Aufgabenblock III: Aufgabe 3).
+Der `WildMagicHelper` ist jedoch an keine solche Restriktion gebunden und kann entsprechend auch funktional Umgesetzt werden. Hierfür eigenen sich besonders Streams. 
+
+Nicht für die Erklärung relevante Zwischenschritte sind nicht in der Darstellung enthalten.
+
+#### Initialisierung
+![minecraft-Initialisierung.png](https://github.com/Joh0210/Funktionale-Programmierung/blob/main/draw_io/minecraft-Initialisierung.png?raw=true)
+
+#### Spell Cast Event
+![minecraft-SpellCastEvent.png](https://github.com/Joh0210/Funktionale-Programmierung/blob/main/draw_io/minecraft-SpellCastEvent.png?raw=true)
+
+### Android Algorithmen-Lern App: Heap Sort
+Dieser Abschnitt versucht, wie in Aufgabenblock III: Aufgabe 4 beschreiben, nicht nur die tatsächliche Erweiterung des Endanwendung, sondern das grundlegende Programm auf funktionale Weise dazustellen. 
+Ein gewisser Grad an Seiteneffekten und Zustandsorientierung lässt sich dabei jedoch trotzdem nicht vermeiden.
+
+Einzelne Zwischenschritte sind nicht ausformuliert, lassen sich jedoch meistens Funktional umsetzen, wie in Aufgabenblock III: Aufgabe 6 zu sehen ist.
+Um das Paradigma auf die Architektur anzuwenden, wird möglichst viel über einen Informationsfluss gelöst. Dieser Fluss lässt sich anschließend Funktionen oder Promises beschreiben.
+
+Eer Nutzer jederzeit die Möglichkeit die Anwendung zu beenden.
+Nicht für die Erklärung relevante Zwischenschritte sind nicht in der Darstellung enthalten.
+
+#### App Start
+![Android-AppStart.png](https://github.com/Joh0210/Funktionale-Programmierung/blob/main/draw_io/Android-AppStart.png?raw=true)
+
+#### Wettbewerb Erstellen
+![Android-WettbewerbErstellen.png](https://github.com/Joh0210/Funktionale-Programmierung/blob/main/draw_io/Android-WettbewerbErstellen.png?raw=true)
+
+#### Spiel Start
+![Android-SpielStart.png](https://github.com/Joh0210/Funktionale-Programmierung/blob/main/draw_io/Android-SpielStart.png?raw=true)
 
 ## Aufgabe 6
-Wählen Sie sich abschließend eines der Projekte aus und versuchen eine prototypenhafte Umsetzung, an der man die funktionale Umsetzung erkennen kann.
+Wählen Sie sich abschließend eines der Projekte aus und versuchen eine prototypen hafte Umsetzung, an der man die funktionale Umsetzung erkennen kann.
 
 ### Anmerkung:
 - Da beide Projekte mehrere Wochen bis Monate Entwicklungszeit benötigten, und sich nicht jeder Teil funktional Umsetzen lässt (vgl. Aufgabe 4), wurde sich dazu entschieden, nur einen Teilausschnitt eines der Projekte zu implementieren, welcher sich als sehr Komplex und umfangreich herausstellt.
@@ -297,8 +341,6 @@ Wählen Sie sich abschließend eines der Projekte aus und versuchen eine prototy
 - Die Nutzung von Listen, vor allem durch die Nutzung von der `list-ref` Funktion ist potenziell etwas weniger Effizient, allerdings wird die Funktion `getSteps()` im Original nur sehr selten aufgerufen, weshalb Optimierungen an oft genzutaten Funktionen empfehlenswerter sind.
 - Alle implementierten Versionen sind Generisch und nicht auf einen Datentyp zugeschnitten 
 - Für den Heap in Array Darstellung gilt, das 0. Element des ist das Root-Node. Die Positionen der Child-Nodes im Arrays sind `2*n+1` und `2*n+2` für `n = Poistion des Parrent`. Daraus folgt u.a. dass die Position aller Linken Child-Nodes immer Ungerade sind.
-
-![img.png](img.png)
 
 ###  Android Algorithmen-Lern App: Heap Sort
 Die Kernkomponente unserer Algorithmen erklärung des Heap Sort verlangte, dass wir eine Liste mit jedem Schritt der Sortierung erhalten.

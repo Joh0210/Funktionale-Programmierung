@@ -1,0 +1,29 @@
+<p>Schreiben Sie eine Funktion flatten, die eine beliebig tief verschachtelte Listen-Struktur in eine Liste &quot;glättet&quot;:</p>
+<pre><code>(<span class="hljs-name">flatten</span> '((a) b (c (d) e) ()))
+'(a b c d e)
+</code></pre><h3 id="code">Code</h3>
+<pre><code>#lang racket
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">flatten</span> lst)
+  (<span class="hljs-name">define</span> (<span class="hljs-name">flatten-by-1</span> x lst)
+    (<span class="hljs-name">cond</span>
+      ((<span class="hljs-name">list</span>? x) (<span class="hljs-name">append</span> x lst))
+      ((<span class="hljs-name">empty</span>? x) lst)
+      (<span class="hljs-name">else</span> (<span class="hljs-name">cons</span> x lst))
+    ))
+
+  (<span class="hljs-name">cond</span>
+    ((<span class="hljs-name">ormap</span> pair? lst) (<span class="hljs-name">flatten</span> (<span class="hljs-name">foldr</span> flatten-by-1 null lst)))
+    (<span class="hljs-name">else</span> lst)))
+</code></pre><h3 id="anmerkungen">Anmerkungen</h3>
+<ul>
+<li>Diese Funktion operiert gleichermaßen mit Paaren wie mit Listen, im Folgenden wird jedoch der Begriff Liste verwendet.</li>
+<li>Die Funktion ist unabhängig vom Typ der Liste.</li>
+<li>Kernkomponente ist die Funktion <code>(flatten (foldr flatten-by-1 null lst))</code>, welche die Tiefe der Liste bei jedem Aufruf um 1 reduziert, 
+in dem sie für jedes Element von rechts nach links Prüft, ob es sich um eine Liste handelt?<ul>
+<li>Ja: Füge die Liste mit der Restliste zusammen</li>
+<li>Nein: Füge es an den Anfang der Restliste</li>
+</ul>
+</li>
+<li>Diese Funktion wird so lange endrekursiv aufgerufen, bis jedes Element der Liste keine Liste mehr ist.</li>
+</ul>

@@ -1,0 +1,33 @@
+<p>Schreiben Sie eine Funktion insert-sort, die eine übergebene Liste von Zahlen mittels Sortierens durch Einfügen sortiert und das Ergebnis zurückliefert. Beispiele:</p>
+<pre><code>(<span class="hljs-name">insert-sort</span> '(<span class="hljs-number">2</span> <span class="hljs-number">4</span> <span class="hljs-number">1</span> <span class="hljs-number">6</span> <span class="hljs-number">4</span>))
+'(<span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">4</span> <span class="hljs-number">4</span> <span class="hljs-number">6</span>)
+(<span class="hljs-name">insert-sort</span> '())
+'()
+</code></pre><h3 id="code">Code</h3>
+<pre><code>#lang racket
+
+(<span class="hljs-name">define</span> DIRECTION &lt;=) <span class="hljs-comment">; Possible values: "&gt;="(Maxsort) or "&lt;="(Minsort)</span>
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">insert-sort</span> lst)
+  (<span class="hljs-name">define</span> (<span class="hljs-name">insert</span> x sorted)
+    (<span class="hljs-name">cond</span>
+      ((<span class="hljs-name">empty</span>? sorted) (<span class="hljs-name">list</span> x))
+      ((<span class="hljs-name">DIRECTION</span> x (<span class="hljs-name">first</span> sorted)) (<span class="hljs-name">cons</span> x sorted))
+      (<span class="hljs-name">else</span> (<span class="hljs-name">cons</span> (<span class="hljs-name">first</span> sorted) (<span class="hljs-name">insert</span> x (<span class="hljs-name">rest</span> sorted))))))
+
+  (<span class="hljs-name">define</span> (<span class="hljs-name">insertion-sort-inner</span> unsorted sorted)
+    (<span class="hljs-name">cond</span>
+      ((<span class="hljs-name">empty</span>? unsorted) sorted)
+      (<span class="hljs-name">else</span> (<span class="hljs-name">insertion-sort-inner</span> (<span class="hljs-name">rest</span> unsorted) (<span class="hljs-name">insert</span> (<span class="hljs-name">first</span> unsorted) sorted)))))
+
+
+
+(<span class="hljs-name">cond</span>
+    ((<span class="hljs-name">not</span> (<span class="hljs-name">andmap</span> number? lst)) null)
+    (<span class="hljs-name">else</span> (<span class="hljs-name">insertion-sort-inner</span> lst '()))))
+</code></pre><h3 id="anmerkungen">Anmerkungen</h3>
+<ul>
+<li>Bei ungültigen Eingaben wird die leere Liste zurückgegeben.</li>
+<li>Durch Anpassen der Konstanten <code>DIRECTION</code> lässt sich zwischen Max-Sort (<code>&gt;=</code>) und Min-Sort (<code>&lt;=</code>) wechseln. 
+Theoretisch ließe sich das auch als Funktionsargument übergeben, aber die Aufgabenstellung verlangte folgende Form: <code>(insert-sort &#39;(2 4 1 6 4))</code></li>
+</ul>

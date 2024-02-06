@@ -1,0 +1,25 @@
+<p>Ein Nutzer schreibt sich ein <code>if</code> neu, da es ja <code>cond</code> gibt:</p>
+<pre><code>(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">new-if</span> predicate then-clause else-clause)
+(<span class="hljs-name"><span class="hljs-builtin-name">cond</span></span> (<span class="hljs-name">predicate</span> then-clause)
+(<span class="hljs-name"><span class="hljs-builtin-name">else</span></span> else-clause)))
+</code></pre><p>Erste Versuche zeigen: Das funktioniert auch.</p>
+<pre><code>(<span class="hljs-name">new-if</span> (<span class="hljs-name"><span class="hljs-builtin-name">=</span></span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>) <span class="hljs-number">0</span> <span class="hljs-number">5</span>) 
+<span class="hljs-number">5</span>
+(<span class="hljs-name">new-if</span> (<span class="hljs-name"><span class="hljs-builtin-name">=</span></span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>) <span class="hljs-number">0</span> <span class="hljs-number">5</span>) 
+<span class="hljs-number">0</span>
+</code></pre><p>Funktioniert <code>new-if</code> nun wie <code>if</code> oder gibt es noch ein Problem? Wenn ja, welches?</p>
+<h3 id="antwort">Antwort</h3>
+<p>Nein, <code>new-if</code> funktioniert nicht exakt wie <code>if</code>. </p>
+<p>In Racket sind die von dem Nutzer erstellten Funktionen immer <strong>applicative order</strong>, also die Funktionsargumente werden bereits bei Funktionsaufruf ausgewertet. Als Folge werden die Funktionen ausgeführt, obwohl ihr Rückgabewert erst später im Funktionskörper relevant ist, wenn überhaupt.
+Dieses Verhalten ist entsprechend auch bei <code>new-if</code> zu beobachten, es handelt sich also um eine strikte Funktion. Bei <code>if</code> hingegen wird immer nur der Zweig ausgewertet, der durch die Kondition bestimmt wurde.</p>
+<p>In vielen Fällen bei funktionalen Sprachen ist das zwar egal, aber wenn eine Funktion z.B. für einen Error sorgt, mit der Umwelt/System interagiert oder einen Zustand ändert, ist es wichtig, dass die Funktion nur aufgerufen wird, wenn die Kondition dafür tatsächlich erfüllt ist!</p>
+<h3 id="beispiel">Beispiel</h3>
+<p>Eine theoretische Funktion die alle Dateien einer Datenbank löschen soll:</p>
+<pre><code>(<span class="hljs-string">define </span>(<span class="hljs-built_in">delete-all-flies)</span>
+  (<span class="hljs-string">print </span><span class="hljs-string">"Everything has been deleted"</span>)
+  <span class="hljs-comment">#f)</span>
+</code></pre><p>mit if: <code>(if (= 0 0) #t (delete-all-flies))</code>
+<br> Rückgabe: <code>#t</code></p>
+<p>mit new-if: <code>(new-if (= 0 0) #t (delete-all-flies))</code>
+<br> Rückgabe: <code>&quot;Everything has been deleted!&quot;#t</code>
+<br> <code>(deleate-all-flies)</code> wird also ausgewertet und entsprechend ausgeführt, trotz dass die Bedingung das eigentlich verhindern sollte.</p>

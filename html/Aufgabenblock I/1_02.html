@@ -1,0 +1,18 @@
+<p>Schreiben Sie eine Funktion <code>my-reverse</code>, die eine Liste erhält und die Elemente umdreht, also bspw. <code>(my-reverse ’(1 2 3))</code> führt zu <code>(3 2 1)</code>.</p>
+<h3 id="code">Code</h3>
+<pre><code>#lang racket
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">my-reverse</span> lst)
+  (<span class="hljs-name">foldl</span> cons '() lst))
+</code></pre><h3 id="anmerkungen">Anmerkungen</h3>
+<ul>
+<li>Für die Umsetzung dieser Aufgabe wurde Currying eingesetzt. Hierbei handelt es sich um eine Technik der funktionalen Programmierung, welche aus einer n stelligen Funktion eine n-m stellige Funktion macht, mit 0 &lt; m &#8804; n.</li>
+<li>Bei der Erstellung dieser Funktion wurde der Fokus auf eine schlanke Lösung gelegt, entsprechend wurde nicht auf ein möglichst performantes Design wert gelegt. </li>
+<li>Tendenziell sind Funktionen welche direkt von der Programmiersprache zur Verfügung gestellt werden, auf Performanz optimiert (z.B. die Funktionen der Standard-Library von der Programmiersprache Python sind in C/C++ Code implementiert <a href="https://github.com/python/cpython">[1]</a>). 
+So sollte also trotz keiner Performance-Optimierung das Laufzeitverhalten durchaus akzeptabel bis gut sein.</li>
+</ul>
+<h3 id="quellen">Quellen</h3>
+<ul>
+<li>Diese Aufgabe wurde zusammen mit Andrea Junge bearbeitet.</li>
+<li>[1] <strong>Python</strong>: <a href="https://github.com/python/cpython">cpython</a> o.J., <a href="https://github.com/python/cpython">https://github.com/python/cpython</a>, 31.01.2024</li>
+</ul>

@@ -21,13 +21,13 @@ Schreiben Sie eine Funktion, die eine natürliche Zahl `n` erhält und eine List
 ### Anmerkungen
 - Als gültige Eingabe für `n`, gilt jede der mathematisch-natürlichen Zahlen:
 <br>Die natürlichen Zahlen sind die Menge aller positiven ganzen Zahlen: &#8469; = {1;2;3;...}
-<br>Im gegensatz zu den technsich-natürlichen Zahlen ist `0` als kein Element von &#8469;.
+<br>Im Gegensatz zu den technisch-natürlichen Zahlen ist `0` also kein Element von &#8469;.
 - Ungültige Eingaben erhalten als Rückgabe die Leere Liste (`null`). 
 - Die Funktion wurde Endrekursiv verfasst.
-- Sollte nur eine der beiden Implementierungen für die Bewertung berücksichtigt werden, gilt nur die `racket`-Version als eingereichte.  
+- Sollte nur eine der beiden Implementierungen für die Bewertung berücksichtigt werden, gilt nur die `racket`-Version als eingereicht.  
 
 ### Typed Racket
-Um mit Zahlen mit Positiver Typsignatur in kombination mit Rechenoperationen zu arbeiten wurde diese Aufgabe ebenfalls in Typed Racket umgesetzt.
+Um mit Zahlen mit positiver Typsignatur in Kombination mit Rechenoperationen zu arbeiten, wurde diese Aufgabe ebenfalls in Typed Racket umgesetzt.
 <br>Es wurde eine Komplikation vermutet, zu der es auch kam:
 
 ``` 
@@ -49,7 +49,7 @@ da der Racket-Compiler erwartet das aus `(- n 1)` 0 entstehen kann, wenn `n = 1`
 Zu diesem Fall kann es jedoch nie kommen, da für `n=1` der andere Zweig (`((<= n 1) acc)`) der Condition-Abfrage ausgewählt wird.
 <br>Der Compiler kann das jedoch nicht erkennen da er nur die Typsignatur der `-` Operation prüft, welche für diesen Aufruf wie folgt definiert ist: `(: - (-> Positive-Integer One Nonnegative-Integer))`.
 
-Um diesen Fehler zu umgehen wurde `Exact-Rational` statt `Positive-Exact-Rational` an Stellen außerhalb des Eingabeparameters verwendet. Das sorgt jedoch für einen Informationsverlust über die Elemente der Liste, was weitere Verarbeitungen erschweren könnte.
+Um diesen Fehler zu umgehen, wurde `Exact-Rational` statt `Positive-Exact-Rational` an Stellen außerhalb des Eingabeparameters verwendet. Das sorgt jedoch für einen Informationsverlust über die Elemente der Liste, was weitere Verarbeitungen erschweren könnte.
 <br>Möchte man diesen Informationsverlust nicht in Kauf nehmen, muss eine andere Implementierung dieser Funktion gewählt werden, was jedoch nicht Teil dieses Versuches ist.
 
 ### Quellen
@@ -69,7 +69,7 @@ Schreiben Sie eine Funktion `my-reverse`, die eine Liste erhält und die Element
 ### Anmerkungen
 - Für die Umsetzung dieser Aufgabe wurde Currying eingesetzt. Hierbei handelt es sich um eine Technik der funktionalen Programmierung, welche aus einer n stelligen Funktion eine n-m stellige Funktion macht, mit 0 < m &#8804; n.
 - Bei der Erstellung dieser Funktion wurde der Fokus auf eine schlanke Lösung gelegt, entsprechend wurde nicht auf ein möglichst performantes Design wert gelegt. 
-- Tendenziell sind Funktionen welche direkt von der Programmiersprache zur verfügung gestellt werden, auf Performanz optimiert (z.B. die Funktionen der Standard-Library von der Programmiersprache Python sind in C/C++ Code implementiert [[1]](https://github.com/python/cpython)). 
+- Tendenziell sind Funktionen welche direkt von der Programmiersprache zur Verfügung gestellt werden, auf Performanz optimiert (z.B. die Funktionen der Standard-Library von der Programmiersprache Python sind in C/C++ Code implementiert [[1]](https://github.com/python/cpython)). 
 So sollte also trotz keiner Performance-Optimierung das Laufzeitverhalten durchaus akzeptabel bis gut sein.
 
 ### Quellen
@@ -88,15 +88,17 @@ Schreiben Sie eine Funktion `my-find`, die eine Liste `lst` und ein Argument `x`
 ```
 
 ### Anmerkungen
-- Wie auch bei Aufgabe 2 kann hier eine existierende Funktion höherer Ordnung genutzt werden, welche in eine neue Funktion "einbacken" wird.
+- Wie auch bei Aufgabe 2 kann hier eine existierende Funktion höherer Ordnung genutzt werden, welche in eine neue Funktion "eingebacken" wird.
 - Es wäre auch denkbar die Aufgabe mit der `foldl` Funktion zu lösen, jedoch gibt es 2 große Unterschiede:
-  1. Nach persönlichem Empfinden ist die version mit `ormap` deutlich übersichtlicher.
+  1. Nach persönlichem Empfinden ist die Version mit `ormap` deutlich übersichtlicher.
   2. Die Version mit `foldl` arbeitet in jedem Fall die komplette Liste durch, selbst wenn das Element bereits gefunden wurde. Bei `ormap` hingegen wird die Auswertung beendet, sobald das erste Element gefunden ist, für welches die Kondition `true` ergibt. 
-  <br>**Beispiel:** Eine Liste mit 10.000 Elementen, bei dem jedes Element dem gesuchten Element entspricht, benötigt bei der `ormap` version nur einen Verarbeitungsschritt um `#t` auszugeben. Bei der `foldl` Version 10.000.
-- Sollte nur eine der beiden Implementierungen für die Bewertung berücksichtigt werden, gilt nur die `ormap`-Version als eingereichte.
+  <br>**Beispiel:** Eine Liste mit 10.000 Elementen, bei dem jedes Element dem gesuchten Element entspricht, benötigt bei der `ormap`-Version nur einen Verarbeitungsschritt um `#t` auszugeben. Bei der `foldl` Version 10.000.
+- Sollte nur eine der beiden Implementierungen für die Bewertung berücksichtigt werden, gilt nur die `ormap`-Version als eingereicht.
 
 ### Alternative Version mit foldl:
 ```
+#lang racket
+
 (define (my-find lst x)
   (foldl
    (lambda (a b) (or (equal? a x) b))
@@ -126,8 +128,8 @@ Schreiben Sie eine Funktion `my-max`, die die höchste Zahl einer Liste von Zahl
 
 ### Anmerkungen
 - Bei ungültigen Eingaben wird ein Error, mit entsprechendem Hinweistext, geworfen, da es keine sinnvolle Antwort auf eine solche Eingabe gibt.
-- Wie auch bei Aufgabe 2 und 3 kann hier eine existierende Funktion höherer Ordnung genutzt werden, welche in eine neue Funktion "einbacken" wird.
-- Anstelle der anonymen Funktion `max-of-two`, hätte auch eine Lambda-Funktion genutzt werden können, jedoch ist es näch persönlichem Empfinden auf diese Weise übersichtlicher.
+- Wie auch bei Aufgaben 2 und 3 kann hier eine existierende Funktion höherer Ordnung genutzt werden, welche in eine neue Funktion "eingebacken" wird.
+- Anstelle der anonymen Funktion `max-of-two`, hätte auch eine Lambda-Funktion genutzt werden können, jedoch ist es nach persönlichem Empfinden auf diese Weise übersichtlicher.
 
 ### Quellen
 - Diese Aufgabe wurde zusammen mit Andrea Junge bearbeitet.
@@ -148,7 +150,7 @@ Schreiben Sie ein weiteres `my-map` unter Benutzung von einer `fold`-Funktion (e
       (list (f (first lst))) (rest lst)))))
 ```
 ### Anmerkungen
-- Wie auch bei Aufgabe 2 bis 5 kann hier eine existierende Funktion höherer Ordnung genutzt werden, welche in eine neue Funktion "einbacken" wird.
+- Wie auch bei Aufgabe 2 bis 4 kann hier eine existierende Funktion höherer Ordnung genutzt werden, welche in eine neue Funktion "eingebacken" wird.
 
 ### Quellen
 - Diese Aufgabe wurde zusammen mit Andrea Junge bearbeitet.
@@ -175,13 +177,13 @@ Schreiben Sie eine Funktion repeated, die eine Funktion `f` und eine natürliche
 
 ### Anmerkungen
 - Durch die `compose` Funktion und den rekursiven Aufruf von `repeated`, wird die übergebene Funktion mit sich selbst verknüpft.
-- Bei ungültigen Eingaben wird angenommen, das 1 eingegeben wurde, und so die übergebene Funktion 1:1 zurück gegeben.
+- Bei ungültigen Eingaben wird angenommen, dass 1 eingegeben wurde und so die übergebene Funktion 1:1 zurückgegeben wird.
 
 ### Quellen
 - Diese Aufgabe wurde zusammen mit Andrea Junge bearbeitet.
 
 ## Aufgabe 7
-Gegeben folgender Code:
+Gegeben sei folgender Code:
 ```
 (define (p) (p))
 
@@ -192,25 +194,25 @@ Gegeben folgender Code:
 ```
 Was erhält der Nutzer, wenn er `(test 0 (p))` eingibt, bei applicative order, bei normal order?
 
-### Antwort:
+### Antwort
 - **normal order**: 0
 - **applicative order**: Endlose Rekursion und somit kein Ergebnis
 
 ### Begründung:
 Die Funktion `p` ruft sich endlos rekursiv selbst auf, sobald sie einmal ausgewertet wird. Ist das der Fall, hängt das Programm in einer Endlosschleife fest, und es muss manuell gestoppt werden.
-<br>Somit gilt, sobald `(p)` ausgeführt wird, kommt es zu einer endlosen Rekursion und das Programm muss manuel beendet werden.
+<br>Somit gilt, sobald `(p)` ausgeführt wird, kommt es zu einer endlosen Rekursion und das Programm muss manuell beendet werden.
 
-Ob das Programm abstützt oder nicht, ist jedoch abhängig von der "Evaluation-Strategy", 
-denn bie eingabe von `(test 0 (p))` ist die Kondition `(= x 0)` stets erfüllt, so wird der Abschnitt `y` nie erreicht, also der Abschnitt in welchem Rückgabewert von `(p)` genutzt wird.
+Ob das Programm abstürzt oder nicht, ist jedoch abhängig von der "Evaluation-Strategy", 
+denn bei Eingabe von `(test 0 (p))` ist die Kondition `(= x 0)` stets erfüllt, so wird der Abschnitt `y` nie erreicht, also der Abschnitt in welchem der Rückgabewert von `(p)` genutzt wird.
 
-Bei **normal order** werden die Funktionsargumente erst ausgewertet, wenn sie tatsächlich im Funktionskörper aufgerufen werden. Bei diesem Verfahren wird `(p)` aber nie aufgerufen, wodurch das Programm mit `0` als Ergebnisse terminiert.
+Bei **normal order** werden die Funktionsargumente erst ausgewertet, wenn sie tatsächlich im Funktionskörper aufgerufen werden. Bei diesem Verfahren wird `(p)` aber nie aufgerufen, wodurch das Programm mit `0` als Ergebnis terminiert.
 
 Bei **applicative order** werden die Funktionsargumente bereits ausgewertet, wenn die Funktion aufgerufen wird. Auf diese Weise wird die Funktion `(p)` aufgerufen und es kommt zur endlosen Rekursion, trotz dass ihr theoretischer Rückgabewert im späteren Funktionskörper nicht benötigt wird.
 
 ### Anmerkungen
-- Für gewöhnlich benötigt Rekursion eine gewisse Menge an Speicher, um die Rücksprungadresse zu hinterlegen. Auf diese Weise kommt es bei einer Endlosen Rekursion in den meisten Fällen zu einem absturz.
+- Für gewöhnlich benötigt Rekursion eine gewisse Menge an Speicher, um die Rücksprungadresse zu hinterlegen. Auf diese Weise kommt es bei einer Endlosen Rekursion in den meisten Fällen zu einem Absturz (Stack Overflow). 
 - Da die Funktion `p` jedoch Endrekursiv ist (der rekursive Aufruf ist die einzige und somit letzte Operation in der Funktion), optimiert Racket diesen Teil, wodurch der Speicherplatz für den Funktionsaufruf freigegeben wird.
-Auf diese Weise stützt das Programm nie ab, sondern verweilt in der Endlosschleife.
+Auf diese Weise stürzt das Programm nie ab, sondern verweilt in der Endlosschleife.
 
 ## Aufgabe 8
 Ein Nutzer schreibt sich ein `if` neu, da es ja `cond` gibt:
@@ -228,26 +230,26 @@ Erste Versuche zeigen: Das funktioniert auch.
 ```
 Funktioniert `new-if` nun wie `if` oder gibt es noch ein Problem? Wenn ja, welches?
 
-### Antwort:
-Nein, es funktioniert nicht `new-if` exact wie `if`. 
+### Antwort
+Nein, `new-if` funktioniert nicht exakt wie `if`. 
 
-In Racket sind die von dem Nutzer erstelle Funktionen immer **applicative order**, also die Funktionsargumente werden bereits bei Funktionsaufruf ausgewertet. Als Folge werden die Funktionen werden ausgeführt, trotz dass ihr Rückgabewert erst später im Funktionskörper relevant ist, wenn überhaupt.
+In Racket sind die von dem Nutzer erstellten Funktionen immer **applicative order**, also die Funktionsargumente werden bereits bei Funktionsaufruf ausgewertet. Als Folge werden die Funktionen ausgeführt, obwohl ihr Rückgabewert erst später im Funktionskörper relevant ist, wenn überhaupt.
 Dieses Verhalten ist entsprechend auch bei `new-if` zu beobachten, es handelt sich also um eine strikte Funktion. Bei `if` hingegen wird immer nur der Zweig ausgewertet, der durch die Kondition bestimmt wurde.
 
-In vielen Fällen bei funktionalen Sprachen ist zwar egal, aber wenn eine Funktion z.B. für einen Error sorgt, mit der Umwelt/System interagiert oder einen Zustand ändert, ist es wichtig, dass die Funktion nur aufgerufen wird, wenn die Kondition dafür tatsächlich erfüllt ist!
+In vielen Fällen bei funktionalen Sprachen ist das zwar egal, aber wenn eine Funktion z.B. für einen Error sorgt, mit der Umwelt/System interagiert oder einen Zustand ändert, ist es wichtig, dass die Funktion nur aufgerufen wird, wenn die Kondition dafür tatsächlich erfüllt ist!
 
-### Beispiel:
+### Beispiel
 Eine theoretische Funktion die alle Dateien einer Datenbank löschen soll:
 ```
-(define (deleate-all-flies)
+(define (delete-all-flies)
   (print "Everything has been deleted")
   #f)
 ```
 
-mit if: `(if (= 0 0) #t (deleate-all-flies))`
+mit if: `(if (= 0 0) #t (delete-all-flies))`
 <br> Rückgabe: `#t`
 
-mit new-if: `(new-if (= 0 0) #t (deleate-all-flies))`
+mit new-if: `(new-if (= 0 0) #t (delete-all-flies))`
 <br> Rückgabe: `"Everything has been deleted!"#t`
 <br> `(deleate-all-flies)` wird also ausgewertet und entsprechend ausgeführt, trotz dass die Bedingung das eigentlich verhindern sollte.
 
@@ -278,9 +280,9 @@ Schreiben Sie endrekursive Fassungen von zwei beliebigen Funktionen, die auf Lis
 ## Aufgabe 10
 Wie erkennen Sie endrekursive Funktionen in Racket und welchen Vorteil haben diese?
 
-### Antwort:
+### Antwort
 Endrekursive Funktionen sind Funktionen, bei denen der rekursive Aufruf die letzte Operation in der Funktion ist.
-Häufig wird dies durch die nutzung eines Akkumulators bewerkstelligt, welcher das Ergebnis der einzelnen Berechnungsschritte erhält, und am Ende das finale Ergebnis der Funktion darstellt und zurückgegeben wird. 
+Häufig wird dies durch die Nutzung eines Akkumulators bewerkstelligt, welcher das Ergebnis der einzelnen Berechnungsschritte erhält, und am Ende das finale Ergebnis der Funktion darstellt und zurückgegeben wird. 
 
 Für gewöhnlich benötigt Rekursion eine gewisse Menge an Speicher, um die Rücksprungadresse zu hinterlegen, 
 jedoch erkennt Racket solche endrekursiven Funktionen und optimiert diese dahingehend, dass der Speicherplatz für den Funktionsaufruf freigegeben wird und der Stack somit nicht weiter gefüllt wird. 
@@ -294,7 +296,7 @@ In der Funktionalität unterscheiden sich `foldr` und `foldl` darin, in welcher 
 - `foldl`: 1. Element -> Letztes Element
 - `foldr`: Letztes Element -> 1. Element
 
-Somit ist das Ergebnis bei Funktionen welche dem Kommutativgesetz folgen, also die Reihenfolge der Argumente kein einfluss auf das Ergebnis haben, identisch bei `foldr` und `foldl`.
+Somit ist das Ergebnis bei Funktionen, welche dem Kommutativgesetz folgen, also die Reihenfolge der Argumente keinen Einfluss auf das Ergebnis hat, identisch bei `foldr` und `foldl`.
 - Beispiel für kommutative Funktionen: Addition
 - Beispiel bei dem die Reihenfolge relevant ist: Subtraktion
 
@@ -312,10 +314,10 @@ Somit ist das Ergebnis bei Funktionen welche dem Kommutativgesetz folgen, also d
 ```
 
 Beim Speicherbedarf unterscheiden sich `foldr` und `foldl` stark, denn `foldl` benötigt eine Konstante Menge an Speicher für die Bearbeitung, wodurch es auch bei unendlichen Listen nicht zu einem Stack Overflow kommen kann.  
-Hingegen benötigt `foldr` eine Menge an Speicher proportional zur Länge der zu verarbeitenden Liste. 
+Hingegen benötigt `foldr` eine Menge an Speicher proportional zur Länge der zur verarbeitenden Liste. 
 Bei beiden gibt es zusätzlich den Speicherbedarf für den Aufruf der Prozedur. [[2]](https://docs.racket-lang.org/reference/pairs.html)
 
-Bei der Geschwindigkeit lässt sich schwer eine eindeutige Aussage bilden. Tendenziell ist es aufwendiger auf das letzte Element einer Liste zuzugreifen, als auf das erste, wodurch `foldl` in kombination mit dem Konstanten Speicherverbrauch tendenziell besser ist, 
+Bei der Geschwindigkeit lässt sich schwer eine eindeutige Aussage bilden. Tendenziell ist es aufwendiger auf das letzte Element einer Liste zuzugreifen, als auf das erste, wodurch `foldl` in Kombination mit dem Konstanten Speicherverbrauch tendenziell besser ist, 
 jedoch kommt es stark auf die gewünschte Funktion an. Manche Funktionalitäten lassen sich besser mit `foldr`, manche mit `foldl` implementieren.
 
 ### Quellen
@@ -340,7 +342,7 @@ Prüfen, ob eine Liste ein Element enthält:
 ```
 
 ### Beispiel 2: filter
-Ermitteln wie viele Angestellten, aus einer Liste von dem monatlichen Brutto Gehalt der Mitarbeiter, über 4.000 € verdienen:
+Ermitteln wie viele Angestellte, aus einer Liste von dem monatlichen Bruttogehalt der Mitarbeiter, über 4.000 € verdienen:
 
 ``` 
 #lang racket
@@ -385,11 +387,11 @@ Ermitteln wie viele Angestellten, aus einer Liste von dem monatlichen Brutto Geh
 - Für die endrekursive Fassung wurde eine Anonyme-Hilfsfunktion angelegt, 
 welche einen Akkumulator besetzt, der das Ergebnis jeder Funktionsiteration speichert und aufsummiert. 
 So beinhaltet er nach der letzten Rekursion das finale Ergebnis und wird zurückgegeben.
-- Die Anonyme Funktion wird initial beim Funktionsaufruf aufgerufen 
-und anschließend endrekursiv als letzter Funktionsaufruf von sich selbst. 
+- Die anonyme Funktion wird initial beim Funktionsaufruf 
+und anschließend endrekursiv als letzter Funktionsaufruf von sich selbst aufgerufen. 
 
 ## Aufgabe 14
-Schreiben Sie eine Funktion insert-sort, die eine übergebene Liste von Zahlen mittels Sortieren durch Einfügen sortiert und das Ergebnis zurückliefert. Beispiele:
+Schreiben Sie eine Funktion insert-sort, die eine übergebene Liste von Zahlen mittels Sortierens durch Einfügen sortiert und das Ergebnis zurückliefert. Beispiele:
 ```
 (insert-sort '(2 4 1 6 4))
 '(1 2 4 4 6)
@@ -454,7 +456,7 @@ Schreiben Sie eine Funktion flatten, die eine beliebig tief verschachtelte Liste
 ### Anmerkungen
 - Diese Funktion operiert gleichermaßen mit Paaren wie mit Listen, im Folgenden wird jedoch der Begriff Liste verwendet.
 - Die Funktion ist unabhängig vom Typ der Liste.
-- Kernkomponente ist die Funktion `(flatten (foldr flatten-by-1 null lst))`, welche die Tiefe der Liste bei jedem Aufruf um 1 Reduziert, 
+- Kernkomponente ist die Funktion `(flatten (foldr flatten-by-1 null lst))`, welche die Tiefe der Liste bei jedem Aufruf um 1 reduziert, 
 in dem sie für jedes Element von rechts nach links Prüft, ob es sich um eine Liste handelt?
   - Ja: Füge die Liste mit der Restliste zusammen
   - Nein: Füge es an den Anfang der Restliste
@@ -474,7 +476,7 @@ Beide stellen Mechanismen dar, welche dazu dienen die Auswertung von Ausdrücken
 `thunk` ist hierbei eine eingewickelte Berechnung, also eine Funktion, welche in z.B. einem lambda-Ausdruck eingewickelt ist (z.B. `(lambda () (+ 2 3))`). 
 Wird das `thunk`, also der lambda-Ausdruck nun als Argument an eine Funktion übergeben, so wird die eingewickelte Funktion trotz applicative order nicht direkt ausgewertet, 
 sondern erst, wenn die Funktion tatsächlich im Funktionskörper benötigt wird. Sollte das Ergebnis im Funktionskörper allerdings mehrfach benötigt werden, 
-wird es an jeder benötigten Stelle, die Berechnung neu durchgeführt, also es findet keine Zwischenspeicherung des Ergebnisses statt.
+wird an jeder benötigten Stelle, die Berechnung neu durchgeführt. Es findet also keine Zwischenspeicherung des Ergebnisses statt.
 <br>Diese Auswertungsstrategie bezeichnet man als `normal order`.
 
 Bei einem Promise wird die Auswertung der Berechnung zwar ebenfalls verzögert, bis an den Punkt, an dem sie eigentlich benötigt wird. 
@@ -484,8 +486,8 @@ muss die Berechnung nicht erneut durchgeführt werden, sondern kann aus dem Spei
 
 #### Wann ist das Ergebnis gleich und wann unterscheidet es sich?
 Die reinen Ergebnisse der Auswertungen sind so lange identisch, solange es bei der Auswertung der Berechnung zu keinen Seiteneffekten oder Zustandsänderungen kommt oder die Berechnung nur einmal stattfindet.
-<br>Sollte die Funktion nämlich einen Seiteneffekt haben, oder eine Zustandsänderung auslösen, so würde eine erneute Auswertung ein anderes Ergebnis auslösen oder den Zustand noch weiter verändern.
-Da bei `lazy evaluation` die Auswertung maximal einmal stattfindet und bei `normal order` auch mehrfach geschehen kann, würde das also zu verschiedene Resultaten führen.
+<br>Sollte die Funktion nämlich einen Seiteneffekt haben, oder eine Zustandsänderung auslösen, so würde eine erneute Auswertung ein anderes Ergebnis auslösen oder den Zustand noch weiter manipuliert.
+Da bei `lazy evaluation` die Auswertung maximal einmal stattfindet und das bei `normal order` auch mehrfach geschehen kann, würde das zu verschiedenen Resultaten führen.
 
 Bei ihrem Ressourcenverbrauch können sich die beiden Verfahren jedoch unterscheiden, da Promises entsprechend Speicher benötigen, und das Ergebnis zwischenzuspeichern, jedoch wird bei einem erneuten Auswerten keine weitere Berechnung durchgeführt.
 <br>Das `thunk` braucht zwar keinen zusätzlichen Speicher, jedoch würde ein erneuter Aufruf wieder eine potenziell aufwendige Berechnung durchführen.
@@ -498,21 +500,20 @@ Löst die Funktion einen Seiteneffekt oder eine Zustandsänderung aus, kommt es 
 
 #### Warum kann man delay nicht als Funktion schreiben?
 In Racket arbeiten alle Funktionen nach `applicative order`, also die Argumente der Funktion werden direkt bei Aufruf der Funktion ausgewertet. 
-Somit würde die Funktion, die man an das `delay` übergeben möchte, direkt ausgewertet werden und das Ziel von wäre verfehlt. 
+Somit würde die Funktion, die man an das `delay` übergeben möchte, direkt ausgewertet werden und das Ziel wäre verfehlt. 
 
-Das eigentliche `delay` ist daher als special form implementiert, welches seine Argumente nicht auswertet. Auf diese Weise findet die auswertung erst durch den Aufruf von `force` statt. 
+Das eigentliche `delay` ist daher, als special form implementiert, welches seine Argumente nicht auswertet. Auf diese Weise findet die Auswertung erst durch den Aufruf von `force` statt. 
 <br>(Special Forms sind in der Lage ihre Argumente nicht, oder auch nur teilweise auszuwerten, wie z.B. `and`)
 
-**Anmerkung**: Wenn die Funktion, die man an eine selbstgebaute `delay`-Funktion übergeben will, in als `thunk` eingewickelt ist, 
+**Anmerkung**: Wenn die Funktion, die man an eine selbstgebaute `delay`-Funktion übergeben will, in ein `thunk` eingewickelt ist, 
 würde die Auswertung auch verzögert werden und man könnte die selbstgebaute `delay`-Funktion nutzen.  
 ```
 (define (my-delay thunk)
   (mcons #f thunk))
 ```
 
-
 ## Aufgabe 17
-Implementierten Sie eine Funktion `fib-stream`, die einen Strom von zwei-elementigen Listen `(n (fib(n)))` erzeugt, wobei `n` die natürlichen Zahlen durchläuft. 
+Implementieren Sie eine Funktion `fib-stream`, die einen Strom von zwei-elementigen Listen `(n (fib(n)))` erzeugt, wobei `n` die natürlichen Zahlen durchläuft. 
 Die Funktion soll nicht jede Fibonacci-Zahl unabhängig berechnen.
 ```
 > (define a (fib-stream))
@@ -614,12 +615,12 @@ Die Funktion soll nicht jede Fibonacci-Zahl unabhängig berechnen.
 ```
 
 ### Anmerkungen
-- Es wurden 2 versionen des Programms erstellt,
-  wobei die Variante 1 eine relativ schöne wirkt, jedoch sehr inperformant ist,
+- Es wurden zwei Versionen des Programms erstellt,
+  wobei die Variante 1 relativ schön wirkt, jedoch sehr inperformant ist,
   da es zum einen viel Speicher aber auch eine große Menge an Rechenleistung benötigt.
-  <br>So kann z.B. die Funktion `(get-at a 100)` an meinem Testgerät nicht zu Ende ausgewertet werden, wobei `a` der Stream ist und `100`, die stelle, die bei dem Stream erfragt wird.
-- Die Variante 2 ist hierbei bei weiten performanter, so kann auch `(get-at a 100000)` nach kurzer verzögerung ausgewertet werden. Damit das so schnell funktioniert werden die ergebnisse der `fib` funktion in einer Hash-Table gespeichert.
-- Sollte nur eine der beiden Implementierungen für die Bewertung berücksichtigt werden, gilt nur Variante 2 als eingereichte. 
+  <br>So kann z.B. die Funktion `(get-at a 100)` an meinem Testgerät nicht zu Ende ausgewertet werden, wobei `a` der Stream ist und `100`, die Stelle, die bei dem Stream erfragt wird.
+- Die Variante 2 ist hierbei bei weitem performanter, so kann auch `(get-at a 100000)` nach kurzer Verzögerung ausgewertet werden. Damit das so schnell funktioniert werden die Ergebnisse der `fib`-Funktion in einer Hash-Table gespeichert.
+- Sollte nur eine der beiden Implementierungen für die Bewertung berücksichtigt werden, gilt nur Variante 2 als eingereicht. 
 
 ## Aufgabe 18
 Gegeben sei die folgende Funktion in Typed Racket:
@@ -639,20 +640,20 @@ expected: String
 given: (U Boolean String) in: x
 ```
 
-### Erklärung
+### Antwort
 Die Typsignatur der Funktion gibt an, dass es sich bei `x` um eine Union-type handelt, als `x` einen `Integer`, `Boolean` oder `String` handeln kann, 
 die Funktion `string-length` kann jedoch nur Strings verarbeiten. 
-Deshalb wurde eine verzweigung eingebaut, in welche der Verarbeitung von `Integer` dient.
-Jedoch kommen auf diese Weise im Else-Zweig das `x` immer noch ein `Boolean` oder `String` sein. Die Funktion verlangt jedoch eindeutig den `String` Typ.
+Deshalb wurde eine Verzweigung eingebaut, welche der Verarbeitung von `Integer` dient.
+Jedoch kann auf diese Weise das `x` im Else-Zweig immer noch ein `Boolean` oder `String` sein. Die Funktion verlangt jedoch eindeutig den `String` Typ.
 
 Das können wir wie Folgt ablesen: 
-- `Type Checker: type mismatch [...] in: x` -> Die Typsignatur simmer bei `x` an der Markierten nicht überein.
+- `Type Checker: type mismatch [...] in: x` -> Die Typsignatur stimmt bei `x` (an der markierten Stelle) nicht überein.
 - `expected: String`: Die Funktion erwartet ausschließlich den Typ `String`, welchem `x` nicht oder nicht ausschließlich entspricht. 
 - `given: (U Boolean String)`: `x` ist ein Union-type und hat zwar u.a. den Typ `String`, kann jedoch auch ein `Boolean` sein.
 
 ### Lösung
-Es muss ein weiterer Konditionszweig für `Boolean` einfügt werden.
-<br> Da der String `"#t"` und `"#f"` je 2 Zeichen lang sind, kann man für den Zweig also 2 zurückgeben.
+Es muss ein weiterer Konditionszweig für `Boolean` eingefügt werden.
+<br> Da die Strings `"#t"` und `"#f"` je zwei Zeichen lang sind, kann man für den Zweig also `2` zurückgeben.
 
 ```
 #lang typed/racket
@@ -696,7 +697,7 @@ Schreiben Sie ein `map` und ein `foldr` in Typed Racket.
 ```
 
 ### Anmerkungen
-- Für die Implementierung wurde eine Implementierung von `foldr` wurde die Implementierung von `my-foldl-inner` (Aufgabe 9) übernommen 
+- Für die Implementierung von `foldr` wurde die Implementierung von `my-foldl-inner` (Aufgabenblock I: Aufgabe 9) übernommen 
 und die Liste wurde mit `reversed` invertiert. 
 - Auf diese Weise muss zwar bei der Rekursion nicht jedes Mal aufwendig an das Ende der Liste gesprungen werden, dafür findet allerdings eine Aufwendige Invertierung der Liste statt. 
 
@@ -712,4 +713,4 @@ Schreiben Sie ein Makro `infix`, mit dem Sie die Addition zweier Zahlen in Infix
 ```
 
 ### Anmerkungen
-- Das Makro ermöglicht die Infix-Notation für arithmetische Operationen, statt die übliche Präfix-Schreibweise.
+- Das Makro ermöglicht die Infix-Notation für arithmetische Operationen, statt der üblichen Präfix-Schreibweise.

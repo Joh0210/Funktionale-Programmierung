@@ -1,0 +1,7 @@
+<p>Wie erkennen Sie endrekursive Funktionen in Racket und welchen Vorteil haben diese?</p>
+<h3 id="antwort">Antwort</h3>
+<p>Endrekursive Funktionen sind Funktionen, bei denen der rekursive Aufruf die letzte Operation in der Funktion ist.
+Häufig wird dies durch die Nutzung eines Akkumulators bewerkstelligt, welcher das Ergebnis der einzelnen Berechnungsschritte erhält, und am Ende das finale Ergebnis der Funktion darstellt und zurückgegeben wird. </p>
+<p>Für gewöhnlich benötigt Rekursion eine gewisse Menge an Speicher, um die Rücksprungadresse zu hinterlegen, 
+jedoch erkennt Racket solche endrekursiven Funktionen und optimiert diese dahingehend, dass der Speicherplatz für den Funktionsaufruf freigegeben wird und der Stack somit nicht weiter gefüllt wird. 
+Auf diese Weise kommt es auch bei einer sehr hohen Menge an endrekursiven Aufrufen zu keinem Stack Overflow.</p>

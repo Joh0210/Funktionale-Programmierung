@@ -1,0 +1,10 @@
+<p>Schreiben Sie ein Makro <code>infix</code>, mit dem Sie die Addition zweier Zahlen in Infix-Schreibweise errechnen lassen können. Anwendungsbeispiel: <code>(infix 1 + 2)</code></p>
+<h3 id="code">Code</h3>
+<pre><code>#lang racket
+
+(<span class="hljs-name">define-syntax-rule</span> (<span class="hljs-name">infix</span> num1 op num2)
+  (<span class="hljs-name">op</span> num1 num2))
+</code></pre><h3 id="anmerkungen">Anmerkungen</h3>
+<ul>
+<li>Das Makro ermöglicht die Infix-Notation für arithmetische Operationen, statt der üblichen Präfix-Schreibweise.</li>
+</ul>

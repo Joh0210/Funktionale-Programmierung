@@ -1,0 +1,30 @@
+<p>Wann liefern <code>foldr</code> und <code>foldl</code> das gleiche Ergebnis? Geben Sie jeweils ein selbst gewähltes Beispiel für beide Fälle (ergibt das gleiche, ergibt etwas anderes) an. Wie unterscheiden sich beide Funktionen in ihrem Laufzeitverhalten (Geschwindigkeit, Speicherbedarf etc.)?</p>
+<h3 id="antwort">Antwort</h3>
+<p>In der Funktionalität unterscheiden sich <code>foldr</code> und <code>foldl</code> darin, in welcher Richtung die Liste durchlaufen wird.</p>
+<ul>
+<li><code>foldl</code>: 1. Element -&gt; Letztes Element</li>
+<li><code>foldr</code>: Letztes Element -&gt; 1. Element</li>
+</ul>
+<p>Somit ist das Ergebnis bei Funktionen, welche dem Kommutativgesetz folgen, also die Reihenfolge der Argumente keinen Einfluss auf das Ergebnis hat, identisch bei <code>foldr</code> und <code>foldl</code>.</p>
+<ul>
+<li>Beispiel für kommutative Funktionen: Addition</li>
+<li>Beispiel bei dem die Reihenfolge relevant ist: Subtraktion</li>
+</ul>
+<pre><code>(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">my+</span> x y) (<span class="hljs-name"><span class="hljs-builtin-name">+</span></span> x y))
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">my-</span> x y) (<span class="hljs-name"><span class="hljs-builtin-name">-</span></span> x y))
+
+<span class="hljs-comment">; identisch</span>
+(<span class="hljs-name">foldl</span> my+ <span class="hljs-number">0</span> (<span class="hljs-name"><span class="hljs-builtin-name">list</span></span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span>))
+(<span class="hljs-name">foldr</span> my+ <span class="hljs-number">0</span> (<span class="hljs-name"><span class="hljs-builtin-name">list</span></span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span>))
+
+<span class="hljs-comment">; verschieden</span>
+(<span class="hljs-name">foldl</span> my- <span class="hljs-number">0</span> (<span class="hljs-name"><span class="hljs-builtin-name">list</span></span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span>))
+(<span class="hljs-name">foldr</span> my- <span class="hljs-number">0</span> (<span class="hljs-name"><span class="hljs-builtin-name">list</span></span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span>))
+</code></pre><p>Beim Speicherbedarf unterscheiden sich <code>foldr</code> und <code>foldl</code> stark, denn <code>foldl</code> benötigt eine Konstante Menge an Speicher für die Bearbeitung, wodurch es auch bei unendlichen Listen nicht zu einem Stack Overflow kommen kann.<br>Hingegen benötigt <code>foldr</code> eine Menge an Speicher proportional zur Länge der zur verarbeitenden Liste. 
+Bei beiden gibt es zusätzlich den Speicherbedarf für den Aufruf der Prozedur. <a href="https://docs.racket-lang.org/reference/pairs.html">[2]</a></p>
+<p>Bei der Geschwindigkeit lässt sich schwer eine eindeutige Aussage bilden. Tendenziell ist es aufwendiger auf das letzte Element einer Liste zuzugreifen, als auf das erste, wodurch <code>foldl</code> in Kombination mit dem Konstanten Speicherverbrauch tendenziell besser ist, 
+jedoch kommt es stark auf die gewünschte Funktion an. Manche Funktionalitäten lassen sich besser mit <code>foldr</code>, manche mit <code>foldl</code> implementieren.</p>
+<h3 id="quellen">Quellen</h3>
+<ul>
+<li>[2] <strong>Racket</strong>: <a href="https://docs.racket-lang.org/reference/pairs.html">Pairs and Lists</a> o.J., <a href="https://docs.racket-lang.org/reference/pairs.html">https://docs.racket-lang.org/reference/pairs.html</a>, 22.12.2023</li>
+</ul>

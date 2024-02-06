@@ -1,7 +1,7 @@
 #lang racket
 
 ; 1.14
-; Schreiben Sie eine Funktion insert-sort, die eine übergebene Liste von Zahlen mittels Sortieren durch Einfügen sortiert und das Ergebnis zurückliefert. Beispiele:
+; Schreiben Sie eine Funktion insert-sort, die eine übergebene Liste von Zahlen mittels Sortierens durch Einfügen sortiert und das Ergebnis zurückliefert. Beispiele:
 
 ; (insert-sort '(2 4 1 6 4))
 ; '(1 2 4 4 6)

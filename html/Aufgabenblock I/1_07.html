@@ -1,0 +1,26 @@
+<p>Gegeben sei folgender Code:</p>
+<pre><code>(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">p</span>) (<span class="hljs-name">p</span>))
+
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">test</span> x y)
+  (<span class="hljs-name"><span class="hljs-builtin-name">if</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">=</span></span> x <span class="hljs-number">0</span>)
+      <span class="hljs-number">0</span>
+      y))
+</code></pre><p>Was erhält der Nutzer, wenn er <code>(test 0 (p))</code> eingibt, bei applicative order, bei normal order?</p>
+<h3 id="antwort">Antwort</h3>
+<ul>
+<li><strong>normal order</strong>: 0</li>
+<li><strong>applicative order</strong>: Endlose Rekursion und somit kein Ergebnis</li>
+</ul>
+<h3 id="begr-ndung-">Begründung:</h3>
+<p>Die Funktion <code>p</code> ruft sich endlos rekursiv selbst auf, sobald sie einmal ausgewertet wird. Ist das der Fall, hängt das Programm in einer Endlosschleife fest, und es muss manuell gestoppt werden.
+<br>Somit gilt, sobald <code>(p)</code> ausgeführt wird, kommt es zu einer endlosen Rekursion und das Programm muss manuell beendet werden.</p>
+<p>Ob das Programm abstürzt oder nicht, ist jedoch abhängig von der &quot;Evaluation-Strategy&quot;, 
+denn bei Eingabe von <code>(test 0 (p))</code> ist die Kondition <code>(= x 0)</code> stets erfüllt, so wird der Abschnitt <code>y</code> nie erreicht, also der Abschnitt in welchem der Rückgabewert von <code>(p)</code> genutzt wird.</p>
+<p>Bei <strong>normal order</strong> werden die Funktionsargumente erst ausgewertet, wenn sie tatsächlich im Funktionskörper aufgerufen werden. Bei diesem Verfahren wird <code>(p)</code> aber nie aufgerufen, wodurch das Programm mit <code>0</code> als Ergebnis terminiert.</p>
+<p>Bei <strong>applicative order</strong> werden die Funktionsargumente bereits ausgewertet, wenn die Funktion aufgerufen wird. Auf diese Weise wird die Funktion <code>(p)</code> aufgerufen und es kommt zur endlosen Rekursion, trotz dass ihr theoretischer Rückgabewert im späteren Funktionskörper nicht benötigt wird.</p>
+<h3 id="anmerkungen">Anmerkungen</h3>
+<ul>
+<li>Für gewöhnlich benötigt Rekursion eine gewisse Menge an Speicher, um die Rücksprungadresse zu hinterlegen. Auf diese Weise kommt es bei einer Endlosen Rekursion in den meisten Fällen zu einem Absturz (Stack Overflow).</li>
+<li>Da die Funktion <code>p</code> jedoch Endrekursiv ist (der rekursive Aufruf ist die einzige und somit letzte Operation in der Funktion), optimiert Racket diesen Teil, wodurch der Speicherplatz für den Funktionsaufruf freigegeben wird.
+Auf diese Weise stürzt das Programm nie ab, sondern verweilt in der Endlosschleife.</li>
+</ul>

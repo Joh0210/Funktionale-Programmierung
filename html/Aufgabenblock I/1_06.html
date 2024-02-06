@@ -1,0 +1,22 @@
+<p>Schreiben Sie eine Funktion repeated, die eine Funktion <code>f</code> und eine natürliche Zahl <code>n</code> erhält und dann <code>f</code> n-mal ausführt. Beispiel:</p>
+<pre><code>((<span class="hljs-name">repeated</span> sqr <span class="hljs-number">2</span>) <span class="hljs-number">3</span>)
+<span class="hljs-number">81</span>
+
+((<span class="hljs-name">repeated</span> add1 <span class="hljs-number">10</span>) <span class="hljs-number">1</span>)
+<span class="hljs-number">11</span>
+</code></pre><h3 id="code">Code</h3>
+<pre><code>#lang racket
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">repeated</span> f n)
+  (<span class="hljs-name">cond</span>
+    ((<span class="hljs-name">or</span> (<span class="hljs-name">not</span> (<span class="hljs-name">integer</span>? n)) (<span class="hljs-name">&lt;=</span> n <span class="hljs-number">1</span>)) f) 
+    (<span class="hljs-name">else</span> (<span class="hljs-name">compose</span> f (<span class="hljs-name">repeated</span> f (<span class="hljs-name">-</span> n <span class="hljs-number">1</span>))))))
+</code></pre><h3 id="anmerkungen">Anmerkungen</h3>
+<ul>
+<li>Durch die <code>compose</code> Funktion und den rekursiven Aufruf von <code>repeated</code>, wird die übergebene Funktion mit sich selbst verknüpft.</li>
+<li>Bei ungültigen Eingaben wird angenommen, dass 1 eingegeben wurde und so die übergebene Funktion 1:1 zurückgegeben wird.</li>
+</ul>
+<h3 id="quellen">Quellen</h3>
+<ul>
+<li>Diese Aufgabe wurde zusammen mit Andrea Junge bearbeitet.</li>
+</ul>

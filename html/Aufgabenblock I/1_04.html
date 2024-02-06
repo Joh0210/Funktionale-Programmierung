@@ -1,0 +1,23 @@
+<p>Schreiben Sie eine Funktion <code>my-max</code>, die die höchste Zahl einer Liste von Zahlen ermittelt und nutzen Sie dazu eine <code>fold</code>-Funktion.</p>
+<h3 id="code">Code</h3>
+<pre><code>#lang racket
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">my-max</span> lst)
+  (<span class="hljs-name">define</span> (<span class="hljs-name">max-of-two</span> a b)
+    (<span class="hljs-name">cond</span>
+      ((<span class="hljs-name">&gt;=</span> a b) a)
+      (<span class="hljs-name">else</span> b)))
+
+  (<span class="hljs-name">cond</span>
+    ((<span class="hljs-name">or</span> (<span class="hljs-name">empty</span>? lst) (<span class="hljs-name">not</span> (<span class="hljs-name">andmap</span> number? lst))) (<span class="hljs-name">error</span><span class="hljs-string">"ungueltige eingabe für die Funktion \"my-max\". Nicht leere Liste an Zahlen benötigt!"</span>))
+    (<span class="hljs-name">else</span> (<span class="hljs-name">foldl</span> max-of-two (<span class="hljs-name">first</span> lst) (<span class="hljs-name">rest</span> lst)))))
+</code></pre><h3 id="anmerkungen">Anmerkungen</h3>
+<ul>
+<li>Bei ungültigen Eingaben wird ein Error, mit entsprechendem Hinweistext, geworfen, da es keine sinnvolle Antwort auf eine solche Eingabe gibt.</li>
+<li>Wie auch bei Aufgaben 2 und 3 kann hier eine existierende Funktion höherer Ordnung genutzt werden, welche in eine neue Funktion &quot;eingebacken&quot; wird.</li>
+<li>Anstelle der anonymen Funktion <code>max-of-two</code>, hätte auch eine Lambda-Funktion genutzt werden können, jedoch ist es nach persönlichem Empfinden auf diese Weise übersichtlicher.</li>
+</ul>
+<h3 id="quellen">Quellen</h3>
+<ul>
+<li>Diese Aufgabe wurde zusammen mit Andrea Junge bearbeitet.</li>
+</ul>

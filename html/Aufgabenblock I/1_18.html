@@ -1,0 +1,34 @@
+<p>Gegeben sei die folgende Funktion in Typed Racket:</p>
+<pre><code>(<span class="hljs-name">:</span> bar (<span class="hljs-name">-&gt;</span> (<span class="hljs-name">U</span> Integer Boolean String) Integer))
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">bar</span> x)
+  (<span class="hljs-name"><span class="hljs-builtin-name">cond</span></span>
+    ((<span class="hljs-name"><span class="hljs-builtin-name">number?</span></span> x) (<span class="hljs-name"><span class="hljs-builtin-name">string-length</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">number-&gt;string</span></span> x)))
+    (<span class="hljs-name"><span class="hljs-builtin-name">else</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">string-length</span></span> x))))
+</code></pre><p>Wenn man diese Funktion versucht zu kompilieren, erhält man eine Fehlermeldung vom Type Checker. Erläutern Sie die Fehlermeldung und korrigieren Sie die Funktion.</p>
+<h3 id="fehlermeldung">Fehlermeldung</h3>
+<pre><code><span class="hljs-keyword">Type</span> Checker: <span class="hljs-keyword">type</span> mismatch
+expected: <span class="hljs-built_in">String</span>
+given: (U <span class="hljs-built_in">Boolean</span> <span class="hljs-built_in">String</span>) <span class="hljs-keyword">in</span>: x
+</code></pre><h3 id="antwort">Antwort</h3>
+<p>Die Typsignatur der Funktion gibt an, dass es sich bei <code>x</code> um eine Union-type handelt, als <code>x</code> einen <code>Integer</code>, <code>Boolean</code> oder <code>String</code> handeln kann, 
+die Funktion <code>string-length</code> kann jedoch nur Strings verarbeiten. 
+Deshalb wurde eine Verzweigung eingebaut, welche der Verarbeitung von <code>Integer</code> dient.
+Jedoch kann auf diese Weise das <code>x</code> im Else-Zweig immer noch ein <code>Boolean</code> oder <code>String</code> sein. Die Funktion verlangt jedoch eindeutig den <code>String</code> Typ.</p>
+<p>Das können wir wie Folgt ablesen: </p>
+<ul>
+<li><code>Type Checker: type mismatch [...] in: x</code> -&gt; Die Typsignatur stimmt bei <code>x</code> (an der markierten Stelle) nicht überein.</li>
+<li><code>expected: String</code>: Die Funktion erwartet ausschließlich den Typ <code>String</code>, welchem <code>x</code> nicht oder nicht ausschließlich entspricht. </li>
+<li><code>given: (U Boolean String)</code>: <code>x</code> ist ein Union-type und hat zwar u.a. den Typ <code>String</code>, kann jedoch auch ein <code>Boolean</code> sein.</li>
+</ul>
+<h3 id="l-sung">Lösung</h3>
+<p>Es muss ein weiterer Konditionszweig für <code>Boolean</code> eingefügt werden.
+<br> Da die Strings <code>&quot;#t&quot;</code> und <code>&quot;#f&quot;</code> je zwei Zeichen lang sind, kann man für den Zweig also <code>2</code> zurückgeben.</p>
+<pre><code>#lang typed/racket
+
+(: bar (<span class="hljs-name">-&gt;</span> (<span class="hljs-name">U</span> Integer Boolean String) Integer))
+(<span class="hljs-name">define</span> (<span class="hljs-name">bar</span> x)
+  (<span class="hljs-name">cond</span>
+    ((<span class="hljs-name">number</span>? x) (<span class="hljs-name">string-length</span> (<span class="hljs-name">number-&gt;string</span> x)))
+    ((<span class="hljs-name">boolean</span>? x) <span class="hljs-number">2</span>) <span class="hljs-comment">; string-length("#t") = string-length("#f") = 2</span>
+    (<span class="hljs-name">else</span> (<span class="hljs-name">string-length</span> x))))
+</code></pre>

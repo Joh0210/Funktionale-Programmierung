@@ -1,0 +1,24 @@
+<p>Überführen Sie die Funktion <code>sum</code> in eine endrekursive Fassung. Die Funktion wurde wie folgt definiert:</p>
+<pre><code>(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">sum</span> term a next b)
+  (<span class="hljs-name"><span class="hljs-builtin-name">cond</span></span>
+    ((<span class="hljs-name"><span class="hljs-builtin-name">&gt;</span></span> a b) <span class="hljs-number">0</span>)
+    (<span class="hljs-name"><span class="hljs-builtin-name">else</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">+</span></span> (<span class="hljs-name">term</span> a)
+             (<span class="hljs-name">sum</span> term (<span class="hljs-name">next</span> a) next b)))))
+</code></pre><h3 id="code">Code</h3>
+<pre><code>#lang racket
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">sum</span> term a next b)
+  (<span class="hljs-name">define</span> (<span class="hljs-name">sum-inner</span> term a next b acc)
+    (<span class="hljs-name">cond</span>
+      ((<span class="hljs-name">&gt;</span> a b) acc)
+      (<span class="hljs-name">else</span> (<span class="hljs-name">sum-inner</span> term (<span class="hljs-name">next</span> a) next b (<span class="hljs-name">+</span> acc (<span class="hljs-name">term</span> a))))))
+
+  (<span class="hljs-name">sum-inner</span> term a next b <span class="hljs-number">0</span>))
+</code></pre><h3 id="anmerkungen">Anmerkungen</h3>
+<ul>
+<li>Für die endrekursive Fassung wurde eine Anonyme-Hilfsfunktion angelegt, 
+welche einen Akkumulator besetzt, der das Ergebnis jeder Funktionsiteration speichert und aufsummiert. 
+So beinhaltet er nach der letzten Rekursion das finale Ergebnis und wird zurückgegeben.</li>
+<li>Die anonyme Funktion wird initial beim Funktionsaufruf 
+und anschließend endrekursiv als letzter Funktionsaufruf von sich selbst aufgerufen. </li>
+</ul>

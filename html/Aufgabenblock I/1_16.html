@@ -1,0 +1,37 @@
+<p>Beschreiben Sie den Unterschied zwischen der Nutzung von <code>thunk</code> und den Promises (<code>delay</code> und <code>force</code>). 
+Wann ist das Ergebnis gleich und wann unterscheidet es sich? 
+Für welchen Anwendungszweck würden Sie welche Version einsetzen? 
+Warum kann man delay nicht als Funktion schreiben?</p>
+<h3 id="antwort">Antwort</h3>
+<h4 id="beschreibung">Beschreibung</h4>
+<p>Beide stellen Mechanismen dar, welche dazu dienen die Auswertung von Ausdrücken zu verzögern.</p>
+<p><code>thunk</code> ist hierbei eine eingewickelte Berechnung, also eine Funktion, welche in z.B. einem lambda-Ausdruck eingewickelt ist (z.B. <code>(lambda () (+ 2 3))</code>). 
+Wird das <code>thunk</code>, also der lambda-Ausdruck nun als Argument an eine Funktion übergeben, so wird die eingewickelte Funktion trotz applicative order nicht direkt ausgewertet, 
+sondern erst, wenn die Funktion tatsächlich im Funktionskörper benötigt wird. Sollte das Ergebnis im Funktionskörper allerdings mehrfach benötigt werden, 
+wird an jeder benötigten Stelle, die Berechnung neu durchgeführt. Es findet also keine Zwischenspeicherung des Ergebnisses statt.
+<br>Diese Auswertungsstrategie bezeichnet man als <code>normal order</code>.</p>
+<p>Bei einem Promise wird die Auswertung der Berechnung zwar ebenfalls verzögert, bis an den Punkt, an dem sie eigentlich benötigt wird. 
+Allerdings wird das Ergebnis der Berechnung in dem Promise zwischengespeichert. Sollte das Ergebnis also erneut benötigt werden, 
+muss die Berechnung nicht erneut durchgeführt werden, sondern kann aus dem Speicher gelesen werden. 
+<br>Diese Auswertungsstrategie bezeichnet man als <code>lazy evaluation</code>.</p>
+<h4 id="wann-ist-das-ergebnis-gleich-und-wann-unterscheidet-es-sich-">Wann ist das Ergebnis gleich und wann unterscheidet es sich?</h4>
+<p>Die reinen Ergebnisse der Auswertungen sind so lange identisch, solange es bei der Auswertung der Berechnung zu keinen Seiteneffekten oder Zustandsänderungen kommt oder die Berechnung nur einmal stattfindet.
+<br>Sollte die Funktion nämlich einen Seiteneffekt haben, oder eine Zustandsänderung auslösen, so würde eine erneute Auswertung ein anderes Ergebnis auslösen oder den Zustand noch weiter manipuliert.
+Da bei <code>lazy evaluation</code> die Auswertung maximal einmal stattfindet und das bei <code>normal order</code> auch mehrfach geschehen kann, würde das zu verschiedenen Resultaten führen.</p>
+<p>Bei ihrem Ressourcenverbrauch können sich die beiden Verfahren jedoch unterscheiden, da Promises entsprechend Speicher benötigen, und das Ergebnis zwischenzuspeichern, jedoch wird bei einem erneuten Auswerten keine weitere Berechnung durchgeführt.
+<br>Das <code>thunk</code> braucht zwar keinen zusätzlichen Speicher, jedoch würde ein erneuter Aufruf wieder eine potenziell aufwendige Berechnung durchführen.</p>
+<h4 id="f-r-welchen-anwendungszweck-w-rden-sie-welche-version-einsetzen-">Für welchen Anwendungszweck würden Sie welche Version einsetzen?</h4>
+<p>Beide Funktionen sollten also verwendet werden, wenn eine Berechnung relativ aufwendig ist und nur unter gewissen Konditionen benötigt wird.
+Bei der Wahl zwischen <code>thunk</code> und Promises kann als grobe Richtlinie gesagt werden, 
+wenn das Ergebnis der Berechnung an vielen Stellen benötigt wird, und nur einen geringen Speicheraufwand hat, sollten Promises verwendet werden. Wird das Ergebnis nur einmal benötigt, oder der Speicheraufwand ist im Verhältnis zum Rechenaufwand zu groß, sollte <code>thunk</code> verwendet werden.
+Löst die Funktion einen Seiteneffekt oder eine Zustandsänderung aus, kommt es darauf an, ob diese Manipulation maximal einmal eintreten soll oder an jeder Stelle der Auswertung.</p>
+<h4 id="warum-kann-man-delay-nicht-als-funktion-schreiben-">Warum kann man delay nicht als Funktion schreiben?</h4>
+<p>In Racket arbeiten alle Funktionen nach <code>applicative order</code>, also die Argumente der Funktion werden direkt bei Aufruf der Funktion ausgewertet. 
+Somit würde die Funktion, die man an das <code>delay</code> übergeben möchte, direkt ausgewertet werden und das Ziel wäre verfehlt. </p>
+<p>Das eigentliche <code>delay</code> ist daher, als special form implementiert, welches seine Argumente nicht auswertet. Auf diese Weise findet die Auswertung erst durch den Aufruf von <code>force</code> statt. 
+<br>(Special Forms sind in der Lage ihre Argumente nicht, oder auch nur teilweise auszuwerten, wie z.B. <code>and</code>)</p>
+<p><strong>Anmerkung</strong>: Wenn die Funktion, die man an eine selbstgebaute <code>delay</code>-Funktion übergeben will, in ein <code>thunk</code> eingewickelt ist, 
+würde die Auswertung auch verzögert werden und man könnte die selbstgebaute <code>delay</code>-Funktion nutzen.  </p>
+<pre><code>(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">my-delay</span> thunk)
+  (<span class="hljs-name">mcons</span> <span class="hljs-literal">#f</span> thunk))
+</code></pre>

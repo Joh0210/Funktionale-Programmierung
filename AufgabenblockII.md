@@ -500,7 +500,7 @@ Diese Lexical-Version liefert das erwartete Ergebnis.
 Überlegen Sie ein Beispiel, in dem verzögerte Auswertung sinnvoll sein kann. 
 Wie würden Sie die verzögerte Auswertung umsetzen? Begründen Sie Ihr Vorgehen.
 
-### Antwort:
+### Antwort
 Verzögerte Auswertung sollte verwendet werden, wenn eine Berechnung relativ aufwendig ist und nur unter gewissen Konditionen benötigt wird.
 
 Hierfür gibt es die Wahl zwischen `thunk` und Promises:

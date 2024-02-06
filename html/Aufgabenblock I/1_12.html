@@ -1,0 +1,29 @@
+<p>Zeigen Sie an zwei selbst erstellten Beispielen die Nutzung von Funktionen höherer Ordnung auf.</p>
+<h3 id="beispiel-1-ormap">Beispiel 1: ormap</h3>
+<p>Prüfen, ob eine Liste ein Element enthält: </p>
+<pre><code>#lang racket
+
+<span class="hljs-comment">; Direkte Auswertung:</span>
+(<span class="hljs-name">ormap</span> (<span class="hljs-name">lambda</span> (<span class="hljs-name">a</span>) (<span class="hljs-name">equal</span>? a <span class="hljs-number">3</span>)) (<span class="hljs-name">list</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span> <span class="hljs-number">5</span>))
+(<span class="hljs-name">ormap</span> (<span class="hljs-name">lambda</span> (<span class="hljs-name">a</span>) (<span class="hljs-name">equal</span>? a #t)) (<span class="hljs-name">list</span> <span class="hljs-string">"AB"</span> #t <span class="hljs-number">3</span> <span class="hljs-string">"S"</span>))
+(<span class="hljs-name">ormap</span> (<span class="hljs-name">lambda</span> (<span class="hljs-name">a</span>) (<span class="hljs-name">equal</span>? a <span class="hljs-string">"A"</span>)) '())
+
+<span class="hljs-comment">; Eingebacken:</span>
+(<span class="hljs-name">define</span> (<span class="hljs-name">my-find</span> lst x)
+  (<span class="hljs-name">ormap</span> (<span class="hljs-name">lambda</span> (<span class="hljs-name">a</span>) (<span class="hljs-name">equal</span>? a x)) lst))
+</code></pre><h3 id="beispiel-2-filter">Beispiel 2: filter</h3>
+<p>Ermitteln wie viele Angestellte, aus einer Liste von dem monatlichen Bruttogehalt der Mitarbeiter, über 4.000 € verdienen:</p>
+<pre><code>#lang racket
+
+<span class="hljs-comment">; Direkte Auswertung:</span>
+(<span class="hljs-name">length</span> (<span class="hljs-name">filter</span> (<span class="hljs-name">lambda</span> (<span class="hljs-name">a</span>) (<span class="hljs-name">cond</span> ((<span class="hljs-name">&gt;</span> a <span class="hljs-number">4000</span>) #t) (<span class="hljs-name">else</span> #f))) (<span class="hljs-name">list</span> <span class="hljs-number">1477</span> <span class="hljs-number">4192</span> <span class="hljs-number">814</span> <span class="hljs-number">457</span> <span class="hljs-number">5245</span> <span class="hljs-number">4000</span> <span class="hljs-number">974</span> <span class="hljs-number">8474</span>)))
+(<span class="hljs-name">length</span> (<span class="hljs-name">filter</span> (<span class="hljs-name">lambda</span> (<span class="hljs-name">a</span>) (<span class="hljs-name">cond</span> ((<span class="hljs-name">&gt;</span> a <span class="hljs-number">4000</span>) #t) (<span class="hljs-name">else</span> #f))) '()))
+
+<span class="hljs-comment">; Eingebacken:</span>
+(<span class="hljs-name">define</span> (<span class="hljs-name">count-over-4000</span> lst)
+  (<span class="hljs-name">length</span> (<span class="hljs-name">filter</span> (<span class="hljs-name">lambda</span> (<span class="hljs-name">a</span>) (<span class="hljs-name">cond</span> ((<span class="hljs-name">&gt;</span> a <span class="hljs-number">4000</span>) #t) (<span class="hljs-name">else</span> #f))) lst)))
+</code></pre><h3 id="anmerkungen">Anmerkungen</h3>
+<ul>
+<li>Im Laufe dieses Portfolios wurden schon einige Anwendungsfälle von Funktionen höherer Ordnung verwendet. Die beiden hier gezeigten Funktionen dienen als konkrete Beispiele, für fiktive Szenarien, doch ist die Notwendigkeit der Funktionen auch bei anderen Aufgaben zu sehen.</li>
+<li>Es ist auch festzustellen, dass ein großes Anwendungsgebiet für Funktionen höherer Ordnung der Umgang mit Listen und Streams ist.</li>
+</ul>

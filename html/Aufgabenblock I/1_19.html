@@ -1,0 +1,31 @@
+<p>Schreiben Sie ein <code>map</code> und ein <code>foldr</code> in Typed Racket.</p>
+<h3 id="code">Code</h3>
+<pre><code>#lang typed/racket
+
+<span class="hljs-comment">; 1</span>
+(: my-map (<span class="hljs-name">All</span> (<span class="hljs-name">A</span> B) (<span class="hljs-name">-&gt;</span> (<span class="hljs-name">-&gt;</span> A B) (<span class="hljs-name">Listof</span> A) (<span class="hljs-name">Listof</span> B))))
+(<span class="hljs-name">define</span> (<span class="hljs-name">my-map</span> f lst)
+  (: my-map-inner (<span class="hljs-name">All</span> (<span class="hljs-name">A</span> B) (<span class="hljs-name">-&gt;</span> (<span class="hljs-name">-&gt;</span> A B) (<span class="hljs-name">Listof</span> A) (<span class="hljs-name">Listof</span> B) (<span class="hljs-name">Listof</span> B))))
+  (<span class="hljs-name">define</span> (<span class="hljs-name">my-map-inner</span> f lst acc)
+    (<span class="hljs-name">cond</span>
+      ((<span class="hljs-name">empty</span>? lst) acc)
+      (<span class="hljs-name">else</span> (<span class="hljs-name">my-map-inner</span> f (<span class="hljs-name">rest</span> lst) (<span class="hljs-name">append</span> acc (<span class="hljs-name">list</span> (<span class="hljs-name">f</span> (<span class="hljs-name">first</span> lst))))))))
+
+  (<span class="hljs-name">my-map-inner</span> f lst '()))
+
+<span class="hljs-comment">; 2</span>
+(: my-foldr (<span class="hljs-name">All</span> (<span class="hljs-name">A</span> B) (<span class="hljs-name">-&gt;</span> (<span class="hljs-name">-&gt;</span> A B B) B (<span class="hljs-name">Listof</span> A) B)))
+(<span class="hljs-name">define</span> (<span class="hljs-name">my-foldr</span> f start lst)
+  (: my-foldl-inner (<span class="hljs-name">All</span> (<span class="hljs-name">A</span> B) (<span class="hljs-name">-&gt;</span> (<span class="hljs-name">-&gt;</span> A B B) (<span class="hljs-name">Listof</span> A) B B)))
+  (<span class="hljs-name">define</span> (<span class="hljs-name">my-foldl-inner</span> f lst acc)
+    (<span class="hljs-name">cond</span>
+      ((<span class="hljs-name">empty</span>? lst) acc)
+      (<span class="hljs-name">else</span> (<span class="hljs-name">my-foldl-inner</span> f (<span class="hljs-name">rest</span> lst) (<span class="hljs-name">f</span> (<span class="hljs-name">first</span> lst) acc)))))
+
+  (<span class="hljs-name">my-foldl-inner</span> f (<span class="hljs-name">reverse</span> lst) start))
+</code></pre><h3 id="anmerkungen">Anmerkungen</h3>
+<ul>
+<li>Für die Implementierung von <code>foldr</code> wurde die Implementierung von <code>my-foldl-inner</code> (Aufgabenblock I: Aufgabe 9) übernommen 
+und die Liste wurde mit <code>reversed</code> invertiert. </li>
+<li>Auf diese Weise muss zwar bei der Rekursion nicht jedes Mal aufwendig an das Ende der Liste gesprungen werden, dafür findet allerdings eine Aufwendige Invertierung der Liste statt. </li>
+</ul>

@@ -1,0 +1,28 @@
+<p>Schreiben Sie eine Funktion <code>my-find</code>, die eine Liste <code>lst</code> und ein Argument <code>x</code> erhält und mittels <code>equal?</code> prüft, ob das Element in der Liste enthalten ist. Die Funktion soll <code>#t</code> antworten, wenn dem so ist, oder mit <code>#f</code> wenn nicht.</p>
+<h3 id="code">Code</h3>
+<pre><code>#lang racket
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">my-find</span> lst x)
+  (<span class="hljs-name">ormap</span> (<span class="hljs-name">lambda</span> (<span class="hljs-name">a</span>) (<span class="hljs-name">equal</span>? a x)) lst))
+</code></pre><h3 id="anmerkungen">Anmerkungen</h3>
+<ul>
+<li>Wie auch bei Aufgabe 2 kann hier eine existierende Funktion höherer Ordnung genutzt werden, welche in eine neue Funktion &quot;eingebacken&quot; wird.</li>
+<li>Es wäre auch denkbar die Aufgabe mit der <code>foldl</code> Funktion zu lösen, jedoch gibt es 2 große Unterschiede:<ol>
+<li>Nach persönlichem Empfinden ist die Version mit <code>ormap</code> deutlich übersichtlicher.</li>
+<li>Die Version mit <code>foldl</code> arbeitet in jedem Fall die komplette Liste durch, selbst wenn das Element bereits gefunden wurde. Bei <code>ormap</code> hingegen wird die Auswertung beendet, sobald das erste Element gefunden ist, für welches die Kondition <code>true</code> ergibt. 
+<br><strong>Beispiel:</strong> Eine Liste mit 10.000 Elementen, bei dem jedes Element dem gesuchten Element entspricht, benötigt bei der <code>ormap</code>-Version nur einen Verarbeitungsschritt um <code>#t</code> auszugeben. Bei der <code>foldl</code> Version 10.000.</li>
+</ol>
+</li>
+<li>Sollte nur eine der beiden Implementierungen für die Bewertung berücksichtigt werden, gilt nur die <code>ormap</code>-Version als eingereicht.</li>
+</ul>
+<h3 id="alternative-version-mit-foldl-">Alternative Version mit foldl:</h3>
+<pre><code>#lang racket
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">my-find</span> lst x)
+  (<span class="hljs-name">foldl</span>
+   (<span class="hljs-name">lambda</span> (<span class="hljs-name">a</span> b) (<span class="hljs-name">or</span> (<span class="hljs-name">equal</span>? a x) b))
+   #f lst))
+</code></pre><h3 id="quellen">Quellen</h3>
+<ul>
+<li>Diese Aufgabe wurde zusammen mit Andrea Junge bearbeitet.</li>
+</ul>

@@ -1,0 +1,98 @@
+<p>Implementieren Sie eine Funktion <code>fib-stream</code>, die einen Strom von zwei-elementigen Listen <code>(n (fib(n)))</code> erzeugt, wobei <code>n</code> die natürlichen Zahlen durchläuft. 
+Die Funktion soll nicht jede Fibonacci-Zahl unabhängig berechnen.</p>
+<pre><code>&gt; (<span class="hljs-name">define</span> a (<span class="hljs-name">fib-stream</span>))
+&gt; a
+((<span class="hljs-number">0</span> <span class="hljs-number">0</span>) . #&lt;promise&gt;)
+&gt; (<span class="hljs-name">tail</span> a)
+((<span class="hljs-number">1</span> <span class="hljs-number">1</span>) . #&lt;promise&gt;)
+&gt; (<span class="hljs-name">tail</span> (<span class="hljs-name">tail</span> a))
+((<span class="hljs-number">2</span> <span class="hljs-number">1</span>) . #&lt;promise&gt;)
+&gt; (<span class="hljs-name">tail</span> (<span class="hljs-name">tail</span> (<span class="hljs-name">tail</span> a)))
+((<span class="hljs-number">3</span> <span class="hljs-number">2</span>) . #&lt;promise&gt;)
+&gt; (<span class="hljs-name">tail</span> (<span class="hljs-name">tail</span> (<span class="hljs-name">tail</span> (<span class="hljs-name">tail</span> a))))
+((<span class="hljs-number">4</span> <span class="hljs-number">3</span>) . #&lt;promise&gt;)
+&gt; (<span class="hljs-name">tail</span> (<span class="hljs-name">tail</span> (<span class="hljs-name">tail</span> (<span class="hljs-name">tail</span> (<span class="hljs-name">tail</span> a)))))
+((<span class="hljs-number">5</span> <span class="hljs-number">5</span>) . #&lt;promise&gt;)
+</code></pre><h3 id="code">Code</h3>
+<h4 id="variante-1-inperformant-">Variante 1 (inperformant)</h4>
+<pre><code>#lang racket
+
+<span class="hljs-comment">; Stream Logik:</span>
+(<span class="hljs-name">define</span> the-empty-stream '())
+(<span class="hljs-name">define</span> head car)
+(<span class="hljs-name">define</span> stream-empty? empty?)
+
+(<span class="hljs-name">define-syntax</span> stream-cons
+  (<span class="hljs-name">syntax-rules</span> ()
+      ((<span class="hljs-name">cons-stream</span> x y)
+       (<span class="hljs-name">cons</span> x (<span class="hljs-name">delay</span> y)))))
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">tail</span> s) (<span class="hljs-name">force</span> (<span class="hljs-name">cdr</span> s)))
+
+<span class="hljs-comment">; fib-stream:</span>
+(<span class="hljs-name">define</span> (<span class="hljs-name">fib-stream</span>)
+  (<span class="hljs-name">define</span> (<span class="hljs-name">interation</span> s1 s2)
+    (<span class="hljs-name">cond</span>
+      ((<span class="hljs-name">stream-empty</span>? s1) s2)
+      ((<span class="hljs-name">stream-empty</span>? s2) s1)
+      (<span class="hljs-name">else</span> (<span class="hljs-name">stream-cons</span> (<span class="hljs-name">list</span>
+                          (<span class="hljs-name">+</span> (<span class="hljs-name">first</span> (<span class="hljs-name">head</span> s2)) <span class="hljs-number">1</span>)
+                          (<span class="hljs-name">+</span> (<span class="hljs-name">second</span> (<span class="hljs-name">head</span> s1)) (<span class="hljs-name">second</span> (<span class="hljs-name">head</span> s2))))
+                         (<span class="hljs-name">interation</span>
+                          (<span class="hljs-name">tail</span> s1)
+                          (<span class="hljs-name">tail</span> s2))))))
+
+  (<span class="hljs-name">stream-cons</span> (<span class="hljs-name">list</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span>)
+               (<span class="hljs-name">stream-cons</span> (<span class="hljs-name">list</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>)
+                            (<span class="hljs-name">interation</span> (<span class="hljs-name">fib-stream</span>) (<span class="hljs-name">tail</span> (<span class="hljs-name">fib-stream</span>))))))
+</code></pre><h4 id="variante-2">Variante 2</h4>
+<pre><code>#lang racket
+
+<span class="hljs-comment">; Stream Logik:</span>
+(<span class="hljs-name">define</span> the-empty-stream '())
+(<span class="hljs-name">define</span> head car)
+(<span class="hljs-name">define</span> stream-empty? empty?)
+
+(<span class="hljs-name">define-syntax</span> stream-cons
+  (<span class="hljs-name">syntax-rules</span> ()
+      ((<span class="hljs-name">cons-stream</span> x y)
+       (<span class="hljs-name">cons</span> x (<span class="hljs-name">delay</span> y)))))
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">tail</span> s) (<span class="hljs-name">force</span> (<span class="hljs-name">cdr</span> s)))
+
+<span class="hljs-comment">; memory-fib:</span>
+(<span class="hljs-name">define</span> fib
+    (<span class="hljs-name">let</span> ((<span class="hljs-name">table</span> (<span class="hljs-name">make-hash</span>)))
+      (<span class="hljs-name">lambda</span> (<span class="hljs-name">n</span>)
+        (<span class="hljs-name">let</span> ((<span class="hljs-name">previously-computed-result</span> (<span class="hljs-name">hash-ref</span> table n #f)))
+          (<span class="hljs-name">or</span> previously-computed-result 
+              (<span class="hljs-name">let</span> ((<span class="hljs-name">result</span> 
+                     (<span class="hljs-name">cond</span>
+                       ((<span class="hljs-name">=</span> n <span class="hljs-number">0</span>) <span class="hljs-number">0</span>)
+                       ((<span class="hljs-name">=</span> n <span class="hljs-number">1</span>) <span class="hljs-number">1</span>)
+                       (<span class="hljs-name">else</span> (<span class="hljs-name">+</span> (<span class="hljs-name">fib</span> (<span class="hljs-name">-</span> n <span class="hljs-number">1</span>)) (<span class="hljs-name">fib</span> (<span class="hljs-name">-</span> n <span class="hljs-number">2</span>)))))))
+                (<span class="hljs-name">hash-set!</span> table n result)
+                result))))))
+
+
+<span class="hljs-comment">; fib-stream:</span>
+(<span class="hljs-name">define</span> (<span class="hljs-name">fib-stream</span>)
+  (<span class="hljs-name">define</span> (<span class="hljs-name">fib-stream-inner</span> n)
+    (<span class="hljs-name">stream-cons</span> (<span class="hljs-name">list</span> n (<span class="hljs-name">fib</span> n)) (<span class="hljs-name">fib-stream-inner</span> (<span class="hljs-name">+</span> n <span class="hljs-number">1</span>))))
+  (<span class="hljs-name">fib-stream-inner</span> <span class="hljs-number">0</span>))
+</code></pre><h4 id="f-r-tests-">Für Tests:</h4>
+<pre><code><span class="hljs-comment">#lang racket</span>
+
+(<span class="hljs-string">define </span>(<span class="hljs-built_in">get-at</span> s n)
+  (<span class="hljs-string">cond
+</span>    ((&lt;= n 0) (<span class="hljs-string">head </span>s))
+    (<span class="hljs-string">else </span>(<span class="hljs-built_in">get-at</span> (<span class="hljs-string">tail </span>s) (- n 1)))))
+</code></pre><h3 id="anmerkungen">Anmerkungen</h3>
+<ul>
+<li>Es wurden zwei Versionen des Programms erstellt,
+wobei die Variante 1 relativ schön wirkt, jedoch sehr inperformant ist,
+da es zum einen viel Speicher aber auch eine große Menge an Rechenleistung benötigt.
+<br>So kann z.B. die Funktion <code>(get-at a 100)</code> an meinem Testgerät nicht zu Ende ausgewertet werden, wobei <code>a</code> der Stream ist und <code>100</code>, die Stelle, die bei dem Stream erfragt wird.</li>
+<li>Die Variante 2 ist hierbei bei weitem performanter, so kann auch <code>(get-at a 100000)</code> nach kurzer Verzögerung ausgewertet werden. Damit das so schnell funktioniert werden die Ergebnisse der <code>fib</code>-Funktion in einer Hash-Table gespeichert.</li>
+<li>Sollte nur eine der beiden Implementierungen für die Bewertung berücksichtigt werden, gilt nur Variante 2 als eingereicht. </li>
+</ul>

@@ -1,0 +1,19 @@
+<p>Schreiben Sie ein weiteres <code>my-map</code> unter Benutzung von einer <code>fold</code>-Funktion (entscheiden Sie selbst welches).</p>
+<h3 id="code">Code</h3>
+<pre><code>#lang racket
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">my-map</span> f lst)
+  (<span class="hljs-name">cond</span>
+    ((<span class="hljs-name">empty</span>? lst) empty)
+    (<span class="hljs-name">else</span>
+     (<span class="hljs-name">foldl</span>
+      (<span class="hljs-name">lambda</span> (<span class="hljs-name">a</span> b) (<span class="hljs-name">append</span> b (<span class="hljs-name">list</span> (<span class="hljs-name">f</span> a))))
+      (<span class="hljs-name">list</span> (<span class="hljs-name">f</span> (<span class="hljs-name">first</span> lst))) (<span class="hljs-name">rest</span> lst)))))
+</code></pre><h3 id="anmerkungen">Anmerkungen</h3>
+<ul>
+<li>Wie auch bei Aufgabe 2 bis 4 kann hier eine existierende Funktion höherer Ordnung genutzt werden, welche in eine neue Funktion &quot;eingebacken&quot; wird.</li>
+</ul>
+<h3 id="quellen">Quellen</h3>
+<ul>
+<li>Diese Aufgabe wurde zusammen mit Andrea Junge bearbeitet.</li>
+</ul>

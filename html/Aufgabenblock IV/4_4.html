@@ -1,0 +1,10 @@
+<p>Vergleichen Sie das Typsystem von Typed Racket mit einem anderen Ihnen bekannten Typsystem. Welche Stärken und Schwächen der beiden Systeme können Sie ausmachen?</p>
+<h3 id="antwort">Antwort</h3>
+<p>Mir erscheint das Typsystem an einigen Stellen deutlich detaillierter zu sein als z.B. in Java. z.B. 1 ist nicht nur eine <code>Number</code>, sondern auch eine <code>Positive Number</code> und genauer sogar eine <code>One</code>.
+Dieser Detailgrad wird anschließend auch von einigen Funktionen unterstützt, so kann bei der Addition zweier positiven Zahlen nur eine Positive Zahl hervorkommen.</p>
+<p>Das sorgt jedoch auch für ein paar Probleme. </p>
+<ol>
+<li>Wenn dieser Detailgrad unterstützt werden soll, müssen Entwickler ihre Funktionen auch entsprechend umfangreich annotieren. Andernfalls gehen die zusätzlichen Informationen verloren.</li>
+<li>Die Statische Codeanalyse prüft die einzelnen Typen ausschließlich bei der Funktion selbst, oder bei <code>type?</code>-Abfragen.
+<br>Aufgrund dessen kann es passieren, dass ein gewisser Fall eigentlich nicht eintreten kann, da er von einem anderen Konditionszweig abfangen wird, ohne dass das Typsystem es erkennt. (vgl. Aufgabenblock I: Aufgabe 1)</li>
+</ol>

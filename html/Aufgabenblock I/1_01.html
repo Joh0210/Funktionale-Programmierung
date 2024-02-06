@@ -1,0 +1,45 @@
+<p>Schreiben Sie eine Funktion, die eine natürliche Zahl <code>n</code> erhält und eine Liste der Zahlen von <code>n</code> bis <code>1</code> erzeugt.</p>
+<h3 id="code">Code</h3>
+<pre><code>#lang racket
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">sequence</span> n)
+  (<span class="hljs-name">define</span> (<span class="hljs-name">sequence-inner</span> n acc)
+    (<span class="hljs-name">cond</span>
+      ((<span class="hljs-name">&lt;=</span> n <span class="hljs-number">1</span>) acc)
+      (<span class="hljs-name">else</span> (<span class="hljs-name">sequence-inner</span> (<span class="hljs-name">-</span> n <span class="hljs-number">1</span>) (<span class="hljs-name">append</span> acc (<span class="hljs-name">list</span>(<span class="hljs-name">-</span> n <span class="hljs-number">1</span>)))))))
+  (<span class="hljs-name">cond</span>
+    ((<span class="hljs-name">or</span> (<span class="hljs-name">not</span> (<span class="hljs-name">integer</span>? n)) (<span class="hljs-name">&lt;</span> n <span class="hljs-number">1</span>)) null)  
+    (<span class="hljs-name">else</span> (<span class="hljs-name">sequence-inner</span> n (<span class="hljs-name">list</span> n)))))
+</code></pre><h3 id="anmerkungen">Anmerkungen</h3>
+<ul>
+<li>Als gültige Eingabe für <code>n</code>, gilt jede der mathematisch-natürlichen Zahlen:
+<br>Die natürlichen Zahlen sind die Menge aller positiven ganzen Zahlen: &#8469; = {1;2;3;...}
+<br>Im Gegensatz zu den technisch-natürlichen Zahlen ist <code>0</code> also kein Element von &#8469;.</li>
+<li>Ungültige Eingaben erhalten als Rückgabe die Leere Liste (<code>null</code>). </li>
+<li>Die Funktion wurde Endrekursiv verfasst.</li>
+<li>Sollte nur eine der beiden Implementierungen für die Bewertung berücksichtigt werden, gilt nur die <code>racket</code>-Version als eingereicht.  </li>
+</ul>
+<h3 id="typed-racket">Typed Racket</h3>
+<p>Um mit Zahlen mit positiver Typsignatur in Kombination mit Rechenoperationen zu arbeiten, wurde diese Aufgabe ebenfalls in Typed Racket umgesetzt.
+<br>Es wurde eine Komplikation vermutet, zu der es auch kam:</p>
+<pre><code>#lang typed/racket
+
+(: sequence (<span class="hljs-name">-&gt;</span> Positive-Exact-Rational (<span class="hljs-name">Listof</span> Exact-Rational)))
+(<span class="hljs-name">define</span> (<span class="hljs-name">sequence</span> n)
+  (: sequence-inner (<span class="hljs-name">-&gt;</span> Exact-Rational (<span class="hljs-name">Listof</span> Exact-Rational) (<span class="hljs-name">Listof</span> Exact-Rational)))
+  (<span class="hljs-name">define</span> (<span class="hljs-name">sequence-inner</span> n acc)
+    (<span class="hljs-name">cond</span>
+      ((<span class="hljs-name">&lt;=</span> n <span class="hljs-number">1</span>) acc)
+      (<span class="hljs-name">else</span> (<span class="hljs-name">sequence-inner</span> (<span class="hljs-name">-</span> n <span class="hljs-number">1</span>) (<span class="hljs-name">append</span> acc (<span class="hljs-name">list</span>(<span class="hljs-name">-</span> n <span class="hljs-number">1</span>)))))))
+
+  (<span class="hljs-name">sequence-inner</span> n (<span class="hljs-name">list</span> n)))
+</code></pre><p>Als Rückgabetyp musste <code>(Listof Exact-Rational)</code>, anstelle von <code>(Listof Positive-Exact-Rational)</code> gewählt werden, 
+da der Racket-Compiler erwartet das aus <code>(- n 1)</code> 0 entstehen kann, wenn <code>n = 1</code> entspricht. 
+Zu diesem Fall kann es jedoch nie kommen, da für <code>n=1</code> der andere Zweig (<code>((&lt;= n 1) acc)</code>) der Condition-Abfrage ausgewählt wird.
+<br>Der Compiler kann das jedoch nicht erkennen da er nur die Typsignatur der <code>-</code> Operation prüft, welche für diesen Aufruf wie folgt definiert ist: <code>(: - (-&gt; Positive-Integer One Nonnegative-Integer))</code>.</p>
+<p>Um diesen Fehler zu umgehen, wurde <code>Exact-Rational</code> statt <code>Positive-Exact-Rational</code> an Stellen außerhalb des Eingabeparameters verwendet. Das sorgt jedoch für einen Informationsverlust über die Elemente der Liste, was weitere Verarbeitungen erschweren könnte.
+<br>Möchte man diesen Informationsverlust nicht in Kauf nehmen, muss eine andere Implementierung dieser Funktion gewählt werden, was jedoch nicht Teil dieses Versuches ist.</p>
+<h3 id="quellen">Quellen</h3>
+<ul>
+<li>Diese Aufgabe wurde zusammen mit Andrea Junge bearbeitet.</li>
+</ul>

@@ -1,7 +1,7 @@
 #lang racket
 
 ; 1.17
-; Implementierten Sie eine Funktion fib-stream,
+; Implementieren Sie eine Funktion fib-stream,
 ; die einen Strom von zwei-elementigen Listen (n (fib(n))) erzeugt, wobei n die natürlichen Zahlen durchläuft.
 ; Die Funktion soll nicht jede Fibonacci-Zahl unabhängig berechnen.
 
@@ -30,28 +30,23 @@
        (cons x (delay y)))))
 
 (define (tail s) (force (cdr s)))
-
-; memory-fib:
-(define fib
-    (let ((table (make-hash)))
-      (lambda (n)
-        (let ((previously-computed-result (hash-ref table n #f)))
-          (or previously-computed-result 
-              (let ((result 
-                     (cond
-                       ((= n 0) 0)
-                       ((= n 1) 1)
-                       (else (+ (fib (- n 1)) (fib (- n 2)))))))
-                (hash-set! table n result)
-                result))))))
-
-
+  
 ; fib-stream:
 (define (fib-stream)
-  (define (fib-stream-inner n)
-    (stream-cons (list n (fib n)) (fib-stream-inner (+ n 1))))
-  (fib-stream-inner 0))
-                            
+  (define (interation s1 s2)
+    (cond
+      ((stream-empty? s1) s2)
+      ((stream-empty? s2) s1)
+      (else (stream-cons (list
+                          (+ (first (head s2)) 1)
+                          (+ (second (head s1)) (second (head s2))))
+                         (interation
+                          (tail s1)
+                          (tail s2))))))
+  
+  (stream-cons (list 0 0)
+               (stream-cons (list 1 1)
+                            (interation (fib-stream) (tail (fib-stream))))))
 
 
 
@@ -74,6 +69,7 @@ a
 (tail (tail (tail (tail (tail (tail (tail (tail a))))))))
 (tail (tail (tail (tail (tail (tail (tail (tail (tail a)))))))))
 (get-at a 10)
-(get-at a 30)
+; zu Speicherintensiv:
+; (get-at a 30) 
 
-(time ((const "<>") (get-at a 100000)))
+; (time ((const "<>") (get-at a 100)))

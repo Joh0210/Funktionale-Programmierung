@@ -7,11 +7,11 @@
   (cond (predicate then-clause)
         (else else-clause)))
 
-(define (deleate-all-flies)
+(define (delete-all-flies)
   (print "Everything has been deleted!")
   #f)
 
 
-(new-if (= 0 0) #t (deleate-all-flies))
+(if (= 0 0) #t (delete-all-flies))
 
-(if (= 0 0) #t (deleate-all-flies))
+(new-if (= 0 0) #t (delete-all-flies))

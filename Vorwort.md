@@ -1,6 +1,6 @@
 # Funktionale Programmierung
 ## Über das Dokument 
-Dieses E-Portfolio dient als Prüfungsleistung für das Wahlpflichtmoduls "Funktionale Programmierung" 2023/2024.
+Dieses E-Portfolio dient als Prüfungsleistung für das Wahlpflichtmoduls "Funktionale Programmierung" 2023/2024 von Johannes Freund.
 Es dient dem Nachweis der im Laufe des Semesters erworbenen Fähigkeiten und Kenntnisse, 
 gleichermaßen aber auch für die Protokollierung der Lernfortschritt und den persönlichen Blickwinkel.
 

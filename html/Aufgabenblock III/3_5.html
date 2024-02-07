@@ -1,0 +1,31 @@
+<p>Entwerfen Sie funktionale Implementierungsskizzen Ihrer Beispiele. 
+Sollte sich keines Ihrer Beispiele dafür eigenen, so überlegen Sie ein fiktives Projekt, Programmieraufgabe, die sich gut mit funktionaler Programmierung umsetzen ließe.</p>
+<h3 id="minecraft-mod">Minecraft Mod</h3>
+<p>Wie bereits in Aufgabenblock III: Aufgabe 4 erwähnt, lassen sich keine Mods rein funktional umsetzen, lediglich einzelne Teilausschnitte. 
+Eine vollständige funktionale Architektur-anpassung und Reimplementierung von Minecraft überschreitet hier auch bei weitem den Umfang des Projektes.
+<br>Das folgende Flussdiagramm zeigt daher eine funktionale Umsetzung einer komplett neuen Spielmechanik, wie sie in Aufgabenblock III: Aufgabe 3 beschrieben ist.</p>
+<p>Bei dem dargestellten Prozess handelt es sich um ein Kernelement der von mir erstellten Erweiterung <a href="https://github.com/Joh0210/FactionsAndCuriosities">Factions And Curiosities</a>. 
+Es handelt sich dabei um zufällige Ereignisse, sogenannte &quot;Wild Magic&quot;, die eintreten, wenn der Spieler einen Zauber nutzt.  </p>
+<p>Diese Ereignisse müssen als Instanz einer Klasse registriert werden und die Interaktion mit der Welt findet durch Objektmanipulation statt.
+<br>Instanzen der <code>WildMagic</code> Klasse verfügen zusätzlich über Funktionen, welche beschreiben, wie gut das Ereignis für den Nutzer ist, wie häufig das Ereignis ist und ob alle Konditionen für das Eintreten erfüllt sind.
+<br>Zusätzlich wird ein Event Handler erstellt, welcher beim Einsetzen eines Zaubers aktiv wird und mithilfe der <code>WildMagicHelper</code> einen zufällige, aber gewichtete und ausführbare &quot;Wild Magic&quot; auswählt und ausführt.</p>
+<p>Die Instanzen der <code>WildMagic</code> Klasse und der Handler sind zwangsläufig objektorientiert zu erstellen, da sich der Architektur von Minecraft angepasst werden muss (vgl. Aufgabenblock III: Aufgabe 3).
+Der <code>WildMagicHelper</code> ist jedoch an keine solche Restriktion gebunden und kann entsprechend auch funktional umgesetzt werden. Hierfür eigenen sich besonders Streams. </p>
+<p>Nicht für die Erklärung relevante Zwischenschritte sind nicht in der Darstellung enthalten.</p>
+<h4 id="initialisierung">Initialisierung</h4>
+<p><img src="https://github.com/Joh0210/Funktionale-Programmierung/blob/main/draw_io/minecraft-Initialisierung.png?raw=true" alt="minecraft-Initialisierung.png" style="max-width: 500px;"></p>
+<h4 id="spell-cast-event">Spell Cast Event</h4>
+<p><img src="https://github.com/Joh0210/Funktionale-Programmierung/blob/main/draw_io/minecraft-SpellCastEvent.png?raw=true" alt="minecraft-SpellCastEvent.png" style="max-width: 500px;"></p>
+<h3 id="android-algorithmen-lern-app-heap-sort">Android Algorithmen-Lern App: Heap Sort</h3>
+<p>Dieser Abschnitt versucht, wie in Aufgabenblock III: Aufgabe 4 beschreiben, nicht nur die tatsächliche Erweiterung des Endanwendung, sondern das grundlegende Programm auf funktionale Weise dazustellen. 
+Ein gewisser Grad an Seiteneffekten und Zustandsorientierung lässt sich dabei trotzdem nicht vermeiden.</p>
+<p>Einzelne Zwischenschritte sind nicht ausformuliert, lassen sich jedoch meistens funktional umsetzen, wie in Aufgabenblock III: Aufgabe 6 zu sehen ist.
+Um das Paradigma auf die Architektur anzuwenden, wird möglichst viel über einen Informationsfluss gelöst. Dieser Fluss lässt sich anschließend durch Funktionen oder Promises beschreiben.</p>
+<p>Der Nutzer hat jederzeit die Möglichkeit die Anwendung zu beenden.
+<br>Nicht für die Erklärung relevante Zwischenschritte sind nicht in der Darstellung enthalten.</p>
+<h4 id="app-start">App Start</h4>
+<p><img src="https://github.com/Joh0210/Funktionale-Programmierung/blob/main/draw_io/Android-AppStart.png?raw=true" alt="Android-AppStart.png" style="max-width: 500px;"></p>
+<h4 id="wettbewerb-erstellen">Wettbewerb Erstellen</h4>
+<p><img src="https://github.com/Joh0210/Funktionale-Programmierung/blob/main/draw_io/Android-WettbewerbErstellen.png?raw=true" alt="Android-WettbewerbErstellen.png" style="max-width: 500px;"></p>
+<h4 id="spiel-start">Spiel Start</h4>
+<p><img src="https://github.com/Joh0210/Funktionale-Programmierung/blob/main/draw_io/Android-SpielStart.png?raw=true" alt="Android-SpielStart.png" style="max-width: 500px;"></p>

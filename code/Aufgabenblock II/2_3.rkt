@@ -3,7 +3,7 @@
 ; 2.3
 ; Implementieren Sie eine Funktion mk-mp3-control, die ein Objekt zurückliefert, das die Kontrolleinheit eines MP3-Spielers repräsentiert. (Es sollen aber nicht wirklich Dateien abgespielt werden.)
 ; Das Objekt soll folgende Informationen speichern/zurückliefern:
-; - Eine Liste, der gespeicherten MP3-Dateien (mit Dateiname und Dauer des Stücks), 
+; - Eine Liste, der gespeicherten MP3-Dateien (mit Dateinamen und Dauer des Stücks), 
 ; - die Anzahl der Titel
 ; - der aktuelle Titel, der gerade abgespielt wird oder vorgewählt ist
 ; - den Abspielstatus, also ob derzeit ein Titel (welcher?) abgespielt wird oder stop, wenn kein Titel abgespielt wird. 

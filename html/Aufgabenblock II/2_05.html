@@ -1,0 +1,89 @@
+<p>Wie wird in Racket/Scheme <code>lexical scope</code> umgesetzt und warum ist <code>dynamic scope</code> eine schlechte Idee? 
+Illustrieren Sie Ihr Argument an einem selbst entwickelten Beispiel.</p>
+<h3 id="umsetzung-von-lexical-scope">Umsetzung von lexical scope</h3>
+<p>Bei <code>lexical scope</code> wird der Gültigkeitsbereich von Variablen durch deren Umgebung definiert. 
+Eine Variable gehört hier zu der Umgebung einer Funktion, wenn sie:</p>
+<ol>
+<li>Als Argument der Funktion übergeben wurde.</li>
+<li>Im Funktionskörper der Funktion definiert wurde. (Definitionen im Funktionskörper einer Unterfunktion zählen nicht dazu!)</li>
+<li>In der Umgebung einer übergeordneten Funktion (oder der globalen Umgebung) enthalten ist. </li>
+</ol>
+<p>Wenn eine neue Variable mit demselben Bezeichner durch 1. oder 2. erstellt wird, wird in der Umgebung der neu zugewiesene verwendet und der höheren Umgebung ignoriert.</p>
+<h3 id="warum-ist-dynamic-scope-eine-schlechte-idee-">Warum ist dynamic scope eine schlechte Idee?</h3>
+<p>Bei <code>lexical scope</code> wird der Gültigkeitsbereich von Variablen durch deren Umgebung definiert,
+sodass Funktionen Zugriff auf Variablen haben, die als Argument übergeben wurden, in einer übergeordneten Umgebung oder in dieser Funktion definiert sind.</p>
+<p>Im Gegensatz dazu ist bei <code>dynamic scope</code> die Gültigkeit und der Wert einer Variable durch die Aufrufreihenfolge bestimmt. </p>
+<p><code>lexical scope</code> sorgt also für eine bessere:</p>
+<ul>
+<li><strong>Wartbarkeit</strong>: Durch <code>lexical scope</code> ist das Nachvollziehen von Zuordnungen leichter, da lediglich Zuweisungen innerhalb der Funktion und der übergeordneten Umgebung nachvollzogen werden müssen, was die Wartbarkeit stark vereinfachen dürfte.</li>
+<li><strong>Fehlervermeidung</strong>: Durch Funktionsaufrufe im <code>dynamic scope</code> können ungewollte Seiteneffekte eintreten, welche zu schwer find bare Fehler führen können, da die Funktionen für sich genommen das richtige Ergebnis liefern, jedoch nicht in Kombination.</li>
+<li><strong>Modularität</strong>: Da im <code>lexical scope</code> Funktion nur die Variablen in ihrer Umgebung manipulieren können, können sie also ohne potenzielle Seiteneffekte in einer Bibliothek für andere Programme genutzt werden.</li>
+</ul>
+<h3 id="code">Code</h3>
+<h4 id="dynamic">Dynamic</h4>
+<pre><code>#lang racket
+
+(<span class="hljs-name">define</span> x <span class="hljs-number">10</span>)
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">mach-was</span>)
+  (<span class="hljs-name">cond</span>
+    (<span class="hljs-name">x</span> <span class="hljs-string">"Zweig 1"</span>)
+    (<span class="hljs-name">else</span> <span class="hljs-string">"Zweig 2"</span>)))
+
+<span class="hljs-comment">; Aus einer Library kopiert: </span>
+(<span class="hljs-name">define</span> (<span class="hljs-name">super-wichtige-rechnung</span>)
+  <span class="hljs-comment">; + 100 Zeilen Code</span>
+  (<span class="hljs-name">set!</span> x #f) <span class="hljs-comment">; eigentlich define. x würde in den nachvollgenden Zeilen gebraucht werden</span>
+  <span class="hljs-comment">; + 70 Zeilen Code</span>
+  (<span class="hljs-name">define</span> y <span class="hljs-string">"test"</span>) <span class="hljs-comment">; y würde in den nachvollgenden Zeilen gebraucht werden</span>
+  <span class="hljs-comment">; + 20 Zeilen Code</span>
+  (<span class="hljs-name">string-append</span> <span class="hljs-string">"Super wichtige Rechnung!"</span>))
+
+(<span class="hljs-name">mach-was</span>) <span class="hljs-comment">; -&gt; "Zweig 1"</span>
+<span class="hljs-comment">; +30 Zeilen</span>
+(<span class="hljs-name">super-wichtige-rechnung</span>)
+<span class="hljs-comment">; +14 Zeilen</span>
+(<span class="hljs-name">mach-was</span>) <span class="hljs-comment">; -&gt; "Zweig 2"</span>
+</code></pre><p>Die Funktion <code>mach-was</code> liefert bei den beiden Aufrufen jeweils ein anderes Ergebnis, 
+ohne dass eine bewusste Anpassung von <code>x</code> stattfand.</p>
+<pre><code><span class="hljs-comment">; +30 Zeilen</span>
+(super-wichtige-rechnung)
+<span class="hljs-comment">; +14 Zeilen</span>
+</code></pre><p>Innerhalb der 45 Zeilen liefert jede Funktion für sich getestet das richtige Ergebnis.
+Nach einigen Tests stellt sich heraus, dass die Funktion <code>super-wichtige-rechnung</code> für den ungewollten Seiteneffekt sorgt.
+<br>Folglich: Fehleranfällig und schlechte Modularität.</p>
+<p>Zudem, wenn man in einer Funktion eine neue Variable hinzufügen will und <code>super-wichtige-rechnung</code> als Unterfunktion nutzen muss (oder <code>super-wichtige-rechnung</code> allgemein nutzt und eine globale Variable hinzufügen will),
+muss der Nutzer wissen, dass neben <code>x</code> auch <code>y</code> nicht verwendet werden darf, da es sonst wieder ungewollt überschrieben werden würde.
+Um das herauszufinden, müss jedoch die komplette Funktion <code>super-wichtige-rechnung</code> mit über 190 Zeilen untersucht werden.
+<br>Folglich: schlechte Wartbarkeit und Modularität.</p>
+<h4 id="lexical">Lexical</h4>
+<pre><code>#lang racket
+
+<span class="hljs-comment">; 2.5 Lexical</span>
+
+(<span class="hljs-name">define</span> x <span class="hljs-number">10</span>)
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">mach-was</span>)
+  (<span class="hljs-name">cond</span>
+    (<span class="hljs-name">x</span> <span class="hljs-string">"Zweig 1"</span>)
+    (<span class="hljs-name">else</span> <span class="hljs-string">"Zweig 2"</span>)))
+
+<span class="hljs-comment">; Aus einer Library kopiert: </span>
+(<span class="hljs-name">define</span> (<span class="hljs-name">super-wichtige-rechnung</span>)
+  <span class="hljs-comment">; + 100 Zeilen Code</span>
+  (<span class="hljs-name">define</span> x #f) <span class="hljs-comment">; x würde in den nachvollgenden Zeilen gebraucht werden</span>
+  <span class="hljs-comment">; + 70 Zeilen Code</span>
+  (<span class="hljs-name">define</span> y <span class="hljs-string">"test"</span>) <span class="hljs-comment">; y würde in den nachvollgenden Zeilen gebraucht werden</span>
+  <span class="hljs-comment">; + 20 Zeilen Code</span>
+  (<span class="hljs-name">string-append</span> <span class="hljs-string">"Super wichtige Rechnung!"</span>))
+
+(<span class="hljs-name">mach-was</span>) <span class="hljs-comment">; -&gt; "Zweig 1"</span>
+<span class="hljs-comment">; +30 Zeilen</span>
+(<span class="hljs-name">super-wichtige-rechnung</span>)
+<span class="hljs-comment">; +14 Zeilen</span>
+(<span class="hljs-name">mach-was</span>) <span class="hljs-comment">; -&gt; "Zweig 1"</span>
+</code></pre><p>Diese Lexical-Version liefert das erwartete Ergebnis.</p>
+<h3 id="anmerkungen">Anmerkungen</h3>
+<ul>
+<li>Um <code>dynamic scope</code> zu simulieren, wurden alle Variablen-Erstellungen nach der 1. durch <code>!set</code> ersetzt.</li>
+</ul>

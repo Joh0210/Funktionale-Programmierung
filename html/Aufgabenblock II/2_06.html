@@ -1,0 +1,62 @@
+<p>Überlegen Sie ein Beispiel, in dem verzögerte Auswertung sinnvoll sein kann. 
+Wie würden Sie die verzögerte Auswertung umsetzen? Begründen Sie Ihr Vorgehen.</p>
+<h3 id="antwort">Antwort</h3>
+<p>Verzögerte Auswertung sollte verwendet werden, wenn eine Berechnung relativ aufwendig ist und nur unter gewissen Konditionen benötigt wird.</p>
+<p>Hierfür gibt es die Wahl zwischen <code>thunk</code> und Promises:</p>
+<ul>
+<li><code>thunk</code> ist eine eingewickelte Berechnung, also eine Funktion, welche in einem z.B. lambda-Ausdruck eingewickelt ist (z.B. <code>(lambda () (+ 2 3))</code>).
+<br>Möchte man das Ergebnis der Funktion an einer Stelle nutzen, so muss das <code>thunk</code> lediglich ausgewertet werden.
+<br>Wird <code>thunk</code> allerdings mehrfach ausgewertet, findet die Berechnung an jeder Stelle erneut statt.</li>
+<li>Promises werden durch <code>delay</code> erstellt. Sie beinhalten die Funktion, welche potenziell ausgeführt werden muss. 
+<br> Um an das Ergebnis der Funktion zu gelangen, muss das Promise an die <code>force</code> Funktion übergeben werden, welche die Berechnung anschließend durchführt.
+<br> Wird das Ergebnis des Promise erneut benötigt, muss die Berechnung nicht erneut durchgeführt werden, sondern es wird ein zwischengespeicherter Wert verwendet. Das hat einen gewissen Speicherverbrauch zur Folge.</li>
+</ul>
+<p>Wenn das Ergebnis der Berechnung an vielen Stellen benötigt wird, und nur einen geringen Speicheraufwand hat, sollten also Promises verwendet werden. Wird das Ergebnis nur einmal benötigt, oder der Speicheraufwand ist im Verhältnis zum Rechenaufwand zu groß, sollte <code>thunk</code> verwendet werden.</p>
+<p>Genauere Erklärungen hierzu auch in Aufgabenblock I: Aufgabe 16.</p>
+<h3 id="code">Code</h3>
+<h4 id="normale-auswertung">Normale Auswertung</h4>
+<pre><code>#lang racket
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">entscheidung</span> kondition res)
+  (<span class="hljs-name">cond</span>
+    (<span class="hljs-name">kondition</span> res)
+    (<span class="hljs-name">else</span> <span class="hljs-string">"wird nicht benötigt"</span>)))
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">aufwendige-berechnung</span>)
+  (<span class="hljs-name">sleep</span> <span class="hljs-number">3</span>)
+  <span class="hljs-string">"wird benötigt"</span>)
+
+(<span class="hljs-name">entscheidung</span> #t (<span class="hljs-name">aufwendige-berechnung</span>)) <span class="hljs-comment">; Es wird 3 sec gewartet</span>
+(<span class="hljs-name">entscheidung</span> #t (<span class="hljs-name">aufwendige-berechnung</span>)) <span class="hljs-comment">; Es wird 3 sec gewartet</span>
+(<span class="hljs-name">entscheidung</span> #f (<span class="hljs-name">aufwendige-berechnung</span>)) <span class="hljs-comment">; Es wird 3 sec gewartet</span>
+</code></pre><h4 id="verz-gerte-auswertung-thunk">Verzögerte Auswertung: thunk</h4>
+<pre><code>#lang racket
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">entscheidung</span> kondition thunk)
+  (<span class="hljs-name">cond</span>
+    (<span class="hljs-name">kondition</span> (<span class="hljs-name">thunk</span>))
+    (<span class="hljs-name">else</span> <span class="hljs-string">"wird nicht benötigt"</span>)))
+
+(<span class="hljs-name">define</span> aufwendige-berechnung (<span class="hljs-name">lambda</span> ()
+  (<span class="hljs-name">sleep</span> <span class="hljs-number">3</span>)
+  <span class="hljs-string">"wird benötigt"</span>))
+
+(<span class="hljs-name">entscheidung</span> #t aufwendige-berechnung) <span class="hljs-comment">; Es wird 3 sec gewartet</span>
+(<span class="hljs-name">entscheidung</span> #t aufwendige-berechnung) <span class="hljs-comment">; Es wird 3 sec gewartet</span>
+(<span class="hljs-name">entscheidung</span> #f aufwendige-berechnung) <span class="hljs-comment">; Es wird nicht gewartet</span>
+</code></pre><h4 id="verz-gerte-auswertung-promise">Verzögerte Auswertung: promise</h4>
+<pre><code>#lang racket
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">entscheidung</span> kondition promise)
+  (<span class="hljs-name">cond</span>
+    (<span class="hljs-name">kondition</span> (<span class="hljs-name">force</span> promise))
+    (<span class="hljs-name">else</span> <span class="hljs-string">"wird nicht benötigt"</span>)))
+
+(<span class="hljs-name">define</span> aufwendige-berechnung (<span class="hljs-name">delay</span>
+  (<span class="hljs-name">sleep</span> <span class="hljs-number">3</span>)
+  <span class="hljs-string">"wird benötigt"</span>))
+
+(<span class="hljs-name">entscheidung</span> #t aufwendige-berechnung) <span class="hljs-comment">; Es wird 3 sec gewartet</span>
+(<span class="hljs-name">entscheidung</span> #t aufwendige-berechnung) <span class="hljs-comment">; Es wird nicht gewartet</span>
+(<span class="hljs-name">entscheidung</span> #f aufwendige-berechnung) <span class="hljs-comment">; Es wird nicht gewartet</span>
+</code></pre>

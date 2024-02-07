@@ -1,0 +1,101 @@
+<p>Gegeben ist folgender Racket-Code, der ein simples Bankkonto realisieren soll. Es soll möglich sein, ein neues Bankkonto einzurichten und Geld ein- und auszuzahlen.</p>
+<pre><code>(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">make-account</span> money)
+  (<span class="hljs-name"><span class="hljs-builtin-name">lambda</span></span> (movement)
+    (<span class="hljs-name"><span class="hljs-builtin-name">set!</span></span> money (<span class="hljs-name"><span class="hljs-builtin-name">+</span></span> money movement))
+    money))
+
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> a (<span class="hljs-name">make-account</span> <span class="hljs-number">10</span>))
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> b (<span class="hljs-name">make-account</span> <span class="hljs-number">100</span>))
+</code></pre><p>Und gegeben die folgende Interaktion mit der Racket-REPL:</p>
+<pre><code>&gt; a
+#&lt;<span class="hljs-function"><span class="hljs-keyword">procedure</span>&gt;
+&gt; <span class="hljs-title">b</span>
+#&lt;<span class="hljs-title">procedure</span>&gt;
+&gt; <span class="hljs-params">(a 10)</span>
+20
+&gt; <span class="hljs-params">(b 10)</span>
+110
+&gt; <span class="hljs-params">(b 10)</span>
+120</span>
+</code></pre><p>Erläutern Sie anhand der Interaktion und des Programmcodes, wie in Racket Abschlussobjekte und zustandsorientierte Programmierung genutzt werden können, 
+um Eigenschaften objektorientierter Programmierung umzusetzen. 
+Sehen Sie Grenzen in der Umsetzung objektorientierter Programmierung in Racket? Wenn ja, welche und warum?</p>
+<h3 id="umsetzung">Umsetzung</h3>
+<p>Racket selbst ist zwar eine funktionale Sprache, jedoch ermöglicht es durch Abschlussobjekte und Zustandsorientierung 
+die Implementierung von objektorientierten Konzepten.</p>
+<p>Abschlussobjekte (Closures) sind Funktionen, mit einem Verweis auf ihre Definitionsumgebung. 
+Also ist das &quot;Objekt&quot;, das durch die Funktion <code>(make-account 10)</code> erstellt wird also eigentlich auch nur eine Funktion, was auch in der REPL-Ausgabe sichtbar ist:</p>
+<pre><code>&gt; a
+#&lt;<span class="hljs-function"><span class="hljs-keyword">procedure</span>&gt;</span>
+</code></pre><p>Da diese Funktion Zugriff auf ihre Definitionsumgebung hat, können dort Daten hinterlegt werden, welche von dem Abschlussobjekt genutzt werden können. 
+Diese Daten repräsentieren also die Attribute des Objektes. In diesem Beispiel haben &quot;Objekte&quot; die durch <code>make-account</code> erstellt werden nur ein Attribut <code>money</code>.</p>
+<p>Abschlussobjekte haben zusätzlich auch noch Funktionen, also Methoden, welche das Objekt ausführen kann. 
+In diesem Fall haben die Objekte nur eine einzige Funktion, welche einen gewissen Betrag auf das Konto überweisen oder abheben kann. 
+Da das Objekt nur eine Methode besitzt, ist diese auch gleichzeitig die Funktion, welche das Objekt darstellt. </p>
+<p>Möchte man die Methode aufrufen, nutzt man das Objekt als Funktion des Klammerausdrucks und den Parameter (<code>movement</code>) als erstes Argument:</p>
+<pre><code><span class="hljs-comment">; 10 (€) einzahlen:</span>
+(<span class="hljs-name">a</span> <span class="hljs-number">10</span>)
+
+<span class="hljs-comment">; 10 (€) abheben:</span>
+(<span class="hljs-name">a</span> <span class="hljs-number">-10</span>)
+
+<span class="hljs-comment">; Kontostand prüfen:</span>
+(<span class="hljs-name">a</span> <span class="hljs-number">0</span>)
+</code></pre><p>Für gewöhnlich unterstützt ein Abschlussobjekt mehrere Funktionen. In den Fällen werden diese innerhalb der erzeugenden Funktion definiert. 
+Zusätzlich wird noch eine Funktion definiert, welches als Argument eine &quot;Message&quot; übergeben bekommt, 
+anhand derer die richtige Funktion in einer Sprungtabelle ausgewählt und mit den restlichen Parametern aufgerufen wird. 
+Diese Auswahlmethode ist anschließend die Funktion, welche das Objekt darstellt.</p>
+<pre><code>(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">make-account</span>)
+  (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> money <span class="hljs-number">0</span>)  
+
+  (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">withdraw</span> amount)
+    (<span class="hljs-name"><span class="hljs-builtin-name">cond</span></span> ((<span class="hljs-name"><span class="hljs-builtin-name">&gt;=</span></span> money amount)
+           (<span class="hljs-name"><span class="hljs-builtin-name">set!</span></span> money (<span class="hljs-name"><span class="hljs-builtin-name">-</span></span> money amount))
+           money)
+          (<span class="hljs-name"><span class="hljs-builtin-name">else</span></span> <span class="hljs-string">"Guthaben nicht ausreichend!"</span>)))
+
+  (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">deposit</span> amount)
+    (<span class="hljs-name"><span class="hljs-builtin-name">set!</span></span> money (<span class="hljs-name"><span class="hljs-builtin-name">+</span></span> money amount))
+    money)
+
+  (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">balance</span>)
+    money)
+
+  (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">dispatch</span> m)
+    (<span class="hljs-name"><span class="hljs-builtin-name">cond</span></span>
+      ((<span class="hljs-name"><span class="hljs-builtin-name">equal?</span></span> m <span class="hljs-symbol">'withdraw</span>) withdraw)
+      ((<span class="hljs-name"><span class="hljs-builtin-name">equal?</span></span> m <span class="hljs-symbol">'deposit</span>) deposit)
+      ((<span class="hljs-name"><span class="hljs-builtin-name">equal?</span></span> m <span class="hljs-symbol">'balance</span>) balance)
+      (<span class="hljs-name"><span class="hljs-builtin-name">else</span></span> <span class="hljs-string">"Unbekannte Nachricht!"</span>)))
+
+  dispatch)
+
+<span class="hljs-comment">; Erzeugung: </span>
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> acc1 (<span class="hljs-name">make-account</span>))
+
+<span class="hljs-comment">; Einzahlen:</span>
+((<span class="hljs-name">acc1</span> <span class="hljs-symbol">'deposit</span>) <span class="hljs-number">100</span>)
+</code></pre><p>Auf diese Weise gibt es auch Polymorphie oder sogenanntes &quot;Duck-Typing&quot; (wie in Python),
+bei dem es der Funktion egal ist, um welche Klasse von Objekt es sich handelt, solange es die eingegebene Funktion unterstützt.
+&quot;If it walks like a duck, swims like a duck, and quacks like a duck, then it probably is a duck.&quot; [Ursprung der Redewendung ist nicht eindeutig auf eine bestimmte Person zurückzuführen]</p>
+<p>Abschlussobjekte allein würden jedoch nicht ausreichen, um Objektorientierung nachstellen zu können, denn sie können erstmal nur Nachrichten empfangen, Nachrichten an andere Objekte senden, Auskunft über den eigenen Zustand geben und neue Objekte erzeugen.
+Erst mit der Zustandsorientierung können die Attribute der Objekte manipuliert werden. Funktionen, welche die Attribute des Objektes anpassen können und so den Zustand des Objektes manipulieren, lassen sich mit <code>set!</code> implementieren.
+<br>In dem gegebenen Beispiel findet z.B. eine Einzahlung statt, wodurch das Attribut, welche den Kontostand repräsentiert, verändert wird. </p>
+<pre><code>&gt; (<span class="hljs-name">b</span> <span class="hljs-number">10</span>)
+<span class="hljs-number">110</span>
+&gt; (<span class="hljs-name">b</span> <span class="hljs-number">10</span>)
+<span class="hljs-number">120</span>
+</code></pre><h3 id="grenzen-und-schw-chen">Grenzen und Schwächen</h3>
+<ul>
+<li><strong>Vererbung</strong>: Vererbung ist etwas umständlicher. Es ist möglich das Parent-Objekt, als Attribut im Child-Objekt zu speichern und unbekannte Massages des Childes an den Parent weiterzuleiten, jedoch ist das verhältnismäßig unübersichtlich und schwer mit mehreren Parents. </li>
+<li><strong>Typprüfung</strong>: Objektorientierte Programmiersprachen, wie Java, nutzen in der Regel ein statisches Typsystem welches auch selbsterstellte Klassen als Typ wahrnimmt. 
+Die einzige Typprüfung, die hier jedoch existiert, ist das, oben erwähnte &quot;Duck-Typing&quot;, welches dazu führen kann, dass falsche Objekte einer Funktion übergeben werden können. 
+In sehr ungünstigen Situationen kann es sogar passieren, dass es nie zu einem tatsächlichen Error kommt, sondern lediglich falsche Ausgaben stattfinden. Dieses Problem haben allerdings auch einige objektorientierte Sprachen, wie z.B. Python.
+<br>Bei dem Versuch Abschlussobjekte mit TypedRacket zu verwenden, kam es zu einigen Komplikationen, weswegen hier nicht genauer darauf eingegangen werden kann. 
+Es lässt sich jedoch sagen, dass TypedRacket mit Abschlussobjekten sehr kompliziert werden kann.</li>
+<li><strong>Funktionales Paradigma</strong>: Racket selbst ist eine funktionale Sprache, was sich auch bei der Erzeugung der Objekte wieder spiegelt. 
+Es ist zwar möglich, jedoch deutlich komplexer als in anderen Sprachen. </li>
+</ul>
+<p>Zusätzlich sollte erwähnt werden, wenn man das funktionale Paradigma nutzen möchte, ist es oft sinnvoll die Nutzung von Objekten zu minimieren, da vor allem Seiteneffekte dem funktionalen Paradigma widerstreben.
+<br>An manchen Stellen kann es sinnvoll sein, objektorientierte Strukturen in dem funktionalen Paradigma umzusetzen, um z.B. Rechenaufwand zu minimieren oder mit der Umwelt zu interagieren. 
+Ist es jedoch geplant große komplexe objektorientierte Strukturen umzusetzen, ist es empfehlenswert direkt eine Sprache zu wählen, welche darauf ausgelegt ist.</p>

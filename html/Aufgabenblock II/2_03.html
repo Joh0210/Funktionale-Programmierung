@@ -1,0 +1,170 @@
+<p>Implementieren Sie eine Funktion <code>mk-mp3-control</code>, die ein Objekt zurückliefert, das die Kontrolleinheit eines MP3-Spielers repräsentiert. 
+(Es sollen aber nicht wirklich Dateien abgespielt werden.) 
+Das Objekt soll folgende Informationen speichern/zurückliefern: </p>
+<ul>
+<li>Eine Liste, der gespeicherten MP3-Dateien (mit Dateinamen und Dauer des Stücks), </li>
+<li>die Anzahl der Titel</li>
+<li>der aktuelle Titel, der gerade abgespielt wird oder vorgewählt ist</li>
+<li>den Abspielstatus, also ob derzeit ein Titel (welcher?) abgespielt wird oder stop, wenn kein Titel abgespielt wird. </li>
+</ul>
+<p>Folgende Botschaften soll das Objekt verstehen: </p>
+<ul>
+<li>laden: Hinzufügen einer neuen MP3-Datei an das Ende der Titelliste, </li>
+<li>loeschen: Löschen einer Datei aus der Liste, Übergabe der Nummer des zu löschenden Titels</li>
+<li>abspielen/stop: Ändern des Abspielstatus, </li>
+<li>vor/zurück: Titel erhöhen oder erniedrigen, sind keine Titel vorhanden oder ist das Ende oder 1 erreicht, so wird die Nachricht ignoriert, </li>
+<li>unbekannte Nachrichten werden ignoriert.</li>
+</ul>
+<h3 id="code">Code</h3>
+<pre><code>#lang racket
+
+<span class="hljs-comment">; Lieder </span>
+(<span class="hljs-name">define</span> (<span class="hljs-name">mk-lied</span> date-name lied-name dauer)
+  (<span class="hljs-name">define</span> (<span class="hljs-name">zu-string</span>)
+    (<span class="hljs-name">string-append</span> date-name <span class="hljs-string">": "</span> lied-name <span class="hljs-string">" ("</span> dauer <span class="hljs-string">"min)"</span>))
+
+  (<span class="hljs-name">define</span> (<span class="hljs-name">dispatch</span> m)
+    (<span class="hljs-name">cond</span>
+      ((<span class="hljs-name">equal</span>? m 'zu-string) zu-string)
+      ((<span class="hljs-name">equal</span>? m 'datei-name) (<span class="hljs-name">lambda</span> () date-name))
+      ((<span class="hljs-name">equal</span>? m 'lied-name) (<span class="hljs-name">lambda</span> () lied-name))
+      ((<span class="hljs-name">equal</span>? m 'dauer) (<span class="hljs-name">lambda</span> () dauer))
+      (<span class="hljs-name">else</span> (<span class="hljs-name">const</span> <span class="hljs-string">"Unbekannte Nachricht!"</span>))))
+  dispatch)
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">zu-string</span> lied)
+  ((<span class="hljs-name">lied</span> 'zu-string)))
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">datei-name</span> lied)
+  ((<span class="hljs-name">lied</span> 'datei-name)))
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">lied-name</span> lied)
+  ((<span class="hljs-name">lied</span> 'lied-name)))
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">dauer</span> lied)
+  ((<span class="hljs-name">lied</span> 'dauer)))
+
+<span class="hljs-comment">; MP3 Players</span>
+(<span class="hljs-name">define</span> (<span class="hljs-name">mk-mp3-control</span>)
+  (<span class="hljs-name">define</span> lieder null)
+  (<span class="hljs-name">define</span> status <span class="hljs-string">"stop"</span>)
+  (<span class="hljs-name">define</span> ausgewählt <span class="hljs-number">0</span>)
+
+  (<span class="hljs-name">define</span> (<span class="hljs-name">ausgewaehlt-name</span>)
+    (<span class="hljs-name">cond</span>
+      ((<span class="hljs-name">&lt;=</span> (<span class="hljs-name">length</span> lieder) <span class="hljs-number">0</span>)
+       <span class="hljs-string">"Du hast kein Lied zum abspielen"</span>)
+      (<span class="hljs-name">else</span>
+       (<span class="hljs-name">lied-name</span> (<span class="hljs-name">list-ref</span> lieder ausgewählt)))))
+
+  (<span class="hljs-name">define</span> (<span class="hljs-name">lieder-liste</span>)
+    (<span class="hljs-name">map</span> (<span class="hljs-name">lambda</span> (<span class="hljs-name">l</span>) (<span class="hljs-name">zu-string</span> l)) lieder))
+
+  (<span class="hljs-name">define</span> (<span class="hljs-name">abspielen/stop</span>)    
+    (<span class="hljs-name">cond</span>
+      ((<span class="hljs-name">&lt;=</span> (<span class="hljs-name">length</span> lieder) <span class="hljs-number">0</span>)
+       (<span class="hljs-name">set!</span> status <span class="hljs-string">"stop"</span>)
+       <span class="hljs-string">"Du hast kein Lied zum abspielen"</span>)
+      ((<span class="hljs-name">equal</span>? status <span class="hljs-string">"stop"</span>)
+       (<span class="hljs-name">set!</span> status <span class="hljs-string">"spielt musik"</span>)
+       <span class="hljs-string">"Die Weidergabe wird fortgesetzt"</span>)
+      (<span class="hljs-name">else</span>
+       (<span class="hljs-name">set!</span> status <span class="hljs-string">"stop"</span>)
+       <span class="hljs-string">"Die Weidergabe wird pausiert"</span>)))
+
+  (<span class="hljs-name">define</span> (<span class="hljs-name">get-status</span>)
+    (<span class="hljs-name">cond</span> ((<span class="hljs-name">equal</span>? status <span class="hljs-string">"stop"</span>) <span class="hljs-string">"stop"</span>) (<span class="hljs-name">else</span> (<span class="hljs-name">string-append</span> <span class="hljs-string">"Es wird gespielt: "</span> (<span class="hljs-name">ausgewaehlt-name</span>)))))
+
+  (<span class="hljs-name">define</span> (<span class="hljs-name">laden</span> lied)
+    (<span class="hljs-name">cond</span>
+      <span class="hljs-comment">; Keine dopplungen </span>
+      ((<span class="hljs-name">findf</span>
+        (<span class="hljs-name">lambda</span> (<span class="hljs-name">l</span>) (<span class="hljs-name">equal</span>? (<span class="hljs-name">datei-name</span> l) (<span class="hljs-name">datei-name</span> lied)))
+        lieder) (<span class="hljs-name">string-append</span> (<span class="hljs-name">datei-name</span> lied) <span class="hljs-string">" ist schon enthalten"</span>))
+      <span class="hljs-comment">; lied hinzufügen</span>
+      (<span class="hljs-name">else</span> (<span class="hljs-name">set!</span> lieder (<span class="hljs-name">append</span> lieder (<span class="hljs-name">list</span> lied)))
+            (<span class="hljs-name">string-append</span> (<span class="hljs-name">datei-name</span> lied) <span class="hljs-string">" hinzugefügt"</span>))))
+
+  (<span class="hljs-name">define</span> (<span class="hljs-name">loeschen</span> n)
+    (<span class="hljs-name">define</span> (<span class="hljs-name">auswahl-anpassen</span>)
+      (<span class="hljs-name">cond</span>
+        ((<span class="hljs-name">=</span> (<span class="hljs-name">+</span> ausgewählt <span class="hljs-number">1</span>) n) (<span class="hljs-name">string-append</span> <span class="hljs-string">" - Ausgewählt ist jetzte: "</span> (<span class="hljs-name">ausgewaehlt-name</span>)))
+        ((<span class="hljs-name">&gt;</span> ausgewählt n) (<span class="hljs-name">set!</span> ausgewählt (<span class="hljs-name">-</span> ausgewählt <span class="hljs-number">1</span>)) <span class="hljs-string">""</span>)
+        (<span class="hljs-name">else</span> <span class="hljs-string">""</span>)))
+
+    (<span class="hljs-name">define</span> (<span class="hljs-name">loeschen-inner</span> lst acc n)
+      (<span class="hljs-name">cond</span>
+        ((<span class="hljs-name">empty</span>? lst) acc)
+        ((<span class="hljs-name">&lt;=</span> n <span class="hljs-number">0</span>) (<span class="hljs-name">append</span> acc (<span class="hljs-name">rest</span> lst)))
+        (<span class="hljs-name">else</span> (<span class="hljs-name">loeschen-inner</span> (<span class="hljs-name">rest</span> lst) (<span class="hljs-name">append</span> acc (<span class="hljs-name">list</span> (<span class="hljs-name">first</span> lst))) (<span class="hljs-name">-</span> n <span class="hljs-number">1</span>)))))
+
+    (<span class="hljs-name">cond</span>
+      ((<span class="hljs-name">and</span> (<span class="hljs-name">exact-positive-integer</span>? n) (<span class="hljs-name">&lt;=</span> n (<span class="hljs-name">length</span> lieder)))
+       (<span class="hljs-name">set!</span> lieder (<span class="hljs-name">loeschen-inner</span> lieder null (<span class="hljs-name">-</span> n <span class="hljs-number">1</span>)))
+       (<span class="hljs-name">string-append</span> <span class="hljs-string">"Das "</span> (<span class="hljs-name">number-&gt;string</span> n) <span class="hljs-string">". lied wurde entfernt"</span> (<span class="hljs-name">auswahl-anpassen</span>)))
+      (<span class="hljs-name">else</span> <span class="hljs-string">"Dieses Element existiert nicht"</span>)))
+
+  (<span class="hljs-name">define</span> (<span class="hljs-name">vor</span>)
+    (<span class="hljs-name">cond</span>
+      ((<span class="hljs-name">&gt;=</span> (<span class="hljs-name">+</span> ausgewählt <span class="hljs-number">1</span>) (<span class="hljs-name">length</span> lieder)) <span class="hljs-string">"Ende erreicht"</span>)
+      (<span class="hljs-name">else</span>
+       (<span class="hljs-name">set!</span> ausgewählt (<span class="hljs-name">+</span> ausgewählt <span class="hljs-number">1</span>))
+       (<span class="hljs-name">string-append</span> <span class="hljs-string">"Ausgewählt: "</span> (<span class="hljs-name">ausgewaehlt-name</span>)))))
+
+  (<span class="hljs-name">define</span> (<span class="hljs-name">zur</span>ück)
+    (<span class="hljs-name">cond</span>
+      ((<span class="hljs-name">&lt;</span> (<span class="hljs-name">-</span> ausgewählt <span class="hljs-number">1</span>) <span class="hljs-number">0</span>) <span class="hljs-string">"Anfang erreicht"</span>)
+      (<span class="hljs-name">else</span>
+       (<span class="hljs-name">set!</span> ausgewählt (<span class="hljs-name">-</span> ausgewählt <span class="hljs-number">1</span>))
+       (<span class="hljs-name">string-append</span> <span class="hljs-string">"Ausgewählt: "</span> (<span class="hljs-name">ausgewaehlt-name</span>)))))
+
+  (<span class="hljs-name">define</span> (<span class="hljs-name">dispatch</span> m)
+    (<span class="hljs-name">cond</span>
+      ((<span class="hljs-name">equal</span>? m 'lieder-liste) lieder-liste)
+      ((<span class="hljs-name">equal</span>? m 'lieder-liste-roh) (<span class="hljs-name">lambda</span> () lieder))
+      ((<span class="hljs-name">equal</span>? m 'anzahl) (<span class="hljs-name">lambda</span> () (<span class="hljs-name">length</span> lieder)))
+      ((<span class="hljs-name">equal</span>? m 'ausgewaehlt) ausgewaehlt-name)
+      ((<span class="hljs-name">equal</span>? m 'status) get-status)
+      ((<span class="hljs-name">equal</span>? m 'abspielen/stop) abspielen/stop)
+      ((<span class="hljs-name">equal</span>? m 'laden) laden)
+      ((<span class="hljs-name">equal</span>? m 'loeschen) loeschen)
+      ((<span class="hljs-name">equal</span>? m 'vor) vor)
+      ((<span class="hljs-name">equal</span>? m 'zurück) zurück)
+      (<span class="hljs-name">else</span> (<span class="hljs-name">const</span> <span class="hljs-string">"Unbekannte Nachricht!"</span>))))
+  dispatch)
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">lieder-liste</span> mp3-control)
+  ((<span class="hljs-name">mp3-control</span> 'lieder-liste)))
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">lieder-liste-roh</span> mp3-control)
+  ((<span class="hljs-name">mp3-control</span> 'lieder-liste-roh)))
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">anzahl</span> mp3-control)
+  ((<span class="hljs-name">mp3-control</span> 'anzahl)))
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">ausgewaehlt</span> mp3-control)
+  ((<span class="hljs-name">mp3-control</span> 'ausgewaehlt)))
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">status</span> mp3-control)
+  ((<span class="hljs-name">mp3-control</span> 'status)))
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">abspielen/stop</span> mp3-control)
+  ((<span class="hljs-name">mp3-control</span> 'abspielen/stop)))
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">laden</span> mp3-control lied)
+  ((<span class="hljs-name">mp3-control</span> 'laden) lied))
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">loeschen</span> mp3-control nummer)
+  ((<span class="hljs-name">mp3-control</span> 'loeschen) nummer))
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">vor</span> mp3-control)
+  ((<span class="hljs-name">mp3-control</span> 'vor)))
+
+(<span class="hljs-name">define</span> (<span class="hljs-name">zur</span>ück mp3-control)
+  ((<span class="hljs-name">mp3-control</span> 'zurück)))
+</code></pre><h3 id="anmerkungen">Anmerkungen</h3>
+<ul>
+<li>Dieser Code ist ein perfektes Beispiel dafür, 
+dass die Objektorientierung in Racket sehr schnell sehr umfangreichen Code erzeugen kann, 
+selbst wenn nur wenig Funktionalität umgesetzt werden soll, welche keinen hohen Komplexitätsgrad hat.</li>
+</ul>

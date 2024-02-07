@@ -1,0 +1,51 @@
+<p>Ließen sich die Projekte oder Aufgaben auch mit dem Paradigma der funktionalen Programmierung umsetzen? Begründen Sie Ihre Antwort.</p>
+<h3 id="antwort">Antwort</h3>
+<p>Nein. In beiden Fällen handelt es bei den Projekten um eine Erweiterung eines bereits existierenden Systems. 
+Auf diese Weise wird zum einen die Programmiersprache Java (oder Kotlin) vorgegeben, welche auf das Paradigma der Objektorientierung ausgelegt ist, 
+jedoch ließe sich auch damit das funktionale Paradigma umsetzen.</p>
+<p>Zum anderen wird jedoch auch die Architektur der Logik-Komponenten vorgegeben. 
+So muss, wie in Aufgabe 3 erklärt, ein neues Objekt in Minecraft immer als Instanz einer Klasse registriert werden. 
+Auch die Activities von Android sind ebenfalls Instanzen der entsprechenden Klassen. 
+<br>Auch der Inhalt dieser Klassen kann nur sehr begrenzt funktional umgesetzt werden, 
+da die Funktionalität hauptsächlich durch Überschreiben von Parent-Methoden und Objektmanipulation stattfindet.</p>
+<p>Auch das Reagieren auf Ereignisse in Minecraft nutzt ebenfalls Objekte als Kommunikationsmedium 
+und nur durch dessen Manipulation lässt sich mit dem Spiel interagieren.</p>
+<p>Funktionale Programmierung lässt zwar bedingt auch die Nutzung von Objekten zu, jedoch geht es in diesen Fällen hauptsächlich um die bewusste Nutzung von Seiteneffekten, 
+welche dem Paradigma der funktionalen Programmierung wieder strebt. </p>
+<p>Jedoch lassen sich potenziell einige Teile mithilfe des funktionalen Paradigmas umsetzen. </p>
+<p>So muss zwar an einem gewissen Punkt die Backendlogik einer Android-App wieder mit der Objektorientierung der Frontendlogik verbunden werden, bzw. 
+die Logik der komplett neuen Spielmechaniken in Minecraft muss mit dem Event-System verbunden werden, jedoch gibt es keine Vorgaben, wie die interne Logik aufgebaut sein muss.
+Diese Abschnitte müssten zwar weiterhin in Java (oder Kotlin) implementiert werden, jedoch ist es theoretisch möglich auch andere Herangehensweisen zu nutzen.</p>
+<p>Hierbei ist allerdings zu beachten, dass Rekursionen, auch Endrekursive-Rekursionen, in Java nicht optimiert ist 
+und im großen Umfang für ein ineffizientes Verhalten sorgen können.</p>
+<h3 id="alternative-frage-">Alternative Frage:</h3>
+<p>Ließen sich die Basis-Projekte auch mit dem Paradigma der funktionalen Programmierung umsetzen? Begründen Sie Ihre Antwort.</p>
+<h4 id="minecraft">Minecraft</h4>
+<p>Auch funktionale Programmiersprachen ermöglichen die Entwicklung von Spielen, jedoch ist Minecraft über die Jahre hinweg extrem umfangreich geworden und stark mit dem Paradigma der Objektorientierung verknüpft. 
+Sich davon zu trennen wäre wahrscheinlich möglich, bedeutet jedoch, dass die komplette Architektur, die über viele Jahre hinweg gewachsen ist, von Grund auf überarbeitet werden muss. 
+Wie das die Performance beeinflussen würde, wird nicht weiter untersucht.</p>
+<p>Gleichermaßen ist ein großer Bestandteil für viele der Spieler, die Verfügbarkeit von Mods, welche von der Minecraft-Community bereitgestellt werden.
+Ich stelle die Vermutung auf, dass diese Fülle an über 10.000 Mods <a href="https://www.curseforge.com/minecraft">[5]</a> unter anderem deshalb möglich gewesen ist, 
+weil eine weit verbreitete Programmiersprache für die Entwicklung verwendet werden kann. Da funktionale Sprachen deutlich weniger verbreitet sind 
+hätte es wahrscheinlich deutlich weniger Entwickler in der Minecraft-Community gegeben, welche in der Lage gewesen wären, das Spiel, um die Inhalte zu erweitern. <a href="https://de.statista.com/statistik/daten/studie/678732/umfrage/beliebteste-programmiersprachen-weltweit-laut-pypl-index/">[6]</a>
+<br>Hierbei handelt es sich jedoch nur um eine begründete Vermutung und keinen Beleg.  </p>
+<p>Zusammenfassend lässt sich vermuten, dass es rein funktional umsetzbar wäre, 
+jedoch würde dies eine grundlegend andere Architektur bedeuten und hätte wahrscheinlich eine deutlich kleinere Modding-Community zur Folge, 
+was auch für den Erfolg des Spiels hinderlich gewesen sein könnte.</p>
+<h4 id="android-algorithmen-lern-app">Android Algorithmen-Lern App</h4>
+<p>Android Native Apps lassen sich auch mithilfe von funktionalen Programmiersprachen, wie Haskell, implementieren <a href="https://stackoverflow.com/questions/5151858/running-a-haskell-program-on-the-android-os">[7]</a>, <a href="https://github.com/neurocyte/android-haskell-activity">[8]</a>.</p>
+<p>Bei dem Projekt kamen einige objektorientierte Design-Patterns zum Einsatz, jedoch in einer deutlich loseren Struktur als z.B. bei Minecraft. 
+Auf diese Weise müssen zwar bestehende Konzepte neu geplant werden, 
+jedoch müsste nicht grundlegend neu definiert werden was Activities sind und wie sie sich verhalten, 
+da die Android-Umgebung nicht überarbeitet werden müsste, da z.B. Haskell hierfür als Schnittstelle dient.</p>
+<p>Die Backendlogik wurde von Gruppe zu Gruppe unterschiedlich implementiert, jedoch handelt es sich hierbei hauptsächlich um Algorithmen, die entsprechend auch mit funktionalen Verfahren implementiert werden können.</p>
+<p>Also Ja, das Projekt hätte, von Grund auf mit der funktionalen Programmierung umgesetzt werden können.</p>
+<p><strong>Anmerkung</strong>: Der hauptsächliche Grund, der dagegen spricht ist, dass die Programmiersprache Java den Studierenden bereits im 1. Semester beigebracht wurde. Eine funktionale Sprache hätte erst vermittelt werden müssen, wodurch andere Themen des Lehrplans gekürzt worden wären. 
+Zusätzlich lässt sich auch sagen das Java zwar immer weniger für die Appentwicklung verwendet wird, aber immer noch deutlich mehr als funktionale Sprachen, wodurch es sinnvoll sein kann diesen Prozess eher mit Java zu üben. <a href="https://de.statista.com/statistik/daten/studie/678732/umfrage/beliebteste-programmiersprachen-weltweit-laut-pypl-index/">[6]</a></p>
+<h3 id="quellen">Quellen</h3>
+<ul>
+<li>[5] <strong>Curseforge</strong>: <a href="https://www.curseforge.com/minecraft">Minecraft Mods</a> o.J., <a href="https://www.curseforge.com/minecraft">https://www.curseforge.com/minecraft</a>, 29.12.2023</li>
+<li>[6] <strong>Statista</strong>: <a href="https://de.statista.com/statistik/daten/studie/678732/umfrage/beliebteste-programmiersprachen-weltweit-laut-pypl-index/">Die beliebtesten Programmiersprachen weltweit laut PYPL</a> o.J., <a href="https://de.statista.com/statistik/daten/studie/678732/umfrage/beliebteste-programmiersprachen-weltweit-laut-pypl-index/">https://de.statista.com/statistik/daten/studie/678732/umfrage/beliebteste-programmiersprachen-weltweit-laut-pypl-index/</a>, 29.12.2023</li>
+<li>[7] <strong>Stackoverflow</strong>: <a href="https://stackoverflow.com/questions/5151858/running-a-haskell-program-on-the-android-os">Running a Haskell program on the Android OS</a> 2011, <a href="https://stackoverflow.com/questions/5151858/running-a-haskell-program-on-the-android-os">https://stackoverflow.com/questions/5151858/running-a-haskell-program-on-the-android-os</a>, 29.12.2023</li>
+<li>[8] <strong>Neurocyte</strong>: <a href="https://github.com/neurocyte/android-haskell-activity">android-haskell-activity</a> o.J., <a href="https://github.com/neurocyte/android-haskell-activity">https://github.com/neurocyte/android-haskell-activity</a>, 29.12.2023</li>
+</ul>

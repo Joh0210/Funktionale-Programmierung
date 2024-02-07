@@ -1,7 +1,7 @@
 # Aufgabenblock II
 
 ## Aufgabe 1 
-Wenn Sie eine neue Sprache erlernen, erwarten Sie eher `applicative order` oder `normal order`? Zeigen Sie die Vorzüge Ihrer Erwartung auf. Welche Auswertungsstrategie ist für Sie natürlicher? Begründen Sie Ihre Antwort. (Ergänzen Sie Ihre Antwort im Laufe des Semester ggf. noch einmal, nachdem Sie den Lambda-Kalkül kennengelern haben.)
+Wenn Sie eine neue Sprache erlernen, erwarten Sie eher `applicative order` oder `normal order`? Zeigen Sie die Vorzüge Ihrer Erwartung auf. Welche Auswertungsstrategie ist für Sie natürlicher? Begründen Sie Ihre Antwort. (Ergänzen Sie Ihre Antwort im Laufe des Semesters ggf. noch einmal, nachdem Sie den Lambda-Kalkül kennengelernt haben.)
 
 ### Wiederholung
 Hierfür ist es wichtig die beiden Begriffe klar einzuordnen:
@@ -14,10 +14,10 @@ Diese Frage lässt sich für mich nicht pauschal beantworten, sondern ist abhän
 #### Imperativ und Objektorientiert
 Erwartung von **Applicative Order**.
 
-Bei der imperativen und objektorientierten Programmierung wird oft gebrauch von Zustandsänderungen, Objektanpassungen und allgemeinen Seiteneffekte in Funktionen, Prozeduren und Methoden gemacht.
+Bei der imperativen und objektorientierten Programmierung wird oft gebrauch von Zustandsänderungen, Objektanpassungen und allgemeinen Seiteneffekten in Funktionen, Prozeduren und Methoden gemacht.
 <br>Aufgrund von Übersichtlichkeit sollten Funktionen und Prozeduren Seiteneffekte zwar primär vermeiden, jedoch sind sie für das Paradigma erlaubt und auch vorgesehen.
 
-Hierfür ist es entsprechend wichtig, das Argument einer Funktion bereits vollständig ausgewertet sind, bevor der Funktionsrumpf ausgewertet wird, da sonst potenziell Seiteneffekte die Argumente beeinflussen könnten.
+Hierfür ist es entsprechend wichtig, dass die Argumente einer Funktion bereits vollständig ausgewertet sind, bevor der Funktionsrumpf ausgewertet wird, da sonst potenziell Seiteneffekte die Argumente beeinflussen könnten.
 
 Beispiel:
 ```java 
@@ -47,7 +47,7 @@ public class Main {
     Original: 1
     ```
 - **Normal Order/Lazy Evaluation**: Das Argument `original` wird innerhalb des Funktionsrumpfes von dem Compiler durch `myTestInt.getValue()` ersetzt, 
-wodurch es durch den Seiteneffekt `myInt.add(1)` ebenfalls beinflusst wird und es zu folgender Ausgabe kommt:
+wodurch es durch den Seiteneffekt `myInt.add(1)` ebenfalls beeinflusst wird und es zu folgender Ausgabe kommt:
     ```
     Plus1: 2
     Original: 2
@@ -55,25 +55,25 @@ wodurch es durch den Seiteneffekt `myInt.add(1)` ebenfalls beinflusst wird und e
 
 Auch wenn das Beispiel sehr künstlich ist, zeigt es das Problem welches **Normal Order/Lazy Evaluation** in imperativen und objektorientierten Programmiersprachen zur Folge hätte.
 
-Entsprechen zu erwarten ist **Applicative Order**, entsprechend muss der Entwickler auf Seiteneffekte, Exception-Handling, etc. bereits bei Aufruf der Funktion achten.
+Zu erwarten ist daher **Applicative Order**. Entsprechend muss der Entwickler auf Seiteneffekte, Exception-Handling, etc. bereits bei Aufruf der Funktion achten.
 
 #### Funktional
-Erwartung von **Lazy Evaluation**, jedoch ist **Applicative Order** wahrscheinlich.
+Erwartung von **Lazy Evaluation**, jedoch ist **Applicative Order** oft vertreten.
 
 Funktionale Programmiersprachen unterstützen zwar auch teilweise Objektmanipulation und Zustandsänderungen, jedoch beschreibt das grundlegende Paradigma, dass das Ergebnis einer Funktion nur von den Eingabedaten abhängig ist.
 Somit sollte der Wert der Argumente unabhängig von der Position des Aufrufs sein.
 
-Funktionen die doch Seiteneffekte haben, z.B. das Löschen aller Dateien einer Datenbank, sollen in der Regel nur unter gewissen Konditionen aufgerufen werden.
+Funktionen, die doch Seiteneffekte haben, z.B. das Löschen aller Dateien einer Datenbank, sollen in der Regel nur unter gewissen Konditionen aufgerufen werden.
 Damit diese Funktionen als Argument übergeben werden können und nicht direkt bei dem Funktionsaufruf ausgewertet werden, ist ebenfalls **Normal Order/Lazy Evaluation** notwendig.
 
-Durch das Lambda-Kalkül ließ sich auch beweisen, dass **Normal Order/Lazy Evaluation** öfters auf ein Ergebnis kommt, da sofern **Applicative Order** zum Ergebnis führt auch **Normal Order/Lazy Evaluation** zwangsläufig terminiert. 
+Durch das Lambda-Kalkül lässt sich auch beweisen, dass **Normal Order/Lazy Evaluation** öfters auf ein Ergebnis kommt, da sofern **Applicative Order** zum Ergebnis führt auch **Normal Order/Lazy Evaluation** zwangsläufig terminiert. 
 Dieser Zusammenhang gilt jedoch nicht andersherum.
 
 In der Praxis wird jedoch auch in funktionalen Sprachen häufiger **Applicative Order** verwendet, da **Normal Order** tendenziell weniger effizient ist.
 
-Als Alternative wird kann entsprechend **Lazy Evaluation** statt **Normal Order** erwartet werden, da bei einer **Lazy Evaluation** das Argument maximal ein mal berechnet wird, und so bei erneuter Abfrage im Funktionsrumpf nicht erneut berechnet werden muss, sondern den entsprechenden wert übergeben bekommt. 
+Als Alternative kann **Lazy Evaluation** statt **Normal Order** erwartet werden, da bei einer **Lazy Evaluation** das Argument maximal einmal berechnet wird und so bei erneuter Abfrage im Funktionsrumpf nicht erneut berechnet werden muss, sondern den entsprechenden Wert übergeben bekommt. 
 Bei **Normal Order** würde die Berechnung der Funktion bei jeder Auswertung des Arguments stattfinden.
-Mit **Lazy Evaluation** lassen sich somit Ressourcen Sparen, da wenn ein Argument nicht benötigt wird, auch nicht berechnet wird und maximal einmal berechnet wird. 
+Mit **Lazy Evaluation** lassen sich somit Ressourcen sparen, da wenn ein Argument nicht benötigt wird nicht berechnet wird und sonst maximal einmal. 
 Diese Methode hat jedoch einen zusätzlichen Speicherverbrauch als Folge.    
 
 #### Logisch
@@ -84,7 +84,7 @@ Da ich primär mit objektorientierten Sprachen gearbeitet habe, erscheint mir **
 Jedoch halte ich es für wahrscheinlich, dass es anders wäre, wenn ich primär mit Sprachen gearbeitet hätte, welche **Normal Order/Lazy Evaluation** verwenden.
 
 ## Aufgabe 2
-Gegeben ist folgender Racket-Code, der ein simples Bankkonto realisieren soll. Es soll möglich sein, ein neues Bankkonte einzurichten und Geld ein- und auszuzahlen.
+Gegeben ist folgender Racket-Code, der ein simples Bankkonto realisieren soll. Es soll möglich sein, ein neues Bankkonto einzurichten und Geld ein- und auszuzahlen.
 ```
 (define (make-account money)
   (lambda (movement)
@@ -114,25 +114,25 @@ Sehen Sie Grenzen in der Umsetzung objektorientierter Programmierung in Racket? 
 
 ### Umsetzung
 Racket selbst ist zwar eine funktionale Sprache, jedoch ermöglicht es durch Abschlussobjekte und Zustandsorientierung 
-die implementierung von objektorientierten Konzepten.
+die Implementierung von objektorientierten Konzepten.
 
 Abschlussobjekte (Closures) sind Funktionen, mit einem Verweis auf ihre Definitionsumgebung. 
-Also ist das "Objekt", dass durch die Funktion `(make-account 10)` erstellt wird also eigentlich auch nur eine Funktion, was auch in der REPL ausgabe sichtbar ist:
+Also ist das "Objekt", das durch die Funktion `(make-account 10)` erstellt wird also eigentlich auch nur eine Funktion, was auch in der REPL-Ausgabe sichtbar ist:
 ```
 > a
 #<procedure>
 ```
 
-Da diese Funktion Zugriff auf ihre Definitionsumgebung hat, können dort Daten hinterlegt werden, welche von dem Abschlussobjekte genutzt werden können. 
-Diese Daten repräsentieren also die Attribute des Objektes. In diesem Beispiel hat "Objekte" die durch `make-account` erstellt werden nur ein Attribut `money`.
+Da diese Funktion Zugriff auf ihre Definitionsumgebung hat, können dort Daten hinterlegt werden, welche von dem Abschlussobjekt genutzt werden können. 
+Diese Daten repräsentieren also die Attribute des Objektes. In diesem Beispiel haben "Objekte" die durch `make-account` erstellt werden nur ein Attribut `money`.
 
 Abschlussobjekte haben zusätzlich auch noch Funktionen, also Methoden, welche das Objekt ausführen kann. 
 In diesem Fall haben die Objekte nur eine einzige Funktion, welche einen gewissen Betrag auf das Konto überweisen oder abheben kann. 
 Da das Objekt nur eine Methode besitzt, ist diese auch gleichzeitig die Funktion, welche das Objekt darstellt. 
 
-Möchte man die Methode aufrufen, nutzt man das Objekt als Funktion des Klammerausdrucks und den Parameter (`movement`) als 1. Argument:
+Möchte man die Methode aufrufen, nutzt man das Objekt als Funktion des Klammerausdrucks und den Parameter (`movement`) als erstes Argument:
 ```
-; 10 (€) einzalen:
+; 10 (€) einzahlen:
 (a 10)
 
 ; 10 (€) abheben:
@@ -142,7 +142,7 @@ Möchte man die Methode aufrufen, nutzt man das Objekt als Funktion des Klammera
 (a 0)
 ```
 
-Für gewöhnlich unterstütze ein Abschlussobjekt mehrere Funktionen. In den Fällen werden diese innerhalb der erzeugenden Funktion definiert. 
+Für gewöhnlich unterstützt ein Abschlussobjekt mehrere Funktionen. In den Fällen werden diese innerhalb der erzeugenden Funktion definiert. 
 Zusätzlich wird noch eine Funktion definiert, welches als Argument eine "Message" übergeben bekommt, 
 anhand derer die richtige Funktion in einer Sprungtabelle ausgewählt und mit den restlichen Parametern aufgerufen wird. 
 Diese Auswahlmethode ist anschließend die Funktion, welche das Objekt darstellt.
@@ -180,12 +180,12 @@ Diese Auswahlmethode ist anschließend die Funktion, welche das Objekt darstellt
 ((acc1 'deposit) 100)
 ```
 
-Auf diese Weise gibt es gewissermaßen auch Polymorphie oder sogenanntes "Duck-Typing" (wie in Python),
+Auf diese Weise gibt es auch Polymorphie oder sogenanntes "Duck-Typing" (wie in Python),
 bei dem es der Funktion egal ist, um welche Klasse von Objekt es sich handelt, solange es die eingegebene Funktion unterstützt.
 "If it walks like a duck, swims like a duck, and quacks like a duck, then it probably is a duck." [Ursprung der Redewendung ist nicht eindeutig auf eine bestimmte Person zurückzuführen]
 
-Abschlussobjekte alleine würden jedoch nicht ausreichen, um Objektorientierung nachstellen zu können, denn sie können erstmal nur Nachrichten empfangen, Nachrichten an andere Objekte senden, Auskunft über den eigenen Zustand geben und neue Objekte erzeugen.
-Erst mit der Zustandsorientierung können die Attribute der Objekte manipuliert werden. Funktionen, welche die Attribute des Objektes anpassen könne und so den Zustand des Objektes zu manipulieren, lassen sich mit `set!` implementieren.
+Abschlussobjekte allein würden jedoch nicht ausreichen, um Objektorientierung nachstellen zu können, denn sie können erstmal nur Nachrichten empfangen, Nachrichten an andere Objekte senden, Auskunft über den eigenen Zustand geben und neue Objekte erzeugen.
+Erst mit der Zustandsorientierung können die Attribute der Objekte manipuliert werden. Funktionen, welche die Attribute des Objektes anpassen können und so den Zustand des Objektes manipulieren, lassen sich mit `set!` implementieren.
 <br>In dem gegebenen Beispiel findet z.B. eine Einzahlung statt, wodurch das Attribut, welche den Kontostand repräsentiert, verändert wird. 
 ```
 > (b 10)
@@ -195,25 +195,24 @@ Erst mit der Zustandsorientierung können die Attribute der Objekte manipuliert 
 ```
 
 ### Grenzen und Schwächen
-- **Vererbung**: Mir ist keine Möglichkeit eingefallen, mit der auf Vererbung mit Abschlussobjekte ohne größere Umwege umsetzbar wäre.
-<br>Es wäre möglich das Parent-Objekt, als Attribut im Child-Objekt zu speichern, und unbekannte Massages des Childes an den Parent weiterzuleiten, jedoch ist das verhältnismäßig aufwendig.
-- **Typprüfung**: Objektorientierte Programmiersprachen, wie Java, nutzen in der regel ein statisches Typsystem welches auch selbsterstellte Klassen als Typ wahrnimmt. 
+- **Vererbung**: Vererbung ist etwas umständlicher. Es ist möglich das Parent-Objekt, als Attribut im Child-Objekt zu speichern und unbekannte Massages des Childes an den Parent weiterzuleiten, jedoch ist das verhältnismäßig unübersichtlich und schwer mit mehreren Parents. 
+- **Typprüfung**: Objektorientierte Programmiersprachen, wie Java, nutzen in der Regel ein statisches Typsystem welches auch selbsterstellte Klassen als Typ wahrnimmt. 
 Die einzige Typprüfung, die hier jedoch existiert, ist das, oben erwähnte "Duck-Typing", welches dazu führen kann, dass falsche Objekte einer Funktion übergeben werden können. 
-In sehr ungünstigen Situationen kann das sogar passieren, das es nie zu einem tatsächlichen Error kommt, sondern lediglich falsche Ausgaben stattfinden. Dieses Problem haben allerdings auch einige objektorientierte Sprachen, wie z.B. Python.
-<br>Bei dem Versuch Abschlussobjekte mit TypedRacket zu verwenden kam es zu einigen Komplikationen, weswegen hier nicht genauer darauf eingegangen werden kann. 
+In sehr ungünstigen Situationen kann es sogar passieren, dass es nie zu einem tatsächlichen Error kommt, sondern lediglich falsche Ausgaben stattfinden. Dieses Problem haben allerdings auch einige objektorientierte Sprachen, wie z.B. Python.
+<br>Bei dem Versuch Abschlussobjekte mit TypedRacket zu verwenden, kam es zu einigen Komplikationen, weswegen hier nicht genauer darauf eingegangen werden kann. 
 Es lässt sich jedoch sagen, dass TypedRacket mit Abschlussobjekten sehr kompliziert werden kann.
-- **Funktionales Paradigma**: Racket selbst ist eine funktionale Sprache, was sich auch bei der erzeugung der Objekte wieder spiegelt. 
+- **Funktionales Paradigma**: Racket selbst ist eine funktionale Sprache, was sich auch bei der Erzeugung der Objekte wieder spiegelt. 
 Es ist zwar möglich, jedoch deutlich komplexer als in anderen Sprachen. 
 
-Zusätzlich sollte erwähnt werden, wenn man das funktionale Paradigma nutzen möchte, ist es oft sinnvoll die Nutzung von Objekten zu minimieren, da vor allem Seiteneffekte dem funktionalen Paradigma wiederstreben.
-<br>An manchen stellen kann es Sinnvoll sein, objektorientierte Struktureden in dem funktionalen Paradigma umzusetzen, um z.B. Rechenaufwand zu minimieren oder mit der Umwelt zu interagieren. 
-Ist es jedoch geplant große komplexe objektorientierte Struktureden umzusetzen, ist es empfehlenswert direkt eine Sprache zu wählen, welche darauf ausgelegt ist.
+Zusätzlich sollte erwähnt werden, wenn man das funktionale Paradigma nutzen möchte, ist es oft sinnvoll die Nutzung von Objekten zu minimieren, da vor allem Seiteneffekte dem funktionalen Paradigma widerstreben.
+<br>An manchen Stellen kann es sinnvoll sein, objektorientierte Strukturen in dem funktionalen Paradigma umzusetzen, um z.B. Rechenaufwand zu minimieren oder mit der Umwelt zu interagieren. 
+Ist es jedoch geplant große komplexe objektorientierte Strukturen umzusetzen, ist es empfehlenswert direkt eine Sprache zu wählen, welche darauf ausgelegt ist.
 
 ## Aufgabe 3 
 Implementieren Sie eine Funktion `mk-mp3-control`, die ein Objekt zurückliefert, das die Kontrolleinheit eines MP3-Spielers repräsentiert. 
 (Es sollen aber nicht wirklich Dateien abgespielt werden.) 
 Das Objekt soll folgende Informationen speichern/zurückliefern: 
-- Eine Liste, der gespeicherten MP3-Dateien (mit Dateiname und Dauer des Stücks), 
+- Eine Liste, der gespeicherten MP3-Dateien (mit Dateinamen und Dauer des Stücks), 
 - die Anzahl der Titel
 - der aktuelle Titel, der gerade abgespielt wird oder vorgewählt ist
 - den Abspielstatus, also ob derzeit ein Titel (welcher?) abgespielt wird oder stop, wenn kein Titel abgespielt wird. 
@@ -377,8 +376,8 @@ Folgende Botschaften soll das Objekt verstehen:
 
 ### Anmerkungen
 - Dieser Code ist ein perfektes Beispiel dafür, 
-dass die Objektorientierung in Racket sehr schnell sehr umfangreichen code erzeugen kann, 
-selbst wenn nur wenig funktionalität umgesetzt werden soll, welche keinen hohen Komplexitätsgrad hat.
+dass die Objektorientierung in Racket sehr schnell sehr umfangreichen Code erzeugen kann, 
+selbst wenn nur wenig Funktionalität umgesetzt werden soll, welche keinen hohen Komplexitätsgrad hat.
 
 ## Aufgabe 4
 Recherchieren Sie, ob Sie Programmiersprachen finden, die `dynamic scope` umsetzen und nennen Sie diese. 
@@ -390,7 +389,7 @@ Falls Sie keine finden, wie kann man `dynamic scope` in anderen Programmiersprac
 
 ### Quellen
 - [3] **Eike Grote**: [Die Programmiersprache Perl](http://www.cpan.org/authors/id/E/EI/EIKEG/doc/perl-tutorial-DE_2.07.pdf) Version 2.07, S. 150-158, 2019
-- [4] **Herbert Stoyan, Günter Görz**: [LISP: Eine Einführung in die Programmierung](https://link.springer.com/book/10.1007/978-3-642-71455-9) Springer, Berlin; S175-177. S182-183, 1984
+- [4] **Herbert Stoyan, Günter Görz**: [LISP: Eine Einführung in die Programmierung](https://link.springer.com/book/10.1007/978-3-642-71455-9) Springer, Berlin, S175-177; S182-183, 1984
 
 ## Aufgabe 5
 Wie wird in Racket/Scheme `lexical scope` umgesetzt und warum ist `dynamic scope` eine schlechte Idee? 
@@ -398,7 +397,7 @@ Illustrieren Sie Ihr Argument an einem selbst entwickelten Beispiel.
 
 ### Umsetzung von lexical scope 
 Bei `lexical scope` wird der Gültigkeitsbereich von Variablen durch deren Umgebung definiert. 
-Eine Variable gehört hier zu der Umgebung einer Funktion wenn sie:
+Eine Variable gehört hier zu der Umgebung einer Funktion, wenn sie:
 1. Als Argument der Funktion übergeben wurde.
 2. Im Funktionskörper der Funktion definiert wurde. (Definitionen im Funktionskörper einer Unterfunktion zählen nicht dazu!)
 3. In der Umgebung einer übergeordneten Funktion (oder der globalen Umgebung) enthalten ist. 
@@ -409,12 +408,12 @@ Wenn eine neue Variable mit demselben Bezeichner durch 1. oder 2. erstellt wird,
 Bei `lexical scope` wird der Gültigkeitsbereich von Variablen durch deren Umgebung definiert,
 sodass Funktionen Zugriff auf Variablen haben, die als Argument übergeben wurden, in einer übergeordneten Umgebung oder in dieser Funktion definiert sind.
 
-Im gegensatz dazu ist bei `dynamic scope` die Gültigkeit und der Wert einer Variable durch die Aufrufreihenfolge bestimmt. 
+Im Gegensatz dazu ist bei `dynamic scope` die Gültigkeit und der Wert einer Variable durch die Aufrufreihenfolge bestimmt. 
 
 `lexical scope` sorgt also für eine bessere:
 - **Wartbarkeit**: Durch `lexical scope` ist das Nachvollziehen von Zuordnungen leichter, da lediglich Zuweisungen innerhalb der Funktion und der übergeordneten Umgebung nachvollzogen werden müssen, was die Wartbarkeit stark vereinfachen dürfte.
-- **Fehlervermeidung**: Durch Funktionsaufrufe im `dynamic scope` können ungewollte Seiteneffekte eintreten, welche für schwer findbare Fehler sorgen können, da die Funktionen individuell das richtige Ergebnis sorgen, jedoch in kombination nicht.
-- **Modularität**: Da im `lexical scope` Funktion nur die Variablen in ihrer Umgebung manipulieren können, können sie also ohne potenzielle Seiteneffekte als in einer Bibliothek für andere Programme genutzt werden.
+- **Fehlervermeidung**: Durch Funktionsaufrufe im `dynamic scope` können ungewollte Seiteneffekte eintreten, welche zu schwer find bare Fehler führen können, da die Funktionen für sich genommen das richtige Ergebnis liefern, jedoch nicht in Kombination.
+- **Modularität**: Da im `lexical scope` Funktion nur die Variablen in ihrer Umgebung manipulieren können, können sie also ohne potenzielle Seiteneffekte in einer Bibliothek für andere Programme genutzt werden.
 
 ### Code
 #### Dynamic
@@ -445,21 +444,21 @@ Im gegensatz dazu ist bei `dynamic scope` die Gültigkeit und der Wert einer Var
 ```
 
 Die Funktion `mach-was` liefert bei den beiden Aufrufen jeweils ein anderes Ergebnis, 
-ohne dass eine bewusste anpassung von `x` stattfand.
+ohne dass eine bewusste Anpassung von `x` stattfand.
 
 ```
 ; +30 Zeilen
 (super-wichtige-rechnung)
 ; +14 Zeilen
 ```
-Innerhalb der 45 Zeilen liefert jede Funktion für sich getestet jedoch das richtige Ergebnis.
-Nach einigen Tests stellt sich heraus dass die Funktion `super-wichtige-rechnung` für den ungewollten Seiteneffekt sorgt.
-<br>Folglich: Fehleranfällig und schlechte Modularität
+Innerhalb der 45 Zeilen liefert jede Funktion für sich getestet das richtige Ergebnis.
+Nach einigen Tests stellt sich heraus, dass die Funktion `super-wichtige-rechnung` für den ungewollten Seiteneffekt sorgt.
+<br>Folglich: Fehleranfällig und schlechte Modularität.
 
 Zudem, wenn man in einer Funktion eine neue Variable hinzufügen will und `super-wichtige-rechnung` als Unterfunktion nutzen muss (oder `super-wichtige-rechnung` allgemein nutzt und eine globale Variable hinzufügen will),
 muss der Nutzer wissen, dass neben `x` auch `y` nicht verwendet werden darf, da es sonst wieder ungewollt überschrieben werden würde.
-Um das herauszufinden, müssen jedoch die komplette Funktion `super-wichtige-rechnung` mit über 190 Zeilen untersucht werden.
-<br>Folglich: schlechte Wartbarkeit und Modularität
+Um das herauszufinden, müss jedoch die komplette Funktion `super-wichtige-rechnung` mit über 190 Zeilen untersucht werden.
+<br>Folglich: schlechte Wartbarkeit und Modularität.
 
 #### Lexical
 
@@ -494,7 +493,7 @@ Um das herauszufinden, müssen jedoch die komplette Funktion `super-wichtige-rec
 Diese Lexical-Version liefert das erwartete Ergebnis.
 
 ### Anmerkungen
-- Um `dynamic scope` zu simulieren, wurden alle Variablen-erstellungen nach der 1. durch `!set` ersetzt
+- Um `dynamic scope` zu simulieren, wurden alle Variablen-Erstellungen nach der 1. durch `!set` ersetzt.
 
 ## Aufgabe 6
 Überlegen Sie ein Beispiel, in dem verzögerte Auswertung sinnvoll sein kann. 
@@ -507,13 +506,13 @@ Hierfür gibt es die Wahl zwischen `thunk` und Promises:
 - `thunk` ist eine eingewickelte Berechnung, also eine Funktion, welche in einem z.B. lambda-Ausdruck eingewickelt ist (z.B. `(lambda () (+ 2 3))`).
 <br>Möchte man das Ergebnis der Funktion an einer Stelle nutzen, so muss das `thunk` lediglich ausgewertet werden.
 <br>Wird `thunk` allerdings mehrfach ausgewertet, findet die Berechnung an jeder Stelle erneut statt.
-- Promises werden durch `delay` erstellt. Sie beinhalten die Funktion, welche potenziell Ausgeführt werden muss. 
-<br> Um an das Ergebnis der Funktion zu gelangen, muss das Promises an die `force` Funktion übergeben werden, welche die Berechnung anschließend durchführt.
-<br> Wird das Ergebnis des Promises erneut benötigt, muss die Berechnung nicht erneut durchgeführt werden, sondern ein zwischengespeicherter Wert wird verwendet. Das hat einen gewissen Speicherverbrauch zur Folge.
+- Promises werden durch `delay` erstellt. Sie beinhalten die Funktion, welche potenziell ausgeführt werden muss. 
+<br> Um an das Ergebnis der Funktion zu gelangen, muss das Promise an die `force` Funktion übergeben werden, welche die Berechnung anschließend durchführt.
+<br> Wird das Ergebnis des Promise erneut benötigt, muss die Berechnung nicht erneut durchgeführt werden, sondern es wird ein zwischengespeicherter Wert verwendet. Das hat einen gewissen Speicherverbrauch zur Folge.
 
 Wenn das Ergebnis der Berechnung an vielen Stellen benötigt wird, und nur einen geringen Speicheraufwand hat, sollten also Promises verwendet werden. Wird das Ergebnis nur einmal benötigt, oder der Speicheraufwand ist im Verhältnis zum Rechenaufwand zu groß, sollte `thunk` verwendet werden.
 
-Genauere Erklärungen hierzu auch in Block I, Aufgabe 16.
+Genauere Erklärungen hierzu auch in Aufgabenblock I: Aufgabe 16.
 
 ### Code
 
@@ -576,25 +575,25 @@ Nehmen Sie zum Zitat "Objects are a poor man’s closures. Closures are a poor m
 und vergleichen die vorgestellten Möglichkeiten der Objektorientierung mit einer Ihnen bekannten objektorientierten Programmiersprache.
 
 ### Stellungnahme 
-Das Zitat vermittelt, dass es eine gewisse Gemeinsamkeit zwischen Abschlussobjekten und normalen Objekten besteht, und mehr oder weniger das gleiche Repräsentieren und austauschbar sind.
+Das Zitat vermittelt, dass es eine gewisse Gemeinsamkeit zwischen Abschlussobjekten und normalen Objekten besteht und sie mehr oder weniger das gleiche Repräsentieren und austauschbar sind.
 
-Durch den abschnitt "a poor man’s" wird jedoch zusätzlich impliziert, dass normale Objekte und Abschlussobjekte keineswegs gleich sind. 
-So wird beschrieben, dass ein Entwickler welche Objekte nutzen möchte, jedoch nur Abschlussobjekte hat, diese zwar als alternative nutzen kann, es jedoch einige Unterschiede gibt, welche zu anpassungen bei der Implementierung führen können.
-Selbiges gilt für Objekte statt Abschlussobjekte.
+Durch den Abschnitt "a poor man’s" wird jedoch zusätzlich impliziert, dass normale Objekte und Abschlussobjekte keineswegs gleich sind. 
+So wird beschrieben, dass ein Entwickler welche Objekte nutzen möchte, jedoch nur Abschlussobjekte hat, diese zwar als alternative nutzen kann, es jedoch einige Unterschiede gibt, welche zu Anpassungen bei der Implementierung führen können.
+Dasselbe gilt für Objekte statt Abschlussobjekte.
 
 ### Vergleich
 Objekte in Java sind Instanzen von Klassen, welche Daten (Attribute) bündeln und zugehörige Methoden, die auf diesen Daten operieren. 
 Durch die jeweiligen Konzepte der Sprache unterstützen Objekte Datenkapselung, Vererbung und Polymorphismus.
 
-Abschlussobjekte in Racket hingegen sind eigentlich nur Funktionen, die auf einen bestimmten Kontext bezug nehmen.
-Durch den Bezug auf ihr Umfeld können sie lokale Variablen erfassen und diese innerhalb ihres Gültigkeitsbereichs verwenden, und mittels Zustandsorientierung auch manipulieren. 
+Abschlussobjekte in Racket hingegen sind eigentlich nur Funktionen, die auf einen bestimmten Kontext bezugnehmen.
+Durch den Bezug auf ihr Umfeld können sie lokale Variablen erfassen und diese innerhalb ihres Gültigkeitsbereichs verwenden und mittels Zustandsorientierung auch manipulieren. 
 
-Wie das Zitat vermittelt, kann man Abschlussobjekte als "Objekte" nutzen, dessen lokale Variablen die Attribute repräsentieren und dessen unterfunktionen die Methoden.
+Wie das Zitat vermittelt, kann man Abschlussobjekte als "Objekte" nutzen, dessen lokale Variablen die Attribute repräsentieren und dessen Unterfunktionen die Methoden.
 <br>Beide Konzepte ermöglichen somit Organisation und Strukturierung von Code.
 
 Jedoch gibt es auch ein paar Unterschiede:
 
-Objekte in Java dienen meist dazu, Daten und Methoden zu kapseln um Entitäten (der realen Welt) und deren Beziehungen untereinander zu Modellierung.
+Objekte in Java dienen meist dazu, Daten und Methoden zu kapseln um Entitäten (der realen Welt) und deren Beziehungen untereinander zu modellieren.
 
 Abschlussobjekte in Racket sind allerdings darauf ausgelegt, Funktionalitäten mit Kontextbezug zu schaffen. 
 Entitäten zu modellieren ist damit zwar möglich, doch vor allem bei größeren Strukturen auch deutlich aufwendiger.
@@ -605,14 +604,14 @@ Entitäten zu modellieren ist damit zwar möglich, doch vor allem bei größeren
 Die Implementierung muss nicht voll funktionsfähig sein, es reicht ein Prototyp oder Pseudo-Code.
 
 ### Antwort
-Den Haupteinsatz von Streams in Racket sehe ich in der Verarbeitung von endlos-kontinuierlichen oder extrem großen Datenmengen mit lazy-steams. 
+Den Haupteinsatz von Streams in Racket sehe ich in der Verarbeitung von endlos-kontinuierlichen oder extrem großen Datenmengen mit lazy-streams. 
 Bei kleinen, finiten Datenmengen ist es in der Regel ohne Probleme möglich, diese als Liste zu speichern und bei Funktionen alle Elemente der Liste mit einzubeziehen. 
 
-Bei endlosen oder extrem großen Mengen ist das jedoch tendenziell nicht möglich. Lässt diese Menge sich jedoch (Mathematisch) Beschreiben oder kontinuierlich auslesen, 
-lässt sie sich als lazy-steam darstellen, welcher für einige Verarbeitungen genutzt werden kann.
-<br>**Anmerkung**: Verarbeitungen welche den ganzen Stream benötigten würden, funktionieren weiterhin nicht.
+Bei endlosen oder extrem großen Mengen ist das jedoch tendenziell nicht möglich. Lässt diese Menge sich jedoch (mathematisch) Beschreiben oder kontinuierlich auslesen, 
+lässt sie sich als lazy-stream darstellen, welcher für einige Verarbeitungen genutzt werden kann.
+<br>**Anmerkung**: Verarbeitungen, welche den ganzen Stream benötigen würden, funktionieren weiterhin nicht.
 
-Eine Beispielfunktion wäre also das Finden des 1. Element des endlosen Streams für das eine gewisse Bedingung gilt. 
+Eine Beispielfunktion wäre also das Finden des ersten Elements des endlosen Streams für das eine gewisse Bedingung gilt. 
 
 ### Code
 ```
@@ -630,7 +629,7 @@ Eine Beispielfunktion wäre also das Finden des 1. Element des endlosen Streams 
 (define (tail s) (force (cdr s)))
 
 ; Funktion für endlose Menge
-; findet das 1. Element des streams für das "bedingung" gilt
+; findet das erste Element des streams für das "bedingung" gilt
 ; ist die abbruchbedingung erfüllt, wird die suche abgebrochen. (const #f) falls man sich 100% sicher ist, dass element existiert.
 (define (findf-endlos steam bedingung abbruchbedingung)
   (cond
@@ -670,37 +669,34 @@ Erläutern Sie anschließend den Unterschied zwischen einer dynamischen Typprüf
 Sie können für Ihre Antwort neben Racket auch noch auf andere Ihnen bekannte Programmiersprachen zurückgreifen.
 
 ### Gründe für Typisierung:
-- Typisierung regelt das Speicherlayout:
-<br>Wenn der Compiler auf eine typisierte Variable trifft (entweder über annotation oder über Inferenz identifiziert), 
+- Effizienteres Speicherlayout:
+<br>Wenn der Compiler auf eine typisierte Variable trifft (entweder über Annotation oder über Inferenz identifiziert), 
 kann er die passende Menge an Bytes für den Datentyp im Speicher belegen und somit möglichst effizient ausnutzen.
-<br>In nicht typisierten Sprachen kann es z.B. passieren, das für eine Variable standardmäßig 32 Bit belegt werden 
-jedoch eigentlich nur 16 Bit genutzt werden, was zu einer Speicherverschwendung fürt. 
-Ebenso könnte es passieren, dass es im Nachhinein auf 64 Bit erweitert werden muss was zusätzlichen Rechenaufwand bedeutet.
-<br>Beispiel: in Java Weiß der Compiler direkt, ob es sich bei einer nummerischen Zahl um eine `short` (16 Bit), `int` (32 Bit) oder `long` (64 Bit)-Variable handelt 
-und reserviert entsprechend große Speicherblöcke, welche im Nachhinein nicht erweitert werden müssen, ohne unnötige mengen an speicher zu belegen.
+<br>In nicht typisierten Sprachen kann es z.B. passieren, dass für eine Variable standardmäßig 32 Bit belegt werden, 
+jedoch eigentlich nur 16 Bit genutzt werden, was zu einer Speicherverschwendung führt. 
+Ebenso könnte es passieren, dass es im Nachhinein auf 64 Bit erweitert werden muss, was zusätzlichen Rechenaufwand bedeutet.
+<br>Beispiel: in Java weiß der Compiler direkt, ob es sich bei einer nummerischen Zahl um eine `short` (16 Bit), `int` (32 Bit) oder `long` (64 Bit) Variable handelt 
+und reserviert entsprechend große Speicherblöcke, welche im Nachhinein nicht erweitert werden müssen, ohne unnötige Mengen an Speicher zu belegen.
 <br> **Anmerkung**: Bei Objekten und Datenstrukturen ist dieser Vorteil nicht direkt der Fall, da diese (z.B. in Racket und Java) mit Speicheradressen arbeiten. 
 Für die primitiven-Bestandteile der Objekte und Datenstrukturen ist das Argument weiterhin gültig. 
-- Typisierung erlaubt effizientere Ausführung eines Programms:
-<br> Wenn der Compiler bereits weiß, dass eine Operation mit Variablen immer mit Ganzzahlen ist, kann er den Code dahingehend optimieren, dass dann die Ganzzahloperation des Rechners verwendet wird, 
-welche Potenziell schneller ist, als wenn zur Laufzeit erst entschieden werden muss, welche arithmetische Funktion tatsächlich benötigt wird.
-- Typisierung erhöht die Lesbarkeit eines Programms:
+- Bessere Lesbarkeit:
 <br> Wenn man ein Typsystem verwendet, kann man trotz potenziell ungünstig gewählten Argumentnamen leichter Nachvollziehen 
 welche Argumente die Funktion benötigt und besser verstehen, was die Funktion macht.
-- Automatisches Finden von logischen Fehlern in einem Programm
-<br>Durch die Typennotationen fügt man Redundante Informationen dem Programm zu. 
+- Automatisches Finden von logischen Fehlern:
+<br>Durch die Typennotationen fügt man redundante Informationen dem Programm zu. 
 Diese Redundanz kann der Compiler nutzen, um während einer statischen Code-Analyse zu prüfen, 
-ob die Variablen-Belegungen mit der zusätzlich angegeben Information zu jedem Zeitpunkt sichergestellt ist. 
+ob die Variablen-Belegung mit der zusätzlich angegeben Information zu jedem Zeitpunkt sichergestellt ist. 
 Wenn dem nicht so ist, wirft der Compiler einen Typfehler und weist den Entwickler auf den entsprechenden Logikfehler hin. 
-- Erlaubt Modularisierung (wenn ein Typ zugleich eine Schnittstelle/Interface ausrückt)
+- Modularisierung (wenn ein Typ zugleich eine Schnittstelle/Interface ausdrückt):
 <br>Die Typsignatur kann gleichzeitig ein Interface ausdrücken, welche Modulentwickler angeben können um spätere Nutzer bei der Nutzung, bzw. Ansteuerung des Moduls zu unterstützen.
 
 ### Unterschied zwischen dynamischer und statischer Typprüfung
-Die statische Typprüfung findet zur Compilezeit statt und weist somit während einer statischen Code-Analyse die Typ korrektheit nach, ohne dass das Programm ausgeführt wird.
+Die statische Typprüfung findet zur Compilezeit statt und weist somit während einer statischen Code-Analyse die Typ Korrektheit nach, ohne dass das Programm ausgeführt wird.
 
 
-Die dynamische Typprüfung findet erst während der Laufzeit, bei der Variablenzuweisung, statt. Also wenn das Programm an die entsprechende Stelle angekommen ist, wird geprüft, ob die Typ-Inn-Variante eingehalten wurde. 
+Die dynamische Typprüfung findet erst während der Laufzeit, bei der Variablenzuweisung, statt. Also wenn das Programm an der entsprechenden Stelle ankommt, wird geprüft, ob die Typ-Inn-Variante eingehalten wurde.  
 Wenn nicht, wird an dieser Stelle ein Laufzeitfehler geworfen. 
-Ein typisches Beispiel hierfür ist die `NullPointerException` in Java. bei welcher zur Laufzeit ein Objekt erwartet wird, 
+<br>Ein typisches Beispiel hierfür ist die `NullPointerException` in Java, bei welcher zur Laufzeit ein Objekt erwartet wird, 
 jedoch `null` erhält und das System darauf nicht reagieren kann.
 
 ## Aufgabe 10
@@ -710,7 +706,7 @@ Erklären Sie den Unterschied zwischen der Reduktionsstrategie `normal order` un
 Die Reduktionsstrategie bestimmt, welcher Teil eines Programms zu welchem Zeitpunkt und somit in welcher Reihenfolge ausgewertet wird. 
 Solange die aufzurufenden Funktionen also keine Seiteneffekte haben und bei gleichem Input stets gleiches Output liefern, führen beide Strategien stets zum gleichen Ergebnis.
 
-Bei `normal order` findet die Auswertung der Argumente erst dann statt, wenn sie tatsächlich benötigt werden. Das kann den vorteil haben, dass die Berechnung für im Funktionsrumpf nicht benötigte Argumente auch nicht durchgeführt wird und so leistung gespart werden kann.
+Bei `normal order` findet die Auswertung der Argumente erst dann statt, wenn sie tatsächlich benötigt werden. Das kann den Vorteil haben, dass die Berechnung für im Funktionsrumpf nicht benötigte Argumente auch nicht durchgeführt wird und so Leistung gespart werden kann.
 ```
 (* (square 2) (square 3))
 (* (* 2 2) (square 3))
@@ -728,6 +724,6 @@ Bei `applicative order` werden alle Argumente einer Funktion ausgewertet, bevor 
 36
 ```
 
-Hat eine Funktion jedoch Nebeneffekte, kann die Ausführungsreihenfolge relevant sein, btw. kann es wichtig sein, dass das Argument erst ausgewertet wird, wenn die Funktion an der entsprechenden Stelle ankommt. 
+Hat eine Funktion jedoch Nebeneffekte, kann die Ausführungsreihenfolge relevant sein, bzw. kann es wichtig sein, dass das Argument erst ausgewertet wird, wenn die Funktion an der entsprechenden Stelle ankommt. 
 In diesen Fällen kann es hinderlich sein, dass bei `applicative order` die Argumente bereits bei Funktionsaufruf ausgewertet werden.
 <br>Beispiele hierfür wurden in Aufgabenblock I: Aufgabe 7 und 8 behandelt.  

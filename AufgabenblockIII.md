@@ -17,7 +17,7 @@ Mit welchen Sprachen haben Sie bisher gearbeitet und welche Aufgaben-/Aufgabenty
 ### Aufgabentypen
 - Algorithmus-Entwicklung
 - Automatisierung 
-- Benutzeroberflächen entwicklung
+- Benutzeroberflächen Entwicklung
 - Datenbankprogrammierung
 - Mobile App-Entwicklung
 - Qualitätssicherung/Testing 
@@ -27,60 +27,59 @@ Mit welchen Sprachen haben Sie bisher gearbeitet und welche Aufgaben-/Aufgabenty
 Welche Programmierprojekte haben Sie in letzter Zeit umgesetzt? Erläutern Sie mindestens zwei bis drei.
 
 ### Anmerkung
-Aus Vertraulichkeitsgründen werden hier keine Projekte der vergangenen Praxisphasen bei Continental Automotive Technologies GmbH erläutert, sondern lediglich Projekte des Studiums und der privaten Implementierung.
-
-Da es den rahmen überschreiten würde, die Architekturen der Projekte komplett zu berschreiben werden sie hier nur oberflächlich und vereinfacht beleuchtet.
+Aus Vertraulichkeitsgründen werden hier keine Projekte der vergangenen Praxisphasen bei der Continental Automotive Technologies GmbH erläutert, sondern lediglich Projekte des Studiums und der privaten Implementierung.
 
 ### Minecraft Mod
 Minecraft-Mods sind Erweiterungen, die von der Minecraft-Community in Java oder Kotlin erstellt wurden, um das ursprüngliche Spiel zu verändern oder neue Gegenstände und Funktionen hinzuzufügen. 
 
 Minecraft selbst ist ein beliebtes Sandbox-Spiel, bei dem Spieler in einer offenen Welt mit Blöcken bauen und erkunden können. 
-Mods ermöglichen es, diese Erfahrung zu personalisieren und auf die verschiedensten arten zu erweitern.
+Mods ermöglichen es, diese Erfahrung zu personalisieren und auf die verschiedensten Arten zu erweitern.
 
-Seit einem Jahr arbeite ich iterativ-inkrementell an zwei solcher Erweiterungen für das Spiel. Die Mods [Dragon Magic And Relics](https://github.com/Joh0210/DragonMagicAndRelics) und [FactionsAndCuriosities](https://github.com/Joh0210/FactionsAndCuriosities) fügen dem Spiel eine große Menge an neuen Gegenständen, Rituale und Zauber hinzu.
-<br>Zusätzlich fügen sie eine komplett neue Spielmechanik hinzu, welche den Kern der Erweiterungen darstellt. Diese ermöglichen es dem Spieler Magie auf eine neue, personalisierte weise zu nutzen.
+Seit einem Jahr arbeite ich iterativ-inkrementell an zwei solcher Erweiterungen für das Spiel. Die Mods [Dragon Magic And Relics](https://github.com/Joh0210/DragonMagicAndRelics) und [Factions And Curiosities](https://github.com/Joh0210/FactionsAndCuriosities) fügen dem Spiel eine große Menge an neuen Gegenständen, Ritualen und Zauber hinzu.
+<br>Zusätzlich fügen sie komplett neue Spielmechaniken hinzu, welche den Kern der Erweiterungen darstellt. Diese ermöglichen es dem Spieler Magie auf eine neue, personalisierte Weise zu nutzen.
 
 ### Android Algorithmen-Lern App: Heap Sort
 Für das Modul "Mobile Technologien", des 4. Semesters der Softwaretechnologie mit Prof. Dr. Schultes, musste eine bereits existierende Lern-App erweitert werden.
 
 Die App dient als Lernmaterial für das Modul "Algorithmen und Datenstrukturen", des 2. Semesters der Softwaretechnologie, in welchem der Begriff des Algorithmus vertieft und theoretisch untersucht wird. 
-Hierfür kommen einige Beispielalgorithmen zum einsatz, welche ebenfalls verstanden werden müssen. Um den Studierenden das Verständnis zu erleichtern und beim Lernen zu helfen, 
-kommt diese Lern-App zum einsatz, welche einige dieser Algorithmen schrittweise erklärt. 
+Hierfür kommen einige Beispielalgorithmen zum Einsatz, welche ebenfalls verstanden werden müssen. Um den Studierenden das Verständnis zu erleichtern und beim Lernen zu helfen, 
+kommt diese Lern-App zum Einsatz, welche einige dieser Algorithmen schrittweise erklärt. 
 
 Grundlegend besteht die App aus 2 Ansichten, eine für den Spielmacher und eine für den Spieler. In beiden Ansichten gibt es anschließend ein Menüfeld,
 in welchen man einen Algorithmus aussuchen kann. Aus Spieleransicht wird einem der entsprechende Algorithmus schrittweise erklärt und man bekommt eine Handvoll Informationen über den Algorithmus, wie z.B. über die Komplexität.
-Zusätzlich kann der Spieler den Algorithmus manuell durchführen um zu prüfen, ob er ihn richtig verstanden hat. 
+Zusätzlich kann der Spieler den Algorithmus manuell durchführen, um zu prüfen, ob er ihn richtig verstanden hat. 
 
-Als Spielmacher besitzt man die Möglichkeit einen Wettbewerb öffnen, an welchem die Spieler teilnehmen können um gegeneinander zu Spielen. Hierfür müssen die Spieler angemeldet sein und Internetzugriff haben. 
+Als Spielmacher besitzt man die Möglichkeit einen Wettbewerb zu öffnen, an welchem die Spieler teilnehmen können, um gegeneinander zu spielen. Hierfür müssen die Spieler angemeldet sein und Internetzugriff haben. 
 
 Die Grundstruktur der Mobilen Android-Anwendung wurde von Prof. Dr. Schultes erstellt und iterativ-inkrementell in dem Modul "Mobile Technologien" erweitert.
 <br>Die Studierenden sollen als Gruppe von bis zu fünf Personen je einen Menüpunkt hinzufügen, welcher die beschriebenen Funktionalitäten erfüllt. 
-Für die Server-Kommunikation des Wettbewerbsmodus und das "Hauptmenü" stand eine Grundstruktur zur verfügung, der rest musste von den Studierenden in Java entwickelt werden. 
+Für die Server-Kommunikation des Wettbewerbsmodus und das "Hauptmenü" stand eine Grundstruktur zur Verfügung, der Rest musste von den Studierenden in Java entwickelt werden. 
 
 Als Gruppe, bestehend aus Tobias Kapitza, Josias Klaus und mir, entschieden wir uns für den Heap Sort Algorithmus.
-Wir implementierten des Weiteren einige Zusatzziele, wie UI-Tests, ein Trophäen-System für den Wettbewerbsmodus und einer persistenten Speicherung der Übungsresultate um den Lernerfolg zu protokollieren.
+Wir implementierten des Weiteren einige Zusatzziele, wie UI-Tests, ein Trophäen-System für den Wettbewerbsmodus und einer persistenten Speicherung der Übungsresultate, um den Lernerfolg zu protokollieren.
 
 ## Aufgabe 3
 Erläutern Sie an Ihren Beispielen, welche Architektur und welches Paradigma hierbei zur Anwendung kamen.
 
 ### Minecraft Mod
-Um eine Minecraft Mod zu schreiben, muss an eine der beiden Schnittstellen [Forge](https://files.minecraftforge.net/net/minecraftforge/forge/) oder [Fabric](https://fabricmc.net) anknüpfen, um das Grundspiel zu erweitern.
-In beiden Fällen kann in Java oder auch Kotlin programmiert werden, deren objektorientiertes Paradigma in großen Maße genutzt wird. 
+Um eine Minecraft Mod zu schreiben, muss an eine der beiden Schnittstellen [Forge](https://files.minecraftforge.net/net/minecraftforge/forge/) oder [Fabric](https://fabricmc.net) angeknüpft werden, um das Grundspiel zu erweitern.
+In beiden Fällen kann in Java oder auch Kotlin programmiert werden, deren objektorientiertes Paradigma in großen Maßen genutzt wird. 
 
-Für meine Projekte entschied ich mich für Java, da es auch in die hauptsächlich genutzte Sprache der Vorlesungen war. 
+Für meine Projekte entschied ich mich für Java, da es auch die hauptsächlich genutzte Sprache der Vorlesungen war. 
 
 Die grundlegende Architektur ist bei beiden Schnittstellen ähnlich, muss jedoch penibel eingehalten werden.  
-Es handelt sich hierbei um ein Gradle-Projekt welches die eigentliche Logik der Mod und dessen Ressourcen strikt trennen.
+
+Es handelt sich hierbei um ein Gradle-Projekt, welches die eigentliche Logik der Mod und dessen Ressourcen strikt trennt.
 Die Logik wird zwar durch die Erweiterung definiert, jedoch können Spieler einzelne Ressourcen nach Belieben anpassen, um so z.B. Texturen oder Rezepte zu verändern.
 
 Beispiel Architektur für Forge:
 - gradle/wrapper/ 
 - src/main -> Der komplette Inhalt der Mod 
-  - java/ -> In diesem Verzeichnisse ist der Programmcode welcher die Logik definiert
+  - java/ -> In diesem Verzeichnis ist der Programmcode, welcher die Logik definiert
   - resources/ 
     - assets/ -> Texturen, Übersetzungen, etc. die je Client individuell sind
     - data/ -> Rezepte und andere Regeldefinitionen, welche von dem Spiel-Server festgelegt werden und bei jedem Client identisch sind
-    - META-INF/ -> Informationen über die Mod welche von der Schnittstelle benötigt werden
+    - META-INF/ -> Informationen über die Mod, welche von der Schnittstelle benötigt werden
 - build.gradle 
 - gradle.properties 
 - gradlew 
@@ -92,8 +91,8 @@ Die grundlegende Logik lässt sich stark vereinfacht in 3 Haupt-Punkte unterteil
 - Komplett neue Spielmechaniken hinzufügen
 
 #### Neue Objekte Registrieren
-In Minecraft gibt es Items, Blöcke, Zaubertränke, Kreaturen und engines mehr, welche ebenfalls durch Mods hinzugefügt werden kann.
-Möchte man das tun, muss man eine neue Instanz von der entsprechenden (davon erbenden) Klasse erstellen, mit einer ID versehen und registrieren. 
+In Minecraft gibt es Items, Blöcke, Zaubertränke, Kreaturen und einiges mehr, welches ebenfalls durch Mods hinzugefügt werden kann.
+<br>Möchte man das tun, muss man eine neue Instanz von der entsprechenden (davon erbenden) Klasse erstellen, mit einer ID versehen und registrieren. 
 
 ```java
 public class ItemInit {
@@ -134,12 +133,12 @@ public class ManaCakeItem extends Item {
 Einige Funktionalitäten von neuen Objekten lassen sich nicht allein durch Überschreiben von Klassenmethoden realisieren. 
 Ist das der Fall, muss in der Regel ein Event Handler erstellt werden.
 
-Minecraft ist Event-Driven aufgebaut, also bei jedem Ereignis das in der Welt passiert, wird ein entsprechendes Event generiert. 
+Minecraft ist Event-Driven aufgebaut, also bei jedem Ereignis, das in der Welt passiert, wird ein entsprechendes Event generiert. 
 Wenn z.B. ein Spieler springt, wird ein Objekt der Klasse `LivingJumpEvent` erzeugt.
-Diese Events sind nach dem Observer-pattern, damit sich sogenannte Event Handler von Mods als Listener registrieren können und auf das Event reagieren können. 
+Diese Events sind nach dem Observer-pattern aufgebaut, damit sich sogenannte Event Handler von Mods als Listener registrieren und auf das Event reagieren können. 
 
 Hat sich z.B. ein Event Handler für das `LivingJumpEvent` registriert und ein Spieler springt, wird die entsprechende Funktion des Event Handler aufgerufen. 
-Die instanz des `LivingJumpEvent` beinhaltet dabei alle Informationen, die für die Verarbeitung notwendig sind. Durch Manipulation der einzelnen Attribute der Instanz lässt sich dann mit der Welt interagieren. 
+Die Instanz des `LivingJumpEvent` beinhaltet dabei alle Informationen, die für die Verarbeitung notwendig sind. Durch Manipulation der einzelnen Attribute der Instanz lässt sich dann mit der Welt interagieren. 
 
 ```java
 @Mod.EventBusSubscriber(modid = DragonMagicAndRelics.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -159,22 +158,22 @@ public class CommonEventHandler {
 Auch eigene Events, auf die andere Modmacher reagieren können, lassen sich erstellen, aber das ist etwas zu weitgreifend für das Portfolio.
 
 #### Komplett neue Spielmechaniken hinzufügen
-Die beiden oberen Erweiterungsmöglichkeiten sind klar definiert wie sie umzusetzen sind. 
+Die beiden oberen Erweiterungsmöglichkeiten sind klar definiert, wie sie umzusetzen sind. 
 Möchte man jedoch eine komplett neue Spielmechanik hinzufügen oder Hilfsklassen erstellen, ist der Entwickler sehr frei in der Umsetzung.
 
 In den meisten Fällen gibt es hierfür eine Klasse, welche die eigentliche Spielmechaniken-Logik beinhaltet. 
-Diese kann nach belieben implementiert werden und wird standardmäßig über ein selbst definiertes Interface angesteuert. 
+Diese kann nach Belieben implementiert werden und wird standardmäßig über ein selbst definiertes Interface angesteuert. 
 In einem zweiten Schritt wird das Interface mit den benötigten Events durch ein Event Handler verknüpft.
 
-Dieser Abschnitt ist bei weitem der Komplizierteste, bietet jedoch auch den meisten Freiraum in der Umsetzung.
+Dieser Abschnitt ist bei weitem der komplizierteste, bietet jedoch auch den meisten Freiraum in der Umsetzung.
 
 ### Android Algorithmen-Lern App: Heap Sort
 Für die Android nativ Entwicklung können standardmäßig ebenfalls die beiden objektorientierten Sprachen Java und Kotlin verwendet werden.
 
-Auch hier werden die Ressourcen (z.B. Übersetzungen, Layouts, Bilder, ...) streng von der Logik getrennt, so das sich leicht, auch ohne Programmierkenntnisse, Anpassungen wie z.B. Übersetzungen vornehmen lassen.
+Auch hier werden die Ressourcen (z.B. Übersetzungen, Layouts, Bilder, ...) streng von der Logik getrennt, sodass sich leicht, auch ohne Programmierkenntnisse, Anpassungen wie z.B. Übersetzungen vornehmen lassen.
 
-Damit es wenig ungewollte interferenzen zwischen den Teams gab, wurde innerhalb des Haupt-Packages ("Root Verzeichnis" für den Java Code), 
-für jedes Team ein Sub-Package erstellt, in welchem sie ihre Logik Implementieren sollten. Die erstellten Ressourcen wurden mit einem Prefix entsprechend der Team-ID versehen.
+Damit es wenig ungewollte Interferenzen zwischen den Teams gab, wurde innerhalb des Haupt-Packages ("Root Verzeichnis" für den Java Code), 
+für jedes Team ein Sub-Package erstellt, in welchem sie ihre Logik implementieren sollten. Die erstellten Ressourcen wurden mit einem Präfix entsprechend der Team-ID versehen.
 Auf diese Weise kommt es zu möglichst wenig Problemen, wenn mehrere Teams an demselben Programm arbeiten.
 
 Eine typische Strategie, welche ebenfalls von uns umgesetzt wurde, ist die Frontend- und Backendlogik voneinander zu trennen.
@@ -209,39 +208,39 @@ public class MainActivity extends AppCompatActivity {
 ```
 
 Neben Activities können auch Fragments verwendet werden. Instanzen dieser Klasse werden dem Nutzer ebenfalls angezeigt, 
-jedoch nehmen sie nicht den ganzen Bildschirm ein, sondern sind oftmals teil einer Activity.
+jedoch nehmen sie nicht den ganzen Bildschirm ein, sondern sind oftmals Teil einer Activity.
 
 In beiden Fällen muss die Objektorientierung für die Logik des Frontends genutzt werden.
 
 #### Backendlogik
 Die Backendlogik ist auch in Java oder Kotlin verfasst, jedoch ist der Entwickler hier sehr frei in der Umsetzung. 
-Er muss keine speziellen Design Patterns einhalten, kann sie jedoch nach Belieben implementieren oder andere herangehensweisen nutzen.
+Er muss keine speziellen Design Patterns einhalten, kann sie jedoch nach Belieben implementieren oder andere Herangehensweisen nutzen.
 
 ## Aufgabe 4
 Ließen sich die Projekte oder Aufgaben auch mit dem Paradigma der funktionalen Programmierung umsetzen? Begründen Sie Ihre Antwort.
 
 ### Antwort
-Nein. In beiden Fällen handelt es bei den Projekten um eine Erweiterung eines Bereits existierenden Systems. 
+Nein. In beiden Fällen handelt es bei den Projekten um eine Erweiterung eines bereits existierenden Systems. 
 Auf diese Weise wird zum einen die Programmiersprache Java (oder Kotlin) vorgegeben, welche auf das Paradigma der Objektorientierung ausgelegt ist, 
-jedoch ließe sich auch damit das Functional Paradigma umsetzen.
+jedoch ließe sich auch damit das funktionale Paradigma umsetzen.
 
 Zum anderen wird jedoch auch die Architektur der Logik-Komponenten vorgegeben. 
 So muss, wie in Aufgabe 3 erklärt, ein neues Objekt in Minecraft immer als Instanz einer Klasse registriert werden. 
 Auch die Activities von Android sind ebenfalls Instanzen der entsprechenden Klassen. 
-<br>Auch der Inhalt dieser Klassen kann nur sehr begrenzt Funktional umgesetzt werden, 
+<br>Auch der Inhalt dieser Klassen kann nur sehr begrenzt funktional umgesetzt werden, 
 da die Funktionalität hauptsächlich durch Überschreiben von Parent-Methoden und Objektmanipulation stattfindet.
 
-Auch das Reagieren auf Ereignisse in Minecraft nutzt ebenfalls Objekte als Kommunikationsmedium, 
+Auch das Reagieren auf Ereignisse in Minecraft nutzt ebenfalls Objekte als Kommunikationsmedium 
 und nur durch dessen Manipulation lässt sich mit dem Spiel interagieren.
 
-Funktionale Programmierung lässt zwar bedingt auch die Nutzung von Objekten zu, jedoch geht es in diesen Fällen hauptsächlich um die bewusste nutzung von Seiteneffekten, 
+Funktionale Programmierung lässt zwar bedingt auch die Nutzung von Objekten zu, jedoch geht es in diesen Fällen hauptsächlich um die bewusste Nutzung von Seiteneffekten, 
 welche dem Paradigma der funktionalen Programmierung wieder strebt. 
 
 Jedoch lassen sich potenziell einige Teile mithilfe des funktionalen Paradigmas umsetzen. 
 
-So muss zwar an einem gewissen Punkt die Backendlogik einer Androidapp wieder mit der Objektorientierung der Frontendlogik verbunden werden, bzw. 
-die Logik der Komplett neue Spielmechaniken in Minecraft muss mit dem Event-System verbunden werden, jedoch gibt es keine Vorgaben, wie die interne Logik aufgebaut sein muss.
-Diese Abschnitte müssten zwar weiterhin in Java (oder Kotlin) implementiert werden, jedoch ist es theoretisch möglich auch andere herangehensweisen zu nutzen.
+So muss zwar an einem gewissen Punkt die Backendlogik einer Android-App wieder mit der Objektorientierung der Frontendlogik verbunden werden, bzw. 
+die Logik der komplett neuen Spielmechaniken in Minecraft muss mit dem Event-System verbunden werden, jedoch gibt es keine Vorgaben, wie die interne Logik aufgebaut sein muss.
+Diese Abschnitte müssten zwar weiterhin in Java (oder Kotlin) implementiert werden, jedoch ist es theoretisch möglich auch andere Herangehensweisen zu nutzen.
 
 Hierbei ist allerdings zu beachten, dass Rekursionen, auch Endrekursive-Rekursionen, in Java nicht optimiert ist 
 und im großen Umfang für ein ineffizientes Verhalten sorgen können.
@@ -251,32 +250,32 @@ Ließen sich die Basis-Projekte auch mit dem Paradigma der funktionalen Programm
 
 #### Minecraft
 Auch funktionale Programmiersprachen ermöglichen die Entwicklung von Spielen, jedoch ist Minecraft über die Jahre hinweg extrem umfangreich geworden und stark mit dem Paradigma der Objektorientierung verknüpft. 
-Sich davon zu trennen wäre wahrscheinlich möglich, bedeutet jedoch das die komplette Architektur, die über viele Jahre hinweg gewachsen ist, von Grund auf überarbeitet werden muss. 
+Sich davon zu trennen wäre wahrscheinlich möglich, bedeutet jedoch, dass die komplette Architektur, die über viele Jahre hinweg gewachsen ist, von Grund auf überarbeitet werden muss. 
 Wie das die Performance beeinflussen würde, wird nicht weiter untersucht.
 
-Gleichermaßen ist ein großer Bestandteil für viele der Spieler, die verfügbarkeit von Mods, welche von der Minecraft-Community bereitgestellt werden.
+Gleichermaßen ist ein großer Bestandteil für viele der Spieler, die Verfügbarkeit von Mods, welche von der Minecraft-Community bereitgestellt werden.
 Ich stelle die Vermutung auf, dass diese Fülle an über 10.000 Mods [[5]](https://www.curseforge.com/minecraft) unter anderem deshalb möglich gewesen ist, 
-dass eine weit verbreitete Programmiersprache für die Entwicklung verwendet werden kann. Da funktionale Sprachen deutsch weniger verbreiteter sind 
-hätte es wahrscheinlich deutlich weniger Entwickler in der Minecraft-Community gegeben, welche in der Lage gewesen wären, das Spiel um die inhalte zu erweitern. [[6]](https://de.statista.com/statistik/daten/studie/678732/umfrage/beliebteste-programmiersprachen-weltweit-laut-pypl-index/)
+weil eine weit verbreitete Programmiersprache für die Entwicklung verwendet werden kann. Da funktionale Sprachen deutlich weniger verbreitet sind 
+hätte es wahrscheinlich deutlich weniger Entwickler in der Minecraft-Community gegeben, welche in der Lage gewesen wären, das Spiel, um die Inhalte zu erweitern. [[6]](https://de.statista.com/statistik/daten/studie/678732/umfrage/beliebteste-programmiersprachen-weltweit-laut-pypl-index/)
 <br>Hierbei handelt es sich jedoch nur um eine begründete Vermutung und keinen Beleg.  
 
-Zusammenfassend lässt sich vermuten, dass es rein Funktional umsetzbar wäre, 
-jedoch würde dies eine Grundlegend andere Architektur bedeuten und hätte wahrscheinlich eine deutlich kleinere Modding-Community, 
+Zusammenfassend lässt sich vermuten, dass es rein funktional umsetzbar wäre, 
+jedoch würde dies eine grundlegend andere Architektur bedeuten und hätte wahrscheinlich eine deutlich kleinere Modding-Community zur Folge, 
 was auch für den Erfolg des Spiels hinderlich gewesen sein könnte.
 
 #### Android Algorithmen-Lern App
-Android Native Apps lassen sich auch mithilfe von funktionalen Programmiersprachen, wie Haskell, implementer [[7]](https://stackoverflow.com/questions/5151858/running-a-haskell-program-on-the-android-os), [[8]](https://github.com/neurocyte/android-haskell-activity).
+Android Native Apps lassen sich auch mithilfe von funktionalen Programmiersprachen, wie Haskell, implementieren [[7]](https://stackoverflow.com/questions/5151858/running-a-haskell-program-on-the-android-os), [[8]](https://github.com/neurocyte/android-haskell-activity).
 
-Bei dem Projekt kamen einige objektorientierten Design-Patterns zum einsatz, jedoch in einer deutlich loseren Struktur als z.B. bei Minecraft. 
+Bei dem Projekt kamen einige objektorientierte Design-Patterns zum Einsatz, jedoch in einer deutlich loseren Struktur als z.B. bei Minecraft. 
 Auf diese Weise müssen zwar bestehende Konzepte neu geplant werden, 
 jedoch müsste nicht grundlegend neu definiert werden was Activities sind und wie sie sich verhalten, 
-da die Android-Umgebung nicht überarbeitet werden müsste, da z.B. Haskell das hierfür Schnittstelle dient.
+da die Android-Umgebung nicht überarbeitet werden müsste, da z.B. Haskell hierfür als Schnittstelle dient.
 
 Die Backendlogik wurde von Gruppe zu Gruppe unterschiedlich implementiert, jedoch handelt es sich hierbei hauptsächlich um Algorithmen, die entsprechend auch mit funktionalen Verfahren implementiert werden können.
 
 Also Ja, das Projekt hätte, von Grund auf mit der funktionalen Programmierung umgesetzt werden können.
 
-**Anmerkung**: Der hauptsächlichen Gründe was dagegen sprechen würde ist, dass die Programmiersprache Java den Studierenden bereits im 1. Semester beigebracht wurde. Eine funktionale Sprache hätte erst vermittelt werden müssen, wodurch andere Themen des Lehrplans gekürzt worden wären. 
+**Anmerkung**: Der hauptsächliche Grund, der dagegen spricht ist, dass die Programmiersprache Java den Studierenden bereits im 1. Semester beigebracht wurde. Eine funktionale Sprache hätte erst vermittelt werden müssen, wodurch andere Themen des Lehrplans gekürzt worden wären. 
 Zusätzlich lässt sich auch sagen das Java zwar immer weniger für die Appentwicklung verwendet wird, aber immer noch deutlich mehr als funktionale Sprachen, wodurch es sinnvoll sein kann diesen Prozess eher mit Java zu üben. [[6]](https://de.statista.com/statistik/daten/studie/678732/umfrage/beliebteste-programmiersprachen-weltweit-laut-pypl-index/)
 
 ### Quellen
@@ -291,18 +290,18 @@ Sollte sich keines Ihrer Beispiele dafür eigenen, so überlegen Sie ein fiktive
 
 ### Minecraft Mod
 Wie bereits in Aufgabenblock III: Aufgabe 4 erwähnt, lassen sich keine Mods rein funktional umsetzen, lediglich einzelne Teilausschnitte. 
-Eine vollständige funktionale Architektur-anpassung und reimplementing von Minecraft überschreitet hier auch bei weitem den Umfang des Projektes.
+Eine vollständige funktionale Architektur-anpassung und Reimplementierung von Minecraft überschreitet hier auch bei weitem den Umfang des Projektes.
 <br>Das folgende Flussdiagramm zeigt daher eine funktionale Umsetzung einer komplett neuen Spielmechanik, wie sie in Aufgabenblock III: Aufgabe 3 beschrieben ist.
 
-Bei dem dargestellten Prozess handelt sich um ein Kernelement der von mir erstellten Erweiterung [FactionsAndCuriosities](https://github.com/Joh0210/FactionsAndCuriosities). 
-Es handelt sich dabei um zufällige Ereignisse, sogenannte "Wild Magic", eintreten, wenn der Spieler einen Zauber nutzt.  
+Bei dem dargestellten Prozess handelt es sich um ein Kernelement der von mir erstellten Erweiterung [Factions And Curiosities](https://github.com/Joh0210/FactionsAndCuriosities). 
+Es handelt sich dabei um zufällige Ereignisse, sogenannte "Wild Magic", die eintreten, wenn der Spieler einen Zauber nutzt.  
 
 Diese Ereignisse müssen als Instanz einer Klasse registriert werden und die Interaktion mit der Welt findet durch Objektmanipulation statt.
 <br>Instanzen der `WildMagic` Klasse verfügen zusätzlich über Funktionen, welche beschreiben, wie gut das Ereignis für den Nutzer ist, wie häufig das Ereignis ist und ob alle Konditionen für das Eintreten erfüllt sind.
-<br>Zusätzlich wird ein Event Handler erstellt, welcher beim Einsetzen eines Zaubers aktiv wird und mithilfe der `WildMagicHelper` einen zufällige, aber gewichtete und ausführbahre "Wild Magic" auswählt und ausführt.
+<br>Zusätzlich wird ein Event Handler erstellt, welcher beim Einsetzen eines Zaubers aktiv wird und mithilfe der `WildMagicHelper` einen zufällige, aber gewichtete und ausführbare "Wild Magic" auswählt und ausführt.
 
 Die Instanzen der `WildMagic` Klasse und der Handler sind zwangsläufig objektorientiert zu erstellen, da sich der Architektur von Minecraft angepasst werden muss (vgl. Aufgabenblock III: Aufgabe 3).
-Der `WildMagicHelper` ist jedoch an keine solche Restriktion gebunden und kann entsprechend auch funktional Umgesetzt werden. Hierfür eigenen sich besonders Streams. 
+Der `WildMagicHelper` ist jedoch an keine solche Restriktion gebunden und kann entsprechend auch funktional umgesetzt werden. Hierfür eigenen sich besonders Streams. 
 
 Nicht für die Erklärung relevante Zwischenschritte sind nicht in der Darstellung enthalten.
 
@@ -314,13 +313,13 @@ Nicht für die Erklärung relevante Zwischenschritte sind nicht in der Darstellu
 
 ### Android Algorithmen-Lern App: Heap Sort
 Dieser Abschnitt versucht, wie in Aufgabenblock III: Aufgabe 4 beschreiben, nicht nur die tatsächliche Erweiterung des Endanwendung, sondern das grundlegende Programm auf funktionale Weise dazustellen. 
-Ein gewisser Grad an Seiteneffekten und Zustandsorientierung lässt sich dabei jedoch trotzdem nicht vermeiden.
+Ein gewisser Grad an Seiteneffekten und Zustandsorientierung lässt sich dabei trotzdem nicht vermeiden.
 
-Einzelne Zwischenschritte sind nicht ausformuliert, lassen sich jedoch meistens Funktional umsetzen, wie in Aufgabenblock III: Aufgabe 6 zu sehen ist.
-Um das Paradigma auf die Architektur anzuwenden, wird möglichst viel über einen Informationsfluss gelöst. Dieser Fluss lässt sich anschließend Funktionen oder Promises beschreiben.
+Einzelne Zwischenschritte sind nicht ausformuliert, lassen sich jedoch meistens funktional umsetzen, wie in Aufgabenblock III: Aufgabe 6 zu sehen ist.
+Um das Paradigma auf die Architektur anzuwenden, wird möglichst viel über einen Informationsfluss gelöst. Dieser Fluss lässt sich anschließend durch Funktionen oder Promises beschreiben.
 
-Eer Nutzer jederzeit die Möglichkeit die Anwendung zu beenden.
-Nicht für die Erklärung relevante Zwischenschritte sind nicht in der Darstellung enthalten.
+Der Nutzer hat jederzeit die Möglichkeit die Anwendung zu beenden.
+<br>Nicht für die Erklärung relevante Zwischenschritte sind nicht in der Darstellung enthalten.
 
 #### App Start
 ![Android-AppStart.png](https://github.com/Joh0210/Funktionale-Programmierung/blob/main/draw_io/Android-AppStart.png?raw=true)
@@ -332,18 +331,18 @@ Nicht für die Erklärung relevante Zwischenschritte sind nicht in der Darstellu
 ![Android-SpielStart.png](https://github.com/Joh0210/Funktionale-Programmierung/blob/main/draw_io/Android-SpielStart.png?raw=true)
 
 ## Aufgabe 6
-Wählen Sie sich abschließend eines der Projekte aus und versuchen eine prototypen hafte Umsetzung, an der man die funktionale Umsetzung erkennen kann.
+Wählen Sie sich abschließend eines der Projekte aus und versuchen eine prototypenhafte Umsetzung, an der man die funktionale Umsetzung erkennen kann.
 
 ### Anmerkung:
-- Da beide Projekte mehrere Wochen bis Monate Entwicklungszeit benötigten, und sich nicht jeder Teil funktional Umsetzen lässt (vgl. Aufgabe 4), wurde sich dazu entschieden, nur einen Teilausschnitt eines der Projekte zu implementieren, welcher sich als sehr Komplex und umfangreich herausstellt.
-- Es ist empfehlenswert sich diesen Code in einer Entwicklungsumgebung anzuschauen welche über Syntax highlighting verfügt.
-- Bei der funktionalen Umsetzung wäre es auch möglich gewesen den Heap über verschachtelte Paare darzustellen, jedoch wurde sich dazu entschieden Listen zu verwenden, um den Originalen Projekt ähnlicher zu sein.
-- Die Nutzung von Listen, vor allem durch die Nutzung von der `list-ref` Funktion ist potenziell etwas weniger Effizient, allerdings wird die Funktion `getSteps()` im Original nur sehr selten aufgerufen, weshalb Optimierungen an oft genzutaten Funktionen empfehlenswerter sind.
-- Alle implementierten Versionen sind Generisch und nicht auf einen Datentyp zugeschnitten 
-- Für den Heap in Array Darstellung gilt, das 0. Element des ist das Root-Node. Die Positionen der Child-Nodes im Arrays sind `2*n+1` und `2*n+2` für `n = Poistion des Parrent`. Daraus folgt u.a. dass die Position aller Linken Child-Nodes immer Ungerade sind.
+- Da beide Projekte mehrere Wochen bis Monate Entwicklungszeit benötigten und sich nicht jeder Teil funktional umsetzen lässt (vgl. Aufgabeblock III: Aufgabe 4), wurde sich dazu entschieden, nur einen Teilausschnitt eines der Projekte zu implementieren, welcher sich als sehr komplex und umfangreich herausstellt.
+- Es ist empfehlenswert sich diesen Code in einer Entwicklungsumgebung anzuschauen, welche über Syntax Highlighting verfügt.
+- Bei der funktionalen Umsetzung wäre es auch möglich gewesen den Heap über verschachtelte Paare darzustellen, jedoch wurde sich dazu entschieden Listen zu verwenden, um dem originalen Projekt ähnlicher zu sein.
+- Die Nutzung von Listen, vor allem durch die Nutzung von der `list-ref` Funktion ist potenziell etwas weniger effizient, allerdings wird die Funktion `getSteps()` im Original nur sehr selten aufgerufen, weshalb Optimierungen an oft genutzten Funktionen empfehlenswerter sind.
+- Alle implementierten Versionen sind generisch und nicht auf einen Datentyp zugeschnitten 
+- Für den Heap als Array Darstellung gilt, das 0. Element des ist die Root-Node. Die Positionen der Child-Nodes im Array sind `2*n+1` und `2*n+2` für `n = Position des Parrent`. Daraus folgt u.a. dass die Positionen aller linken Child-Nodes immer ungerade sind.
 
 ###  Android Algorithmen-Lern App: Heap Sort
-Die Kernkomponente unserer Algorithmen erklärung des Heap Sort verlangte, dass wir eine Liste mit jedem Schritt der Sortierung erhalten.
+Die Kernkomponente unserer Algorithmen Erklärung des Heap Sort verlangte, dass wir eine Liste mit jedem Schritt der Sortierung erhalten.
 
 #### Original
 ```java
@@ -512,11 +511,11 @@ Die Funktion `getSteps()` muss also funktional in Racket umgesetzt werden.
 
 Die Standartfunktion `get-steps` unterstützt lediglich Strings und Numbers.
 
-Als generische version gibt es die Funktion `get-steps-generic`, welche auch mit anderen Datentypen genutzt werden kann.
-Hierfür benötigt sie als Argument-`translate-comparator` eine Funktion, welche Number-Comparators (`>=`, `<=`, `>`, `<`, `=`) in eine geeignete Form umwandelt.
+Als generische Version gibt es die Funktion `get-steps-generic`, welche auch mit anderen Datentypen genutzt werden kann.
+Hierfür benötigt sie als Argument `translate-comparator` eine Funktion, welche Number-Comparators (`>=`, `<=`, `>`, `<`, `=`) in eine geeignete Form umwandelt.
 <br>Soll z.B. die Länge der Listen verglichen werden, könnte folgende Funktion übergeben werden: `(lambda (comparator) (lambda (a b) (comparator (length a) (length b))))`
 
-Zur Übung des funktionalen Paradigmas wurde auf die nutzung von mutables verzichtet. Es hätte sich jedoch `vector` angeboten.
+Zur Übung des funktionalen Paradigmas wurde auf die Nutzung von Mutables verzichtet. Es hätte sich jedoch `vector` angeboten.
 
 ```
 #lang racket
@@ -641,8 +640,8 @@ Um das funktionale Schema zu erreichen, werden statische Funktionen verwendet,
 welche keine Seiteneffekte auf die Übergabeparameter ausüben.
 
 Des Weiteren wird bestmöglich auf die Objektmanipulation und Schleifen-Kontrollstrukturen verzichtet.
-<br>Lediglich die Hilfsfunktionen `add`, `cons`, `rest`, `removeLast` und `swap` greifen auf diese Technik zurück,
-um eine signifikante Menge an Rechenendleistung bei den Listenoperationen zu sparen.
+Lediglich die Hilfsfunktionen `add`, `cons`, `rest`, `removeLast` und `swap` greifen auf diese Technik zurück,
+um eine signifikante Menge an Rechenleistung bei den Listenoperationen zu sparen.
 
 Es sei auch angemerkt, dass in Java versucht werden sollte Rekursion zu vermeiden
 und es daher an vielen Stellen sinnvoll wäre ein `while` Konstrukt zu bauen.
@@ -875,4 +874,3 @@ public class FunktionalHeapSortAlgorithmJava {
     }
 }
 ```
-

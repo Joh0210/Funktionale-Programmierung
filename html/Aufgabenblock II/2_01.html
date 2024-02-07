@@ -1,0 +1,63 @@
+<p>Wenn Sie eine neue Sprache erlernen, erwarten Sie eher <code>applicative order</code> oder <code>normal order</code>? Zeigen Sie die Vorzüge Ihrer Erwartung auf. Welche Auswertungsstrategie ist für Sie natürlicher? Begründen Sie Ihre Antwort. (Ergänzen Sie Ihre Antwort im Laufe des Semesters ggf. noch einmal, nachdem Sie den Lambda-Kalkül kennengelernt haben.)</p>
+<h3 id="wiederholung">Wiederholung</h3>
+<p>Hierfür ist es wichtig die beiden Begriffe klar einzuordnen:</p>
+<ul>
+<li><strong>Applicative Order</strong> wertet die Argumente einer Funktion vor Aufruf des Funktionskörpers aus. Das entspricht einer &quot;normalen&quot; Reihenfolge, in der zuerst die Teile und dann das Ganze betrachtet wird.</li>
+<li><strong>Normal Order/Lazy Evaluation</strong> hingegen wertet die Argumente erst dann aus, wenn sie tatsächlich benötigt werden. Das entspricht einer &quot;faulen&quot; Reihenfolge, bei der nur das ausgewertet wird, was unbedingt erforderlich ist.</li>
+</ul>
+<h3 id="antwort">Antwort</h3>
+<p>Diese Frage lässt sich für mich nicht pauschal beantworten, sondern ist abhängig von dem gewählten Paradigma.</p>
+<h4 id="imperativ-und-objektorientiert">Imperativ und Objektorientiert</h4>
+<p>Erwartung von <strong>Applicative Order</strong>.</p>
+<p>Bei der imperativen und objektorientierten Programmierung wird oft gebrauch von Zustandsänderungen, Objektanpassungen und allgemeinen Seiteneffekten in Funktionen, Prozeduren und Methoden gemacht.
+<br>Aufgrund von Übersichtlichkeit sollten Funktionen und Prozeduren Seiteneffekte zwar primär vermeiden, jedoch sind sie für das Paradigma erlaubt und auch vorgesehen.</p>
+<p>Hierfür ist es entsprechend wichtig, dass die Argumente einer Funktion bereits vollständig ausgewertet sind, bevor der Funktionsrumpf ausgewertet wird, da sonst potenziell Seiteneffekte die Argumente beeinflussen könnten.</p>
+<p>Beispiel:</p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Main</span> {
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span>(<span class="hljs-params">String[] args</span>)</span>{
+        MyInt myTestInt = <span class="hljs-keyword">new</span> MyInt(<span class="hljs-number">1</span>);
+
+        printOriginalAndPlus1(myTestInt, myTestInt.getValue());
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">printOriginalAndPlus1</span>(<span class="hljs-params">MyInt myInt, <span class="hljs-keyword">int</span> original</span>)</span>{
+        myInt.<span class="hljs-keyword">add</span>(<span class="hljs-number">1</span>);   <span class="hljs-comment">//Seiteneffekt</span>
+        System.<span class="hljs-keyword">out</span>.println(<span class="hljs-string">"Plus1: "</span> + myInt.getValue());
+        System.<span class="hljs-keyword">out</span>.println(<span class="hljs-string">"Original: "</span> + original);
+    }
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title">MyInt</span>{
+        <span class="hljs-comment">// Nicht relevant</span>
+        <span class="hljs-comment">// siehe 2_1_Objektorientiert.java</span>
+    }
+}
+</code></pre>
+<ul>
+<li><strong>Applicative Order</strong>: Hier wird das erwartete Ergebnis ausgegeben:<pre><code><span class="hljs-symbol">  Plus1:</span> <span class="hljs-number">2</span>
+<span class="hljs-symbol">  Original:</span> <span class="hljs-number">1</span>
+</code></pre></li>
+<li><strong>Normal Order/Lazy Evaluation</strong>: Das Argument <code>original</code> wird innerhalb des Funktionsrumpfes von dem Compiler durch <code>myTestInt.getValue()</code> ersetzt, 
+wodurch es durch den Seiteneffekt <code>myInt.add(1)</code> ebenfalls beeinflusst wird und es zu folgender Ausgabe kommt:<pre><code><span class="hljs-symbol">  Plus1:</span> <span class="hljs-number">2</span>
+<span class="hljs-symbol">  Original:</span> <span class="hljs-number">2</span>
+</code></pre></li>
+</ul>
+<p>Auch wenn das Beispiel sehr künstlich ist, zeigt es das Problem welches <strong>Normal Order/Lazy Evaluation</strong> in imperativen und objektorientierten Programmiersprachen zur Folge hätte.</p>
+<p>Zu erwarten ist daher <strong>Applicative Order</strong>. Entsprechend muss der Entwickler auf Seiteneffekte, Exception-Handling, etc. bereits bei Aufruf der Funktion achten.</p>
+<h4 id="funktional">Funktional</h4>
+<p>Erwartung von <strong>Lazy Evaluation</strong>, jedoch ist <strong>Applicative Order</strong> oft vertreten.</p>
+<p>Funktionale Programmiersprachen unterstützen zwar auch teilweise Objektmanipulation und Zustandsänderungen, jedoch beschreibt das grundlegende Paradigma, dass das Ergebnis einer Funktion nur von den Eingabedaten abhängig ist.
+Somit sollte der Wert der Argumente unabhängig von der Position des Aufrufs sein.</p>
+<p>Funktionen, die doch Seiteneffekte haben, z.B. das Löschen aller Dateien einer Datenbank, sollen in der Regel nur unter gewissen Konditionen aufgerufen werden.
+Damit diese Funktionen als Argument übergeben werden können und nicht direkt bei dem Funktionsaufruf ausgewertet werden, ist ebenfalls <strong>Normal Order/Lazy Evaluation</strong> notwendig.</p>
+<p>Durch das Lambda-Kalkül lässt sich auch beweisen, dass <strong>Normal Order/Lazy Evaluation</strong> öfters auf ein Ergebnis kommt, da sofern <strong>Applicative Order</strong> zum Ergebnis führt auch <strong>Normal Order/Lazy Evaluation</strong> zwangsläufig terminiert. 
+Dieser Zusammenhang gilt jedoch nicht andersherum.</p>
+<p>In der Praxis wird jedoch auch in funktionalen Sprachen häufiger <strong>Applicative Order</strong> verwendet, da <strong>Normal Order</strong> tendenziell weniger effizient ist.</p>
+<p>Als Alternative kann <strong>Lazy Evaluation</strong> statt <strong>Normal Order</strong> erwartet werden, da bei einer <strong>Lazy Evaluation</strong> das Argument maximal einmal berechnet wird und so bei erneuter Abfrage im Funktionsrumpf nicht erneut berechnet werden muss, sondern den entsprechenden Wert übergeben bekommt. 
+Bei <strong>Normal Order</strong> würde die Berechnung der Funktion bei jeder Auswertung des Arguments stattfinden.
+Mit <strong>Lazy Evaluation</strong> lassen sich somit Ressourcen sparen, da wenn ein Argument nicht benötigt wird nicht berechnet wird und sonst maximal einmal. 
+Diese Methode hat jedoch einen zusätzlichen Speicherverbrauch als Folge.    </p>
+<h4 id="logisch">Logisch</h4>
+<p>Aufgrund von mangelnder Erfahrung mit dem Paradigma, erwarte ich keine der Auswertungsstrategien, sondern setze mich erst mit dem Paradigma auseinander.</p>
+<h4 id="welche-auswertungsstrategie-ist-f-r-mich-nat-rlicher-">Welche Auswertungsstrategie ist für mich natürlicher?</h4>
+<p>Da ich primär mit objektorientierten Sprachen gearbeitet habe, erscheint mir <strong>Applicative Order</strong> natürlicher. 
+Jedoch halte ich es für wahrscheinlich, dass es anders wäre, wenn ich primär mit Sprachen gearbeitet hätte, welche <strong>Normal Order/Lazy Evaluation</strong> verwenden.</p>

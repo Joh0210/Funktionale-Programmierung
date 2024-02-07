@@ -1,0 +1,133 @@
+<p>Erläutern Sie an Ihren Beispielen, welche Architektur und welches Paradigma hierbei zur Anwendung kamen.</p>
+<h3 id="minecraft-mod">Minecraft Mod</h3>
+<p>Um eine Minecraft Mod zu schreiben, muss an eine der beiden Schnittstellen <a href="https://files.minecraftforge.net/net/minecraftforge/forge/">Forge</a> oder <a href="https://fabricmc.net">Fabric</a> angeknüpft werden, um das Grundspiel zu erweitern.
+In beiden Fällen kann in Java oder auch Kotlin programmiert werden, deren objektorientiertes Paradigma in großen Maßen genutzt wird. </p>
+<p>Für meine Projekte entschied ich mich für Java, da es auch die hauptsächlich genutzte Sprache der Vorlesungen war. </p>
+<p>Die grundlegende Architektur ist bei beiden Schnittstellen ähnlich, muss jedoch penibel eingehalten werden.  </p>
+<p>Es handelt sich hierbei um ein Gradle-Projekt, welches die eigentliche Logik der Mod und dessen Ressourcen strikt trennt.
+Die Logik wird zwar durch die Erweiterung definiert, jedoch können Spieler einzelne Ressourcen nach Belieben anpassen, um so z.B. Texturen oder Rezepte zu verändern.</p>
+<p>Beispiel Architektur für Forge:</p>
+<ul>
+<li>gradle/wrapper/ </li>
+<li>src/main -&gt; Der komplette Inhalt der Mod <ul>
+<li>java/ -&gt; In diesem Verzeichnis ist der Programmcode, welcher die Logik definiert</li>
+<li>resources/ <ul>
+<li>assets/ -&gt; Texturen, Übersetzungen, etc. die je Client individuell sind</li>
+<li>data/ -&gt; Rezepte und andere Regeldefinitionen, welche von dem Spiel-Server festgelegt werden und bei jedem Client identisch sind</li>
+<li>META-INF/ -&gt; Informationen über die Mod, welche von der Schnittstelle benötigt werden</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>build.gradle </li>
+<li>gradle.properties </li>
+<li>gradlew </li>
+<li>gradlew.bat </li>
+</ul>
+<p>Die grundlegende Logik lässt sich stark vereinfacht in 3 Haupt-Punkte unterteilen:</p>
+<ul>
+<li>Neue Objekte Registrieren</li>
+<li>Auf Ereignisse Reagieren</li>
+<li>Komplett neue Spielmechaniken hinzufügen</li>
+</ul>
+<h4 id="neue-objekte-registrieren">Neue Objekte Registrieren</h4>
+<p>In Minecraft gibt es Items, Blöcke, Zaubertränke, Kreaturen und einiges mehr, welches ebenfalls durch Mods hinzugefügt werden kann.
+<br>Möchte man das tun, muss man eine neue Instanz von der entsprechenden (davon erbenden) Klasse erstellen, mit einer ID versehen und registrieren. </p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ItemInit</span> {</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> DeferredRegister&lt;Item&gt; ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, DragonMagicAndRelics.MOD_ID);
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> RegistryObject&lt;Item&gt; DRAGON_CORE = ITEMS.register(<span class="hljs-string">"dragon_core"</span>, () -&gt; 
+            <span class="hljs-keyword">new</span> Item(<span class="hljs-keyword">new</span> Item.Properties().fireResistant().rarity(Rarity.EPIC).tab(CreativeModeTab.CreativeModeTab)));
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> RegistryObject&lt;Item&gt; MANA_CAKE = ITEMS.register(<span class="hljs-string">"mana_cake"</span>, <span class="hljs-string">ManaCakeItem:</span>:<span class="hljs-keyword">new</span>);
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> register(IEventBus eventBus){
+        ITEMS.register(eventBus);
+    }
+}
+</code></pre>
+<p>Soll das Objekt zusätzliche Funktionalitäten beinhalten, lassen sich viele davon umsetzen in dem die ursprüngliche Klasse erweitert wird und einige Parent- oder Interface-Methoden überschrieben werden. Eine Instanz dieser Klasse kann anschließend registriert werden:</p>
+<pre><code class="lang-java">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ManaCakeItem</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Item</span> </span>{
+    <span class="hljs-keyword">private</span> static <span class="hljs-keyword">final</span> int <span class="hljs-type">NUTRITION</span> = <span class="hljs-number">4</span>;
+
+    <span class="hljs-keyword">private</span> static <span class="hljs-keyword">final</span> float <span class="hljs-type">SATURATION</span> = <span class="hljs-number">0.4</span>f;
+
+    public <span class="hljs-type">ManaCakeItem</span>() {
+        <span class="hljs-keyword">super</span>(<span class="hljs-keyword">new</span> <span class="hljs-type">Item</span>.<span class="hljs-type">Properties</span>().tab(<span class="hljs-type">CreativeModeTab</span>.<span class="hljs-type">CreativeModeTab</span>).stacksTo(<span class="hljs-number">1</span>).rarity(<span class="hljs-type">Rarity</span>.<span class="hljs-type">COMMON</span>)
+                .food((<span class="hljs-keyword">new</span> <span class="hljs-type">FoodProperties</span>.<span class="hljs-type">Builder</span>()).nutrition(<span class="hljs-type">NUTRITION</span>).saturationMod(<span class="hljs-type">SATURATION</span>).alwaysEat().build()));
+    }
+
+  <span class="hljs-meta">@Override</span>
+  public <span class="hljs-meta">@NotNull</span> <span class="hljs-type">ItemStack</span> finishUsingItem(<span class="hljs-meta">@NotNull</span> <span class="hljs-type">ItemStack</span> itemstack, <span class="hljs-meta">@NotNull</span> <span class="hljs-type">Level</span> world, <span class="hljs-meta">@NotNull</span> <span class="hljs-type">LivingEntity</span> entity) {
+    <span class="hljs-keyword">super</span>.finishUsingItem(itemstack, world, entity);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-type">ItemStack</span>(<span class="hljs-type">ItemInit</span>.<span class="hljs-type">MANA_CAKE</span>.get());
+  }
+}
+</code></pre>
+<h4 id="auf-ereignisse-reagieren">Auf Ereignisse Reagieren</h4>
+<p>Einige Funktionalitäten von neuen Objekten lassen sich nicht allein durch Überschreiben von Klassenmethoden realisieren. 
+Ist das der Fall, muss in der Regel ein Event Handler erstellt werden.</p>
+<p>Minecraft ist Event-Driven aufgebaut, also bei jedem Ereignis, das in der Welt passiert, wird ein entsprechendes Event generiert. 
+Wenn z.B. ein Spieler springt, wird ein Objekt der Klasse <code>LivingJumpEvent</code> erzeugt.
+Diese Events sind nach dem Observer-pattern aufgebaut, damit sich sogenannte Event Handler von Mods als Listener registrieren und auf das Event reagieren können. </p>
+<p>Hat sich z.B. ein Event Handler für das <code>LivingJumpEvent</code> registriert und ein Spieler springt, wird die entsprechende Funktion des Event Handler aufgerufen. 
+Die Instanz des <code>LivingJumpEvent</code> beinhaltet dabei alle Informationen, die für die Verarbeitung notwendig sind. Durch Manipulation der einzelnen Attribute der Instanz lässt sich dann mit der Welt interagieren. </p>
+<pre><code class="lang-java"><span class="hljs-meta">@Mod</span>.EventBusSubscriber(modid = DragonMagicAndRelics.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CommonEventHandler</span> </span>{
+    <span class="hljs-meta">@SubscribeEvent</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onLivingJump</span><span class="hljs-params">(LivingEvent.LivingJumpEvent event)</span> </span>{
+        <span class="hljs-keyword">if</span>(event.getEntity() <span class="hljs-keyword">instanceof</span> Player player &amp;&amp; !player.getLevel().isClientSide()){
+            <span class="hljs-keyword">if</span> (player.isSprinting()) {
+                player.push(player.getDeltaMovement().x * <span class="hljs-number">0.2f</span>, <span class="hljs-number">0.6f</span>, player.getDeltaMovement().z * <span class="hljs-number">0.2f</span>);
+                player.hurtMarked = <span class="hljs-keyword">true</span>;
+            }
+        }
+    }
+}
+</code></pre>
+<p>Auch eigene Events, auf die andere Modmacher reagieren können, lassen sich erstellen, aber das ist etwas zu weitgreifend für das Portfolio.</p>
+<h4 id="komplett-neue-spielmechaniken-hinzuf-gen">Komplett neue Spielmechaniken hinzufügen</h4>
+<p>Die beiden oberen Erweiterungsmöglichkeiten sind klar definiert, wie sie umzusetzen sind. 
+Möchte man jedoch eine komplett neue Spielmechanik hinzufügen oder Hilfsklassen erstellen, ist der Entwickler sehr frei in der Umsetzung.</p>
+<p>In den meisten Fällen gibt es hierfür eine Klasse, welche die eigentliche Spielmechaniken-Logik beinhaltet. 
+Diese kann nach Belieben implementiert werden und wird standardmäßig über ein selbst definiertes Interface angesteuert. 
+In einem zweiten Schritt wird das Interface mit den benötigten Events durch ein Event Handler verknüpft.</p>
+<p>Dieser Abschnitt ist bei weitem der komplizierteste, bietet jedoch auch den meisten Freiraum in der Umsetzung.</p>
+<h3 id="android-algorithmen-lern-app-heap-sort">Android Algorithmen-Lern App: Heap Sort</h3>
+<p>Für die Android nativ Entwicklung können standardmäßig ebenfalls die beiden objektorientierten Sprachen Java und Kotlin verwendet werden.</p>
+<p>Auch hier werden die Ressourcen (z.B. Übersetzungen, Layouts, Bilder, ...) streng von der Logik getrennt, sodass sich leicht, auch ohne Programmierkenntnisse, Anpassungen wie z.B. Übersetzungen vornehmen lassen.</p>
+<p>Damit es wenig ungewollte Interferenzen zwischen den Teams gab, wurde innerhalb des Haupt-Packages (&quot;Root Verzeichnis&quot; für den Java Code), 
+für jedes Team ein Sub-Package erstellt, in welchem sie ihre Logik implementieren sollten. Die erstellten Ressourcen wurden mit einem Präfix entsprechend der Team-ID versehen.
+Auf diese Weise kommt es zu möglichst wenig Problemen, wenn mehrere Teams an demselben Programm arbeiten.</p>
+<p>Eine typische Strategie, welche ebenfalls von uns umgesetzt wurde, ist die Frontend- und Backendlogik voneinander zu trennen.</p>
+<h4 id="frontendlogik">Frontendlogik</h4>
+<p>Das, was der Nutzer einer Android-Nativ-App sieht, sind sogenannte <code>Activities</code>. Diese sind Instanzen einer entsprechenden Activity-Klasse.
+Die Elemente und das Layout der Activity, also z.B. ein Knopf, mit besonderer Farbe, Text im Inneren und wo auf dem Bildschirm er sich befindet, 
+wird durch eine verknüpfte Ressource definiert.
+Was die einzelnen Elemente jedoch machen, z.B. was passiert, wenn der Nutzer einen Knopf drückt, oder der Livecycle der Activity wird durch die entsprechende Klasse definiert, 
+in dem ebenfalls Parent-Methoden überschrieben und Objekte manipuliert werden. </p>
+<pre><code class="lang-java">public <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MainActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AppCompatActivity</span> </span>{
+
+  <span class="hljs-keyword">private</span> <span class="hljs-type">ActivityMainBinding</span> binding;
+
+  <span class="hljs-meta">@Override</span>
+  <span class="hljs-keyword">protected</span> void onCreate(<span class="hljs-type">Bundle</span> savedInstanceState) {
+    <span class="hljs-keyword">super</span>.onCreate(savedInstanceState);
+
+    binding = <span class="hljs-type">ActivityMainBinding</span>.inflate(getLayoutInflater());
+    setContentView(binding.getRoot());
+
+    <span class="hljs-type">AppBarConfiguration</span> appBarConfiguration = <span class="hljs-keyword">new</span> <span class="hljs-type">AppBarConfiguration</span>.<span class="hljs-type">Builder</span>(
+            <span class="hljs-type">R</span>.id.navigation_home, <span class="hljs-type">R</span>.id.navigation_dashboard, <span class="hljs-type">R</span>.id.navigation_notifications)
+            .build();
+    <span class="hljs-type">NavController</span> navController = <span class="hljs-type">Navigation</span>.findNavController(<span class="hljs-keyword">this</span>, <span class="hljs-type">R</span>.id.nav_host_fragment_activity_main);
+    <span class="hljs-type">NavigationUI</span>.setupActionBarWithNavController(<span class="hljs-keyword">this</span>, navController, appBarConfiguration);
+    <span class="hljs-type">NavigationUI</span>.setupWithNavController(binding.navView, navController);
+  }
+}
+</code></pre>
+<p>Neben Activities können auch Fragments verwendet werden. Instanzen dieser Klasse werden dem Nutzer ebenfalls angezeigt, 
+jedoch nehmen sie nicht den ganzen Bildschirm ein, sondern sind oftmals Teil einer Activity.</p>
+<p>In beiden Fällen muss die Objektorientierung für die Logik des Frontends genutzt werden.</p>
+<h4 id="backendlogik">Backendlogik</h4>
+<p>Die Backendlogik ist auch in Java oder Kotlin verfasst, jedoch ist der Entwickler hier sehr frei in der Umsetzung. 
+Er muss keine speziellen Design Patterns einhalten, kann sie jedoch nach Belieben implementieren oder andere Herangehensweisen nutzen.</p>

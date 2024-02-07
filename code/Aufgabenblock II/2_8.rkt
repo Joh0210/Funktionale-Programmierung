@@ -19,7 +19,7 @@
 (define (tail s) (force (cdr s)))
 
 ; Funktion für endlose Menge
-; findet das 1. Element des streams für das "bedingung" gilt
+; findet das erste Element des streams für das "bedingung" gilt
 ; ist die abbruchbedingung erfüllt, wird die suche abgebrochen. (const #f) falls man sich 100% sicher ist, dass element existiert.
 (define (findf-endlos steam bedingung abbruchbedingung)
   (cond

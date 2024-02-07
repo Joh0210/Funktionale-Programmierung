@@ -1,0 +1,524 @@
+<p>Wählen Sie sich abschließend eines der Projekte aus und versuchen eine prototypenhafte Umsetzung, an der man die funktionale Umsetzung erkennen kann.</p>
+<h3 id="anmerkung-">Anmerkung:</h3>
+<ul>
+<li>Da beide Projekte mehrere Wochen bis Monate Entwicklungszeit benötigten und sich nicht jeder Teil funktional umsetzen lässt (vgl. Aufgabeblock III: Aufgabe 4), wurde sich dazu entschieden, nur einen Teilausschnitt eines der Projekte zu implementieren, welcher sich als sehr komplex und umfangreich herausstellt.</li>
+<li>Es ist empfehlenswert sich diesen Code in einer Entwicklungsumgebung anzuschauen, welche über Syntax Highlighting verfügt.</li>
+<li>Bei der funktionalen Umsetzung wäre es auch möglich gewesen den Heap über verschachtelte Paare darzustellen, jedoch wurde sich dazu entschieden Listen zu verwenden, um dem originalen Projekt ähnlicher zu sein.</li>
+<li>Die Nutzung von Listen, vor allem durch die Nutzung von der <code>list-ref</code> Funktion ist potenziell etwas weniger effizient, allerdings wird die Funktion <code>getSteps()</code> im Original nur sehr selten aufgerufen, weshalb Optimierungen an oft genutzten Funktionen empfehlenswerter sind.</li>
+<li>Alle implementierten Versionen sind generisch und nicht auf einen Datentyp zugeschnitten </li>
+<li>Für den Heap als Array Darstellung gilt, das 0. Element des ist die Root-Node. Die Positionen der Child-Nodes im Array sind <code>2*n+1</code> und <code>2*n+2</code> für <code>n = Position des Parrent</code>. Daraus folgt u.a. dass die Positionen aller linken Child-Nodes immer ungerade sind.</li>
+</ul>
+<h3 id="android-algorithmen-lern-app-heap-sort">Android Algorithmen-Lern App: Heap Sort</h3>
+<p>Die Kernkomponente unserer Algorithmen Erklärung des Heap Sort verlangte, dass wir eine Liste mit jedem Schritt der Sortierung erhalten.</p>
+<h4 id="original">Original</h4>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> Main {
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> main(<span class="hljs-keyword">String</span>[] args) {
+    <span class="hljs-comment">// Objektorientiert:</span>
+    System.out.<span class="hljs-built_in">println</span>(<span class="hljs-string">"Objektorientiert:"</span>);
+    ObjektorientiertHeapSortAlgorithmJava&lt;Integer&gt; heapSort = <span class="hljs-keyword">new</span> ObjektorientiertHeapSortAlgorithmJava&lt;&gt;(<span class="hljs-keyword">new</span> Integer[]{<span class="hljs-number">6</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-number">1</span>, <span class="hljs-number">7</span>}, true);
+    <span class="hljs-built_in">for</span> (ArrayList&lt;Integer&gt; <span class="hljs-built_in">step</span> : heapSort.getSteps()) {
+      System.out.<span class="hljs-built_in">println</span>(<span class="hljs-built_in">step</span>);
+    }
+  }
+}
+</code></pre>
+<pre><code class="lang-java"><span class="hljs-comment">/**
+ * detailed step calculation of HeapSort
+ * @param &lt;T&gt; type of comparable entry to sort
+ * @author Johannes Freund, Tobias Kapitza
+ */</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> ObjektorientiertHeapSortAlgorithmJava&lt;T extends Comparable&lt;T&gt;&gt; {
+  <span class="hljs-keyword">public</span> final T[] orgArray;
+  <span class="hljs-keyword">private</span> final ArrayList&lt;ArrayList&lt;T&gt;&gt; steps;
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> counter = <span class="hljs-number">-1</span>;
+
+  <span class="hljs-keyword">public</span> ObjektorientiertHeapSortAlgorithmJava(T[] orgArray, <span class="hljs-keyword">boolean</span> isMinHeap) {
+    <span class="hljs-keyword">this</span>.orgArray = orgArray;
+    <span class="hljs-keyword">this</span>.steps = heapSort(orgArray, isMinHeap);
+  }
+
+  <span class="hljs-comment">/**
+   * @return array of every step
+   */</span>
+  <span class="hljs-keyword">public</span> ArrayList&lt;ArrayList&lt;T&gt;&gt; getSteps() {
+    <span class="hljs-built_in">return</span> steps;
+  }
+
+  <span class="hljs-comment">/**
+   * iteration increases by one
+   * @return get the next step in order or null if current step is last
+   */</span>
+  <span class="hljs-keyword">public</span> ArrayList&lt;T&gt; getNext(){
+    <span class="hljs-built_in">return</span> getNext(true);
+  }
+
+  <span class="hljs-comment">/**
+   * @param increment Should the next higher step be output when called again?
+   * @return Next step or null if the current step is the last.
+   */</span>
+  <span class="hljs-keyword">public</span> ArrayList&lt;T&gt; getNext(<span class="hljs-keyword">boolean</span> increment){
+    <span class="hljs-built_in">if</span>(steps.<span class="hljs-built_in">size</span>() &lt;= counter +<span class="hljs-number">1</span>){
+      <span class="hljs-built_in">return</span> null;
+    }
+
+    <span class="hljs-built_in">if</span>(increment){
+      counter++;
+      <span class="hljs-built_in">return</span> steps.<span class="hljs-built_in">get</span>(counter);
+    }
+    <span class="hljs-built_in">return</span> steps.<span class="hljs-built_in">get</span>(counter + <span class="hljs-number">1</span>);
+  }
+
+  <span class="hljs-comment">/**
+   * @return true if size of array changes in the next step (insert or delete)
+   */</span>
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> isBigStepNext(){
+    <span class="hljs-built_in">return</span> counter == <span class="hljs-number">-1</span> || steps.<span class="hljs-built_in">size</span>() &lt;= counter + <span class="hljs-number">1</span> || (steps.<span class="hljs-built_in">get</span>(counter).<span class="hljs-built_in">size</span>() != getNext(false).<span class="hljs-built_in">size</span>());
+  }
+
+  <span class="hljs-keyword">private</span> ArrayList&lt;ArrayList&lt;T&gt;&gt; heapSort(T[] orgArray, <span class="hljs-keyword">boolean</span> isMinHeap){
+    ArrayList&lt;ArrayList&lt;T&gt;&gt; ret = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+    ArrayList&lt;T&gt; currentVersion = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+
+    <span class="hljs-built_in">for</span>(T element : orgArray){
+      currentVersion.add(element);
+      ret.add(<span class="hljs-keyword">new</span> ArrayList&lt;&gt;(currentVersion));
+      ret.addAll(heapifyInsert(currentVersion, isMinHeap));
+    }
+
+    <span class="hljs-built_in">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; orgArray.length; i++){
+      currentVersion.set(<span class="hljs-number">0</span>, currentVersion.<span class="hljs-built_in">get</span>(currentVersion.<span class="hljs-built_in">size</span>()<span class="hljs-number">-1</span>));
+      currentVersion.<span class="hljs-built_in">remove</span>(currentVersion.<span class="hljs-built_in">size</span>()<span class="hljs-number">-1</span>);
+      ret.add(<span class="hljs-keyword">new</span> ArrayList&lt;&gt;(currentVersion));
+      ret.addAll(heapifyDeleteFirst(currentVersion, isMinHeap));
+    }
+    <span class="hljs-built_in">return</span> ret;
+  }
+
+  <span class="hljs-keyword">private</span> ArrayList&lt;ArrayList&lt;T&gt;&gt; heapifyInsert(ArrayList&lt;T&gt; <span class="hljs-built_in">step</span>, <span class="hljs-keyword">boolean</span> isMinHeap) {
+    ArrayList&lt;ArrayList&lt;T&gt;&gt; ret = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+
+    <span class="hljs-keyword">int</span> posElement = <span class="hljs-built_in">step</span>.<span class="hljs-built_in">size</span>() - <span class="hljs-number">1</span>;
+    <span class="hljs-comment">//If the elements are the same, they are unnecessarily exchanged once</span>
+    <span class="hljs-built_in">while</span>(getParentPos(posElement) &gt;= <span class="hljs-number">0</span> &amp;&amp; (isMinHeap ? (<span class="hljs-built_in">step</span>.<span class="hljs-built_in">get</span>(getParentPos(posElement)).compareTo(<span class="hljs-built_in">step</span>.<span class="hljs-built_in">get</span>(posElement)) &gt; <span class="hljs-number">0</span>) : (<span class="hljs-built_in">step</span>.<span class="hljs-built_in">get</span>(getParentPos(posElement)).compareTo(<span class="hljs-built_in">step</span>.<span class="hljs-built_in">get</span>(posElement)) &lt; <span class="hljs-number">0</span>))){
+      T temp = <span class="hljs-built_in">step</span>.<span class="hljs-built_in">get</span>(getParentPos(posElement));
+      <span class="hljs-built_in">step</span>.set(getParentPos(posElement), <span class="hljs-built_in">step</span>.<span class="hljs-built_in">get</span>(posElement));
+      <span class="hljs-built_in">step</span>.set(posElement, temp);
+      posElement = getParentPos(posElement);
+      ret.add(<span class="hljs-keyword">new</span> ArrayList&lt;&gt;(<span class="hljs-built_in">step</span>));
+    }
+    <span class="hljs-built_in">return</span> ret;
+  }
+
+  <span class="hljs-keyword">private</span> ArrayList&lt;ArrayList&lt;T&gt;&gt; heapifyDeleteFirst(ArrayList&lt;T&gt; <span class="hljs-built_in">step</span>, <span class="hljs-keyword">boolean</span> isMinHeap) {
+    ArrayList&lt;ArrayList&lt;T&gt;&gt; ret = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+
+    <span class="hljs-keyword">int</span> posElement = <span class="hljs-number">0</span>;
+    <span class="hljs-built_in">while</span>(hasSmallerChild(posElement, <span class="hljs-built_in">step</span>, isMinHeap)){
+      <span class="hljs-keyword">int</span> smallerChildPos = getChildPos(posElement, isLeftSmaller(posElement, <span class="hljs-built_in">step</span>, isMinHeap));
+      T temp = <span class="hljs-built_in">step</span>.<span class="hljs-built_in">get</span>(smallerChildPos);
+
+      <span class="hljs-built_in">step</span>.set(smallerChildPos, <span class="hljs-built_in">step</span>.<span class="hljs-built_in">get</span>(posElement));
+      <span class="hljs-built_in">step</span>.set(posElement, temp);
+      posElement = smallerChildPos;
+      ret.add(<span class="hljs-keyword">new</span> ArrayList&lt;&gt;(<span class="hljs-built_in">step</span>));
+    }
+    <span class="hljs-built_in">return</span> ret;
+  }
+
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> getParentPos(<span class="hljs-keyword">int</span> childPos) {
+    <span class="hljs-built_in">if</span> (childPos != <span class="hljs-number">0</span>){
+      <span class="hljs-built_in">return</span> (<span class="hljs-keyword">int</span>) Math.floor((childPos - <span class="hljs-number">1</span>) / <span class="hljs-number">2.0</span>);
+    } <span class="hljs-built_in">else</span> {
+      <span class="hljs-built_in">return</span> <span class="hljs-number">-1</span>;
+    }
+  }
+
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> getChildPos(<span class="hljs-keyword">int</span> parentPos, <span class="hljs-keyword">boolean</span> left) {
+    <span class="hljs-built_in">return</span> <span class="hljs-number">2</span> * parentPos + (left ? <span class="hljs-number">1</span> : <span class="hljs-number">2</span>);
+  }
+
+  <span class="hljs-comment">/**
+   * @param parentPos Position of the parent node to be examined
+   * @param step Current structure of the heap
+   * @param isMinHeap Is it a MinHeap? If Max Heap it is checked whether the child is LARGER!
+   * @return true if the parent has at least one child smaller than then it.
+   */</span>
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> hasSmallerChild(<span class="hljs-keyword">int</span> parentPos, ArrayList&lt;T&gt; <span class="hljs-built_in">step</span>, <span class="hljs-keyword">boolean</span> isMinHeap){
+    <span class="hljs-built_in">for</span>(<span class="hljs-keyword">boolean</span> left : <span class="hljs-keyword">new</span> <span class="hljs-keyword">boolean</span>[]{true, false}){
+      <span class="hljs-built_in">if</span>(getChildPos(parentPos, left) &lt;= <span class="hljs-built_in">step</span>.<span class="hljs-built_in">size</span>() - <span class="hljs-number">1</span> &amp;&amp; (isMinHeap ? (<span class="hljs-built_in">step</span>.<span class="hljs-built_in">get</span>(parentPos).compareTo(<span class="hljs-built_in">step</span>.<span class="hljs-built_in">get</span>(getChildPos(parentPos, left))) &gt; <span class="hljs-number">0</span>) : (<span class="hljs-built_in">step</span>.<span class="hljs-built_in">get</span>(parentPos).compareTo(<span class="hljs-built_in">step</span>.<span class="hljs-built_in">get</span>(getChildPos(parentPos, left))) &lt; <span class="hljs-number">0</span>))){
+        <span class="hljs-built_in">return</span> true;
+      }
+    }
+    <span class="hljs-built_in">return</span> false;
+  }
+
+  <span class="hljs-comment">/**
+   * The node must have at least one child!
+   * @param parentPos Position of the parent node to be examined
+   * @param step Current structure of the heap
+   * @param isMinHeap Is it a MinHeap? If Max Heap it is checked whether the child is LARGER!
+   * @return true if the left child is smaller than the right one or if the right does not exist
+   */</span>
+  <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> isLeftSmaller(<span class="hljs-keyword">int</span> parentPos, ArrayList&lt;T&gt; <span class="hljs-built_in">step</span>, <span class="hljs-keyword">boolean</span> isMinHeap){
+    <span class="hljs-built_in">if</span>(getChildPos(parentPos, false) &gt; <span class="hljs-built_in">step</span>.<span class="hljs-built_in">size</span>() - <span class="hljs-number">1</span>){
+      <span class="hljs-built_in">return</span> true;
+    }
+    <span class="hljs-keyword">int</span> comparison = <span class="hljs-built_in">step</span>.<span class="hljs-built_in">get</span>(getChildPos(parentPos, true)).compareTo(<span class="hljs-built_in">step</span>.<span class="hljs-built_in">get</span>(getChildPos(parentPos, false)));
+    <span class="hljs-built_in">return</span> isMinHeap ? (comparison &lt; <span class="hljs-number">0</span>) : (comparison &gt; <span class="hljs-number">0</span>);
+  }
+}
+</code></pre>
+<h4 id="funktional-racket">Funktional - Racket</h4>
+<p>Die Funktion <code>getSteps()</code> muss also funktional in Racket umgesetzt werden.</p>
+<p>Die Standartfunktion <code>get-steps</code> unterstützt lediglich Strings und Numbers.</p>
+<p>Als generische Version gibt es die Funktion <code>get-steps-generic</code>, welche auch mit anderen Datentypen genutzt werden kann.
+Hierfür benötigt sie als Argument <code>translate-comparator</code> eine Funktion, welche Number-Comparators (<code>&gt;=</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>=</code>) in eine geeignete Form umwandelt.
+<br>Soll z.B. die Länge der Listen verglichen werden, könnte folgende Funktion übergeben werden: <code>(lambda (comparator) (lambda (a b) (comparator (length a) (length b))))</code></p>
+<p>Zur Übung des funktionalen Paradigmas wurde auf die Nutzung von Mutables verzichtet. Es hätte sich jedoch <code>vector</code> angeboten.</p>
+<pre><code>#lang racket
+
+<span class="hljs-comment">; Generische Variante von "get-steps" um alle Datentypen zu unterstützen</span>
+<span class="hljs-comment">; Es muss eine Funktion "translate-comparator" übergeben werden welche die Number-Comparators (&gt;= &lt;= &gt; &lt; =)</span>
+<span class="hljs-comment">; für die jeweiligen Datentypen übersetzt</span>
+<span class="hljs-comment">; Warnung: Inkonsistente Typen werden hier theoretisch unterstützt, jedoch muss die "translate-comparator"-Funktion damit klar kommen.</span>
+(<span class="hljs-name">define</span> (<span class="hljs-name">get-steps-generic</span> lst is-min-heap translate-comparator)
+
+  <span class="hljs-comment">; Ermittelt die Position einer Parent-Node einer Node in einem binären Heap</span>
+  <span class="hljs-comment">; -1 falls die Node die Root Node ist </span>
+  (<span class="hljs-name">define</span> (<span class="hljs-name">get-parent-pos</span> child-pos)
+    (<span class="hljs-name">cond</span>
+      (( <span class="hljs-name">&lt;=</span> child-pos <span class="hljs-number">0</span>) <span class="hljs-number">-1</span>)
+      (<span class="hljs-name">else</span> (<span class="hljs-name">inexact-&gt;exact</span>(<span class="hljs-name">floor</span> (<span class="hljs-name">/</span> (<span class="hljs-name">-</span> child-pos <span class="hljs-number">1</span>) <span class="hljs-number">2.0</span>))))))
+
+  <span class="hljs-comment">; Ermittelt ob die Heap-Condition des Binären Heaps gebrochen ist</span>
+  <span class="hljs-comment">; #f falls die Heap-Condtion nicht gebrochen ist</span>
+  <span class="hljs-comment">; Position der Child-Node an der die Heap-Condtion nicht erfüllt ist</span>
+  <span class="hljs-comment">; Sollte es 2 Kandidaten geben, die mit dem Parent getauscht werden können,</span>
+  <span class="hljs-comment">; wird der kleinere (minheap)/größere (maxheap)genommen.</span>
+  (<span class="hljs-name">define</span> (<span class="hljs-name">heapify-broken</span>? lst)
+    (<span class="hljs-name">define</span> (<span class="hljs-name">broken-at</span>? lst pos)
+      (<span class="hljs-name">cond</span>
+        ((<span class="hljs-name">empty</span>? lst) #f)
+        ((<span class="hljs-name">&lt;=</span> pos <span class="hljs-number">0</span>) #f)
+        (((<span class="hljs-name">translate-comparator</span> (<span class="hljs-name">cond</span> (<span class="hljs-name">is-min-heap</span> &gt;=) (<span class="hljs-name">else</span> &lt;=))) (<span class="hljs-name">list-ref</span> lst pos) (<span class="hljs-name">list-ref</span> lst (<span class="hljs-name">get-parent-pos</span> pos)))
+         (<span class="hljs-name">broken-at</span>? lst (<span class="hljs-name">-</span> pos <span class="hljs-number">1</span>)))
+        <span class="hljs-comment">; Fehlerfall:</span>
+        ((<span class="hljs-name">and</span> (<span class="hljs-name">odd</span>? pos) (<span class="hljs-name">=</span> pos (<span class="hljs-name">-</span> (<span class="hljs-name">length</span> lst) <span class="hljs-number">1</span>))) pos)
+        <span class="hljs-comment">; wähle das kleinere (minheap) der beiden Kinder (größere für dem Maxheap) </span>
+        (((<span class="hljs-name">translate-comparator</span> (<span class="hljs-name">cond</span> (<span class="hljs-name">is-min-heap</span> &lt;=) (<span class="hljs-name">else</span> &gt;=)))
+                  (<span class="hljs-name">list-ref</span> lst pos) (<span class="hljs-name">list-ref</span> lst ((<span class="hljs-name">cond</span> ((<span class="hljs-name">odd</span>? pos) +) (<span class="hljs-name">else</span> -)) pos <span class="hljs-number">1</span>))) pos)
+        <span class="hljs-comment">; die Position aller Linken Child-Nodes sind immer Ungerade</span>
+        (<span class="hljs-name">else</span> ((<span class="hljs-name">cond</span> ((<span class="hljs-name">odd</span>? pos) +) (<span class="hljs-name">else</span> -)) pos <span class="hljs-number">1</span>))))
+    (<span class="hljs-name">broken-at</span>? lst (<span class="hljs-name">-</span> (<span class="hljs-name">length</span> lst) <span class="hljs-number">1</span>)))
+
+  <span class="hljs-comment">; Tauscht 2 Elemente einer Liste</span>
+  (<span class="hljs-name">define</span> (<span class="hljs-name">swap</span> pos1 pos2 lst)
+    (<span class="hljs-name">define</span> (<span class="hljs-name">swap-inner1</span> pre value1 pos2 lst)
+      (<span class="hljs-name">cond</span>
+        ((<span class="hljs-name">and</span> (<span class="hljs-name">&lt;=</span> pos2 <span class="hljs-number">0</span>) (<span class="hljs-name">empty</span>? lst)) (<span class="hljs-name">append</span> pre (<span class="hljs-name">list</span> value1)))
+        ((<span class="hljs-name">&lt;=</span> pos2 <span class="hljs-number">0</span>) (<span class="hljs-name">append</span> pre (<span class="hljs-name">list</span> value1) (<span class="hljs-name">rest</span> lst)))
+        (<span class="hljs-name">else</span> (<span class="hljs-name">swap-inner1</span> (<span class="hljs-name">append</span> pre (<span class="hljs-name">list</span> (<span class="hljs-name">first</span> lst))) value1 (<span class="hljs-name">-</span> pos2 <span class="hljs-number">1</span>) (<span class="hljs-name">rest</span> lst)))
+        ))
+
+    (<span class="hljs-name">define</span> (<span class="hljs-name">swap-inner2</span> pre pos1 pos2 lst)
+      (<span class="hljs-name">cond</span>
+        ((<span class="hljs-name">&lt;=</span> pos1 <span class="hljs-number">0</span>) (<span class="hljs-name">swap-inner1</span> (<span class="hljs-name">append</span> pre (<span class="hljs-name">list</span> (<span class="hljs-name">list-ref</span> lst pos2))) (<span class="hljs-name">first</span> lst) (<span class="hljs-name">-</span> pos2 <span class="hljs-number">1</span>) (<span class="hljs-name">rest</span> lst)))
+        (<span class="hljs-name">else</span> (<span class="hljs-name">swap-inner2</span> (<span class="hljs-name">append</span> pre (<span class="hljs-name">list</span> (<span class="hljs-name">first</span> lst))) (<span class="hljs-name">-</span> pos1 <span class="hljs-number">1</span>) (<span class="hljs-name">-</span> pos2 <span class="hljs-number">1</span>) (<span class="hljs-name">rest</span> lst)))))
+
+    (<span class="hljs-name">cond</span>
+      ((<span class="hljs-name">&lt;</span> pos1 <span class="hljs-number">0</span>)(<span class="hljs-name">error</span> <span class="hljs-string">"IndexOutOfBoundsException"</span>))
+      ((<span class="hljs-name">&lt;</span> pos2 <span class="hljs-number">0</span>)(<span class="hljs-name">error</span> <span class="hljs-string">"IndexOutOfBoundsException"</span>))
+      ((<span class="hljs-name">&lt;</span> pos1 pos2)(<span class="hljs-name">swap-inner2</span> null pos1 pos2 lst))
+      ((<span class="hljs-name">&gt;</span> pos1 pos2)(<span class="hljs-name">swap-inner2</span> null pos2 pos1 lst))
+      (<span class="hljs-name">else</span> lst)))
+
+  <span class="hljs-comment">; Wenn die Heap-Condition der Liste gebrochen wurde,</span>
+  <span class="hljs-comment">; fürt diese Funktion genau einen Schritt aus um sie stückweise wieder herzustellen.</span>
+  (<span class="hljs-name">define</span> (<span class="hljs-name">heapify-step</span> lst)
+    (<span class="hljs-name">swap</span> (<span class="hljs-name">get-parent-pos</span> (<span class="hljs-name">heapify-broken</span>? lst)) (<span class="hljs-name">heapify-broken</span>? lst) lst))
+
+  <span class="hljs-comment">; Baut den Heap Schrittweise auf</span>
+  (<span class="hljs-name">define</span> (<span class="hljs-name">insert-step</span> current ret lst)
+    (<span class="hljs-name">cond</span>
+      ((<span class="hljs-name">heapify-broken</span>? current) (<span class="hljs-name">insert-step</span> (<span class="hljs-name">heapify-step</span> current) (<span class="hljs-name">append</span> ret (<span class="hljs-name">list</span> current)) lst))
+      ((<span class="hljs-name">empty</span>? lst) (<span class="hljs-name">append</span> ret (<span class="hljs-name">list</span> current)))
+      (<span class="hljs-name">else</span> (<span class="hljs-name">insert-step</span> (<span class="hljs-name">append</span> current (<span class="hljs-name">list</span> (<span class="hljs-name">first</span> lst))) (<span class="hljs-name">cond</span> ((<span class="hljs-name">empty</span>? current) ret)(<span class="hljs-name">else</span> (<span class="hljs-name">append</span> ret (<span class="hljs-name">list</span> current)))) (<span class="hljs-name">rest</span> lst)))))
+
+  <span class="hljs-comment">; Baut den Heap Schrittweise ab.</span>
+  <span class="hljs-comment">; Nutzt als ausgabgspunkt den letzen Schritt der insert-steps</span>
+  (<span class="hljs-name">define</span> (<span class="hljs-name">delete-step</span> insert-steps)
+    (<span class="hljs-name">define</span> (<span class="hljs-name">delete-step-inner</span> current ret)
+      (<span class="hljs-name">cond</span>
+        ((<span class="hljs-name">heapify-broken</span>? current) (<span class="hljs-name">delete-step-inner</span> (<span class="hljs-name">heapify-step</span> current) (<span class="hljs-name">append</span> ret (<span class="hljs-name">list</span> current))))
+        ((<span class="hljs-name">&lt;=</span> (<span class="hljs-name">length</span> current) <span class="hljs-number">1</span>) (<span class="hljs-name">append</span> ret (<span class="hljs-name">list</span> current)))
+        (<span class="hljs-name">else</span> (<span class="hljs-name">delete-step-inner</span> (<span class="hljs-name">cons</span> (<span class="hljs-name">last</span> current) (<span class="hljs-name">reverse</span> (<span class="hljs-name">rest</span> (<span class="hljs-name">reverse</span> (<span class="hljs-name">rest</span> current))))) (<span class="hljs-name">append</span> ret (<span class="hljs-name">list</span> current))))))
+
+    (<span class="hljs-name">delete-step-inner</span> (<span class="hljs-name">cons</span> (<span class="hljs-name">last</span> (<span class="hljs-name">last</span> insert-steps)) (<span class="hljs-name">reverse</span> (<span class="hljs-name">rest</span> (<span class="hljs-name">reverse</span> (<span class="hljs-name">rest</span> (<span class="hljs-name">last</span> insert-steps)))))) insert-steps))
+
+  <span class="hljs-comment">; Interner Aufruf der Funktion</span>
+  (<span class="hljs-name">cond</span>
+    ((<span class="hljs-name">empty</span>? lst) null) <span class="hljs-comment">; kann nicht sortiert werden</span>
+    ((<span class="hljs-name">&lt;=</span> (<span class="hljs-name">length</span> lst) <span class="hljs-number">1</span>) (<span class="hljs-name">list</span> lst)) <span class="hljs-comment">; ist bereits sortiert </span>
+    (<span class="hljs-name">else</span> (<span class="hljs-name">delete-step</span> (<span class="hljs-name">insert-step</span> null null lst))))
+  )
+
+
+<span class="hljs-comment">; Die Standartfunktion unterstütz ausschließlich Numbers und Strings</span>
+<span class="hljs-comment">; Alternative Datentypen können jedoch mit "get-steps-generic" verarbeitet werden.</span>
+(<span class="hljs-name">define</span> (<span class="hljs-name">get-steps</span> lst is-min-heap)
+
+  <span class="hljs-comment">; Erstellt eine Funktion die number-comparator zu string-comparator überfürt,</span>
+  <span class="hljs-comment">; falls es sich bei der Liste um Strings handelt.</span>
+  (<span class="hljs-name">define</span> (<span class="hljs-name">get-comparator-translater</span>)
+    (<span class="hljs-name">cond</span>
+      ((<span class="hljs-name">number</span>? (<span class="hljs-name">first</span> lst)) (<span class="hljs-name">lambda</span> (<span class="hljs-name">comparator</span>) comparator))
+      ((<span class="hljs-name">string</span>? (<span class="hljs-name">first</span> lst))
+       (<span class="hljs-name">lambda</span> (<span class="hljs-name">comparator</span>) (<span class="hljs-name">cond</span>
+         ((<span class="hljs-name">equal</span>? comparator &gt;=) string&gt;=?)
+         ((<span class="hljs-name">equal</span>? comparator &lt;=) string&lt;=?)
+         ((<span class="hljs-name">equal</span>? comparator &gt;) string&gt;?)
+         ((<span class="hljs-name">equal</span>? comparator &lt;) string&lt;?)
+         (<span class="hljs-name">else</span> equal?))))
+      (<span class="hljs-name">else</span> (<span class="hljs-name">error</span> <span class="hljs-string">"TypeException: Diese Funktion untersützt nur Listen aus nur Numbers oder nur Strings.\nVerwende statdessen die Funktion \"get-steps-generic\""</span>))))
+
+  (<span class="hljs-name">cond</span>
+    ((<span class="hljs-name">empty</span>? lst) null) <span class="hljs-comment">; kann nicht sortiert werden</span>
+    ((<span class="hljs-name">&lt;=</span> (<span class="hljs-name">length</span> lst) <span class="hljs-number">1</span>) (<span class="hljs-name">list</span> lst)) <span class="hljs-comment">; ist bereits sortiert </span>
+    ((<span class="hljs-name">nor</span> (<span class="hljs-name">andmap</span> number? lst) (<span class="hljs-name">andmap</span> string? lst))
+     (<span class="hljs-name">error</span> <span class="hljs-string">"TypeException: Diese Funktion untersützt nur Listen aus nur Numbers oder nur Strings.\nVerwende statdessen die Funktion \"get-steps-generic\""</span>))
+    (<span class="hljs-name">else</span> (<span class="hljs-name">get-steps-generic</span> lst is-min-heap (<span class="hljs-name">get-comparator-translater</span>)))))
+</code></pre><h4 id="funktional-java">Funktional - Java</h4>
+<p>Sofern die funktionale Version für das eigentliche Projekt eingesetzt werden sollte, 
+muss die Funktion <code>getSteps()</code> wieder in Java übertragen werden.</p>
+<p>Um das funktionale Schema zu erreichen, werden statische Funktionen verwendet,
+welche keine Seiteneffekte auf die Übergabeparameter ausüben.</p>
+<p>Des Weiteren wird bestmöglich auf die Objektmanipulation und Schleifen-Kontrollstrukturen verzichtet.
+Lediglich die Hilfsfunktionen <code>add</code>, <code>cons</code>, <code>rest</code>, <code>removeLast</code> und <code>swap</code> greifen auf diese Technik zurück,
+um eine signifikante Menge an Rechenleistung bei den Listenoperationen zu sparen.</p>
+<p>Es sei auch angemerkt, dass in Java versucht werden sollte Rekursion zu vermeiden
+und es daher an vielen Stellen sinnvoll wäre ein <code>while</code> Konstrukt zu bauen.
+Für Lern- und Demonstrationszwecke wurde darauf jedoch verzichtet.</p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> Main {
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> main(<span class="hljs-keyword">String</span>[] args) {
+    <span class="hljs-comment">// Funktional:</span>
+    System.out.<span class="hljs-built_in">println</span>(<span class="hljs-string">"\n\nFunktional:"</span>);
+    <span class="hljs-built_in">for</span> (ArrayList&lt;Integer&gt; <span class="hljs-built_in">step</span> : Objects.requireNonNull(FunktionalHeapSortAlgorithmJava.getSteps(<span class="hljs-keyword">new</span> ArrayList&lt;&gt;(List.of(<span class="hljs-number">6</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-number">1</span>, <span class="hljs-number">7</span>)), true))) {
+      System.out.<span class="hljs-built_in">println</span>(<span class="hljs-built_in">step</span>);
+    }
+  }
+}
+</code></pre>
+<pre><code class="lang-java"><span class="hljs-comment">/**
+ * Hilfsklasse die alle Schritte des Heap Sort für ein Array ermittelt.
+ * &lt;br&gt; Die Klasse funktioniert für alle Objekte die {<span class="hljs-doctag">@link</span> Comparable} implementieren.
+ * <span class="hljs-doctag">@see</span> Comparable
+ * <span class="hljs-doctag">@author</span> Johannes Freund
+ */</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FunktionalHeapSortAlgorithmJava</span> </span>{
+    <span class="hljs-comment">/**
+     * Ermittelt alle Schritte die bei dem Heap Sort des Arrays benötigt werden.
+     * <span class="hljs-doctag">@param</span> array Array, dass durch Heapsort sortiert werden soll
+     * <span class="hljs-doctag">@param</span> isMinHeap Soll ein Min- (true) oder Max (false) Heap aufgebaut werden?
+     * <span class="hljs-doctag">@return</span> Array, mit allen Schritten des Heapsort
+     * <span class="hljs-doctag">@param</span> &lt;E&gt; Comparable Typ des Heap. Alle Objekte die {<span class="hljs-doctag">@link</span> Comparable} implementieren können diese Funktion nutzen.
+     * <span class="hljs-doctag">@see</span> Comparable
+     */</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;E extends Comparable&lt;E&gt;&gt; ArrayList&lt;ArrayList&lt;E&gt;&gt; getSteps(ArrayList&lt;E&gt; <span class="hljs-keyword">array</span>, <span class="hljs-keyword">boolean</span> isMinHeap) {
+        <span class="hljs-keyword">if</span>(<span class="hljs-keyword">array</span>.isEmpty()){
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(<span class="hljs-keyword">array</span>.size() == <span class="hljs-number">1</span>){
+            ArrayList&lt;ArrayList&lt;E&gt;&gt; ret = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+            ret.add(<span class="hljs-keyword">array</span>);
+            <span class="hljs-keyword">return</span> ret;
+        }
+        <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">return</span> deleteStep(insertStep(<span class="hljs-keyword">new</span> ArrayList&lt;&gt;(), <span class="hljs-keyword">new</span> ArrayList&lt;&gt;(), <span class="hljs-keyword">array</span>, isMinHeap), isMinHeap);
+        }
+    }
+
+    <span class="hljs-comment">/**
+     * Baut den Heap Schrittweise auf
+     * <span class="hljs-doctag">@param</span> current Aktueller Schritt
+     * <span class="hljs-doctag">@param</span> ret Rückgabe
+     * <span class="hljs-doctag">@param</span> array einzufügende Werte
+     * <span class="hljs-doctag">@param</span> isMinHeap Handelt es sich um einen Min-Heap?
+     * <span class="hljs-doctag">@return</span> Alle Insert Steps
+     * <span class="hljs-doctag">@param</span> &lt;E&gt; Typ des Heap
+     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> &lt;E extends Comparable&lt;E&gt;&gt; ArrayList&lt;ArrayList&lt;E&gt;&gt; insertStep(ArrayList&lt;E&gt; current, ArrayList&lt;ArrayList&lt;E&gt;&gt; ret, ArrayList&lt;E&gt; <span class="hljs-keyword">array</span>, <span class="hljs-keyword">boolean</span> isMinHeap){
+        <span class="hljs-keyword">if</span>(isHeapifyBroken(current, isMinHeap) &gt; <span class="hljs-number">-1</span>){
+            <span class="hljs-keyword">return</span> insertStep(heapifyStep(current, isMinHeap), add(ret, current), <span class="hljs-keyword">array</span>, isMinHeap);
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(<span class="hljs-keyword">array</span>.isEmpty()){
+            <span class="hljs-keyword">return</span> add(ret, current);
+        }
+        <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">return</span> insertStep(add(current, <span class="hljs-keyword">array</span>.get(<span class="hljs-number">0</span>)), (current.isEmpty())? ret : add(ret, current), rest(<span class="hljs-keyword">array</span>), isMinHeap);
+        }
+    }
+
+    <span class="hljs-comment">/**
+     * Baut den Heap Schrittweise ab
+     * <span class="hljs-doctag">@param</span> isMinHeap Handelt es sich um einen Min-Heap?
+     * <span class="hljs-doctag">@return</span> Alle Delete Steps
+     * <span class="hljs-doctag">@param</span> &lt;E&gt; Typ des Heap
+     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> &lt;E extends Comparable&lt;E&gt;&gt; ArrayList&lt;ArrayList&lt;E&gt;&gt; deleteStep(ArrayList&lt;ArrayList&lt;E&gt;&gt; insertSteps, <span class="hljs-keyword">boolean</span> isMinHeap){
+        <span class="hljs-keyword">return</span> deleteStepHelper(cons(insertSteps.getLast().getLast(), removeLast(rest(insertSteps.getLast()))), insertSteps, isMinHeap);
+    }
+
+    <span class="hljs-comment">/**
+     * Hilfsfunktion von {<span class="hljs-doctag">@link</span> FunktionalHeapSortAlgorithmJava#deleteStep}
+     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> &lt;E extends Comparable&lt;E&gt;&gt; ArrayList&lt;ArrayList&lt;E&gt;&gt; deleteStepHelper(ArrayList&lt;E&gt; current, ArrayList&lt;ArrayList&lt;E&gt;&gt; ret, <span class="hljs-keyword">boolean</span> isMinHeap){
+        <span class="hljs-keyword">if</span>(isHeapifyBroken(current, isMinHeap) &gt; <span class="hljs-number">-1</span>){
+            <span class="hljs-keyword">return</span> deleteStepHelper(heapifyStep(current, isMinHeap), add(ret, current), isMinHeap);
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(current.size() &lt;= <span class="hljs-number">1</span>){
+            <span class="hljs-keyword">return</span> add(ret, current);
+        }
+        <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">return</span> deleteStepHelper(cons(current.getLast(), removeLast(rest(current))), add(ret, current), isMinHeap);
+        }
+    }
+
+    <span class="hljs-comment">/**
+     * Ermittelt die Position einer Parent-Node einer Node in einem binären Heap
+     * <span class="hljs-doctag">@param</span> childPos Position der Child Node
+     * <span class="hljs-doctag">@return</span> Position des Parent, oder -1 Falls die Node die Wurzel ist
+     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> getParentPos(<span class="hljs-keyword">int</span> childPos){
+        <span class="hljs-keyword">if</span>(childPos &lt;= <span class="hljs-number">0</span>){
+            <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;
+        }
+        <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">return</span> (<span class="hljs-keyword">int</span>) Math.floor((childPos - <span class="hljs-number">1</span>) / <span class="hljs-number">2.0</span>f);
+        }
+    }
+
+    <span class="hljs-comment">/**
+     * Ermittelt ob die Heap-Condition des Binären Heaps gebrochen ist
+     * <span class="hljs-doctag">@param</span> array Zu überprüfender Heap
+     * <span class="hljs-doctag">@param</span> isMinHeap Handelt es sich um einen Min-Heap?
+     * <span class="hljs-doctag">@return</span> -1 falls nicht gebrochen oder Position der Child-Node an der die Heap-Condtion nicht erfüllt ist
+     * <span class="hljs-doctag">@param</span> &lt;E&gt; Typ des Heap
+     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> &lt;E extends Comparable&lt;E&gt;&gt; <span class="hljs-keyword">int</span> isHeapifyBroken(ArrayList&lt;E&gt; <span class="hljs-keyword">array</span>, <span class="hljs-keyword">boolean</span> isMinHeap){
+        <span class="hljs-keyword">return</span> (isHeapifyBrokenAt(<span class="hljs-keyword">array</span>, <span class="hljs-keyword">array</span>.size() - <span class="hljs-number">1</span>, isMinHeap));
+    }
+
+    <span class="hljs-comment">/**
+     * Hilfsfunktion von {<span class="hljs-doctag">@link</span> FunktionalHeapSortAlgorithmJava#isHeapifyBroken}
+     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> &lt;E extends Comparable&lt;E&gt;&gt; <span class="hljs-keyword">int</span> isHeapifyBrokenAt(ArrayList&lt;E&gt; <span class="hljs-keyword">array</span>, <span class="hljs-keyword">int</span> pos, <span class="hljs-keyword">boolean</span> isMinHeap){
+        <span class="hljs-keyword">if</span>(<span class="hljs-keyword">array</span>.isEmpty()){
+            <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;  <span class="hljs-comment">// -&gt; False</span>
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(pos &lt;= <span class="hljs-number">0</span>){
+            <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>; <span class="hljs-comment">// -&gt; False</span>
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(
+                (isMinHeap &amp;&amp; <span class="hljs-number">0</span> &lt;= <span class="hljs-keyword">array</span>.get(pos).compareTo(<span class="hljs-keyword">array</span>.get(getParentPos(pos)))) |    <span class="hljs-comment">//Parent &gt;= Child</span>
+                (!isMinHeap &amp;&amp; <span class="hljs-number">0</span> &gt;= <span class="hljs-keyword">array</span>.get(pos).compareTo(<span class="hljs-keyword">array</span>.get(getParentPos(pos))))     <span class="hljs-comment">//Parent &lt;= Child</span>
+        ){
+            <span class="hljs-keyword">return</span> isHeapifyBrokenAt(<span class="hljs-keyword">array</span>, pos<span class="hljs-number">-1</span>, isMinHeap);
+        }
+
+        <span class="hljs-comment">// Fehlerfall:</span>
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>((pos % <span class="hljs-number">2</span> != <span class="hljs-number">0</span>) &amp;&amp; (pos == <span class="hljs-keyword">array</span>.size()<span class="hljs-number">-1</span>)){
+            <span class="hljs-keyword">return</span> pos;
+        }
+        <span class="hljs-comment">// wähle das kleinere (minheap) der beiden Kinder (größere für dem Maxheap)</span>
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(
+                (isMinHeap &amp;&amp; <span class="hljs-number">0</span> &gt;= <span class="hljs-keyword">array</span>.get(pos).compareTo(<span class="hljs-keyword">array</span>.get(pos + ((pos % <span class="hljs-number">2</span> != <span class="hljs-number">0</span>) ? +<span class="hljs-number">1</span> : <span class="hljs-number">-1</span>)))) |
+                (!isMinHeap &amp;&amp; <span class="hljs-number">0</span> &lt;= <span class="hljs-keyword">array</span>.get(pos).compareTo(<span class="hljs-keyword">array</span>.get(pos + ((pos % <span class="hljs-number">2</span> != <span class="hljs-number">0</span>) ? +<span class="hljs-number">1</span> : <span class="hljs-number">-1</span>))))
+        ){
+            <span class="hljs-keyword">return</span> pos;
+        }
+        <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">return</span> pos + ((pos % <span class="hljs-number">2</span> != <span class="hljs-number">0</span>) ? +<span class="hljs-number">1</span> : <span class="hljs-number">-1</span>);
+        }
+    }
+
+    <span class="hljs-comment">/**
+     * Wenn die Heap-Condition der Liste gebrochen wurde,
+     * fürt diese Funktion genau einen Schritt aus um sie stückweise wieder herzustellen.
+     * <span class="hljs-doctag">@param</span> array Heap
+     * <span class="hljs-doctag">@param</span> isMinHeap Handelt es sich um einen Min-Heap?
+     * <span class="hljs-doctag">@return</span> Nächster Schritt für den Heap um die Heap Kondition zu erfüllen.
+     * <span class="hljs-doctag">@param</span> &lt;E&gt; Typ des Heap
+     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> &lt;E extends Comparable&lt;E&gt;&gt; ArrayList&lt;E&gt; heapifyStep(ArrayList&lt;E&gt; <span class="hljs-keyword">array</span>, <span class="hljs-keyword">boolean</span> isMinHeap){
+        <span class="hljs-keyword">return</span> swap(<span class="hljs-keyword">array</span>, getParentPos(isHeapifyBroken(<span class="hljs-keyword">array</span>, isMinHeap)), isHeapifyBroken(<span class="hljs-keyword">array</span>, isMinHeap));
+    }
+
+    <span class="hljs-comment">/**
+     * Tauscht 2 Elemente im Heap. (Nicht funktional, aber ohne Seiteneffekte)
+     * <span class="hljs-doctag">@param</span> array Array in dem Elemente getauscht werden sollen
+     * <span class="hljs-doctag">@param</span> pos1 1. Tauschelement
+     * <span class="hljs-doctag">@param</span> pos2 2. Tauschelement
+     * <span class="hljs-doctag">@return</span> Array in dem die Elemente getauscht wurden
+     * <span class="hljs-doctag">@param</span> &lt;E&gt; Typ des Heap
+     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> &lt;E extends Comparable&lt;E&gt;&gt; ArrayList&lt;E&gt; swap(ArrayList&lt;E&gt; <span class="hljs-keyword">array</span>, <span class="hljs-keyword">int</span> pos1, <span class="hljs-keyword">int</span> pos2){
+        ArrayList&lt;E&gt; copy = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;(<span class="hljs-keyword">array</span>);
+
+        E temp = copy.get(pos1);
+        copy.set(pos1, copy.get(pos2));
+        copy.set(pos2, temp);
+
+        <span class="hljs-keyword">return</span> copy;
+    }
+
+    <span class="hljs-comment">/**
+     * Fügt ein Element an das Ende des Arrays. (Nicht funktional, aber ohne Seiteneffekte)
+     * <span class="hljs-doctag">@param</span> array Haupt-Array
+     * <span class="hljs-doctag">@param</span> addtion Element das hinzugefügt wird
+     * <span class="hljs-doctag">@return</span> Zusammengefügtes Array
+     * <span class="hljs-doctag">@param</span> &lt;T&gt; Typ des Haupt-Arrays
+     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> &lt;T&gt; ArrayList&lt;T&gt; add(ArrayList&lt;T&gt; <span class="hljs-keyword">array</span>, T addtion){
+        ArrayList&lt;T&gt; copy = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;(<span class="hljs-keyword">array</span>);
+        copy.add(addtion);
+        <span class="hljs-keyword">return</span> copy;
+    }
+
+    <span class="hljs-comment">/**
+     * Fügt ein Element an den Anfang des Arrays. (Nicht funktional, aber ohne Seiteneffekte)
+     * <span class="hljs-doctag">@param</span> array Haupt-Array
+     * <span class="hljs-doctag">@param</span> addtion Element das hinzugefügt wird
+     * <span class="hljs-doctag">@return</span> Zusammengefügtes Array
+     * <span class="hljs-doctag">@param</span> &lt;T&gt; Typ des Haupt-Arrays
+     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> &lt;T&gt; ArrayList&lt;T&gt; cons(T addtion, ArrayList&lt;T&gt; <span class="hljs-keyword">array</span>){
+        ArrayList&lt;T&gt; copy = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;(<span class="hljs-keyword">array</span>);
+        copy.add(<span class="hljs-number">0</span>, addtion);
+        <span class="hljs-keyword">return</span> copy;
+    }
+
+    <span class="hljs-comment">/**
+     * Entfernt das letzte Element des Arrays. (Nicht funktional, aber ohne Seiteneffekte)
+     * <span class="hljs-doctag">@param</span> array Zu nutzendes Array
+     * <span class="hljs-doctag">@return</span> Array ohne das letzte Element
+     * <span class="hljs-doctag">@param</span> &lt;T&gt; Typ des Arrays
+     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> &lt;T&gt; ArrayList&lt;T&gt; removeLast(ArrayList&lt;T&gt; <span class="hljs-keyword">array</span>){
+        ArrayList&lt;T&gt; copy = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;(<span class="hljs-keyword">array</span>);
+        copy.removeLast();
+        <span class="hljs-keyword">return</span> copy;
+    }
+
+    <span class="hljs-comment">/**
+     * Entfernt das 1. Element des Arrays. (Nicht funktional, aber ohne Seiteneffekte)
+     * <span class="hljs-doctag">@param</span> array Zu nutzendes Array
+     * <span class="hljs-doctag">@return</span> Array ohne das 1. Element
+     * <span class="hljs-doctag">@param</span> &lt;T&gt; Typ des Arrays
+     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> &lt;T&gt; ArrayList&lt;T&gt; rest(ArrayList&lt;T&gt; <span class="hljs-keyword">array</span>){
+        ArrayList&lt;T&gt; copy = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;(<span class="hljs-keyword">array</span>);
+        copy.removeFirst();
+        <span class="hljs-keyword">return</span> copy;
+    }
+}
+</code></pre>

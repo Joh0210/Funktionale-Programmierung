@@ -1,0 +1,31 @@
+<p>Nennen und erläutern Sie mindestens drei Gründe, warum es sinnvoll sein kann, ein Typsystem zu verwenden. 
+Erläutern Sie anschließend den Unterschied zwischen einer dynamischen Typprüfung und einer statischen Typprüfung. 
+Sie können für Ihre Antwort neben Racket auch noch auf andere Ihnen bekannte Programmiersprachen zurückgreifen.</p>
+<h3 id="gr-nde-f-r-typisierung-">Gründe für Typisierung:</h3>
+<ul>
+<li>Effizienteres Speicherlayout:
+<br>Wenn der Compiler auf eine typisierte Variable trifft (entweder über Annotation oder über Inferenz identifiziert), 
+kann er die passende Menge an Bytes für den Datentyp im Speicher belegen und somit möglichst effizient ausnutzen.
+<br>In nicht typisierten Sprachen kann es z.B. passieren, dass für eine Variable standardmäßig 32 Bit belegt werden, 
+jedoch eigentlich nur 16 Bit genutzt werden, was zu einer Speicherverschwendung führt. 
+Ebenso könnte es passieren, dass es im Nachhinein auf 64 Bit erweitert werden muss, was zusätzlichen Rechenaufwand bedeutet.
+<br>Beispiel: in Java weiß der Compiler direkt, ob es sich bei einer nummerischen Zahl um eine <code>short</code> (16 Bit), <code>int</code> (32 Bit) oder <code>long</code> (64 Bit) Variable handelt 
+und reserviert entsprechend große Speicherblöcke, welche im Nachhinein nicht erweitert werden müssen, ohne unnötige Mengen an Speicher zu belegen.
+<br> <strong>Anmerkung</strong>: Bei Objekten und Datenstrukturen ist dieser Vorteil nicht direkt der Fall, da diese (z.B. in Racket und Java) mit Speicheradressen arbeiten. 
+Für die primitiven-Bestandteile der Objekte und Datenstrukturen ist das Argument weiterhin gültig. </li>
+<li>Bessere Lesbarkeit:
+<br> Wenn man ein Typsystem verwendet, kann man trotz potenziell ungünstig gewählten Argumentnamen leichter Nachvollziehen 
+welche Argumente die Funktion benötigt und besser verstehen, was die Funktion macht.</li>
+<li>Automatisches Finden von logischen Fehlern:
+<br>Durch die Typennotationen fügt man redundante Informationen dem Programm zu. 
+Diese Redundanz kann der Compiler nutzen, um während einer statischen Code-Analyse zu prüfen, 
+ob die Variablen-Belegung mit der zusätzlich angegeben Information zu jedem Zeitpunkt sichergestellt ist. 
+Wenn dem nicht so ist, wirft der Compiler einen Typfehler und weist den Entwickler auf den entsprechenden Logikfehler hin. </li>
+<li>Modularisierung (wenn ein Typ zugleich eine Schnittstelle/Interface ausdrückt):
+<br>Die Typsignatur kann gleichzeitig ein Interface ausdrücken, welche Modulentwickler angeben können um spätere Nutzer bei der Nutzung, bzw. Ansteuerung des Moduls zu unterstützen.</li>
+</ul>
+<h3 id="unterschied-zwischen-dynamischer-und-statischer-typpr-fung">Unterschied zwischen dynamischer und statischer Typprüfung</h3>
+<p>Die statische Typprüfung findet zur Compilezeit statt und weist somit während einer statischen Code-Analyse die Typ Korrektheit nach, ohne dass das Programm ausgeführt wird.</p>
+<p>Die dynamische Typprüfung findet erst während der Laufzeit, bei der Variablenzuweisung, statt. Also wenn das Programm an der entsprechenden Stelle ankommt, wird geprüft, ob die Typ-Inn-Variante eingehalten wurde.<br>Wenn nicht, wird an dieser Stelle ein Laufzeitfehler geworfen. 
+<br>Ein typisches Beispiel hierfür ist die <code>NullPointerException</code> in Java, bei welcher zur Laufzeit ein Objekt erwartet wird, 
+jedoch <code>null</code> erhält und das System darauf nicht reagieren kann.</p>

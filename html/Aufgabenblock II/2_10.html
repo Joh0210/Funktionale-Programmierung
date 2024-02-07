@@ -1,0 +1,19 @@
+<p>Erklären Sie den Unterschied zwischen der Reduktionsstrategie <code>normal order</code> und <code>applicative order</code>. Führen beide immer zum gleichen Ergebnis? Begründen Sie Ihre Antwort an einem selbst erstellten Beispiel.</p>
+<h3 id="antwort">Antwort</h3>
+<p>Die Reduktionsstrategie bestimmt, welcher Teil eines Programms zu welchem Zeitpunkt und somit in welcher Reihenfolge ausgewertet wird. 
+Solange die aufzurufenden Funktionen also keine Seiteneffekte haben und bei gleichem Input stets gleiches Output liefern, führen beide Strategien stets zum gleichen Ergebnis.</p>
+<p>Bei <code>normal order</code> findet die Auswertung der Argumente erst dann statt, wenn sie tatsächlich benötigt werden. Das kann den Vorteil haben, dass die Berechnung für im Funktionsrumpf nicht benötigte Argumente auch nicht durchgeführt wird und so Leistung gespart werden kann.</p>
+<pre><code>(<span class="hljs-name"><span class="hljs-builtin-name">*</span></span> (<span class="hljs-name">square</span> <span class="hljs-number">2</span>) (<span class="hljs-name">square</span> <span class="hljs-number">3</span>))
+(<span class="hljs-name"><span class="hljs-builtin-name">*</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">*</span></span> <span class="hljs-number">2</span> <span class="hljs-number">2</span>) (<span class="hljs-name">square</span> <span class="hljs-number">3</span>))
+(<span class="hljs-name"><span class="hljs-builtin-name">*</span></span> <span class="hljs-number">4</span> (<span class="hljs-name">square</span> <span class="hljs-number">3</span>))
+(<span class="hljs-name"><span class="hljs-builtin-name">*</span></span> <span class="hljs-number">4</span> (<span class="hljs-name"><span class="hljs-builtin-name">*</span></span> <span class="hljs-number">3</span> <span class="hljs-number">3</span>))
+(<span class="hljs-name"><span class="hljs-builtin-name">*</span></span> <span class="hljs-number">4</span> <span class="hljs-number">9</span>)
+<span class="hljs-number">36</span>
+</code></pre><p>Bei <code>applicative order</code> werden alle Argumente einer Funktion ausgewertet, bevor die Funktion aufgerufen wird.</p>
+<pre><code>(<span class="hljs-name"><span class="hljs-builtin-name">*</span></span> (<span class="hljs-name">square</span> <span class="hljs-number">2</span>) (<span class="hljs-name">square</span> <span class="hljs-number">3</span>))
+(<span class="hljs-name"><span class="hljs-builtin-name">*</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">*</span></span> <span class="hljs-number">2</span> <span class="hljs-number">2</span>) (<span class="hljs-name"><span class="hljs-builtin-name">*</span></span> <span class="hljs-number">3</span> <span class="hljs-number">3</span>))
+(<span class="hljs-name"><span class="hljs-builtin-name">*</span></span> <span class="hljs-number">4</span> <span class="hljs-number">9</span>)
+<span class="hljs-number">36</span>
+</code></pre><p>Hat eine Funktion jedoch Nebeneffekte, kann die Ausführungsreihenfolge relevant sein, bzw. kann es wichtig sein, dass das Argument erst ausgewertet wird, wenn die Funktion an der entsprechenden Stelle ankommt. 
+In diesen Fällen kann es hinderlich sein, dass bei <code>applicative order</code> die Argumente bereits bei Funktionsaufruf ausgewertet werden.
+<br>Beispiele hierfür wurden in Aufgabenblock I: Aufgabe 7 und 8 behandelt.  </p>

@@ -1,0 +1,57 @@
+<p>Überlegen Sie sich einen Anwendungsfall für Ströme (streams) und illustrieren Ihren Anwendungsfall an einer Implementierung in Racket. 
+Die Implementierung muss nicht voll funktionsfähig sein, es reicht ein Prototyp oder Pseudo-Code.</p>
+<h3 id="antwort">Antwort</h3>
+<p>Den Haupteinsatz von Streams in Racket sehe ich in der Verarbeitung von endlos-kontinuierlichen oder extrem großen Datenmengen mit lazy-streams. 
+Bei kleinen, finiten Datenmengen ist es in der Regel ohne Probleme möglich, diese als Liste zu speichern und bei Funktionen alle Elemente der Liste mit einzubeziehen. </p>
+<p>Bei endlosen oder extrem großen Mengen ist das jedoch tendenziell nicht möglich. Lässt diese Menge sich jedoch (mathematisch) Beschreiben oder kontinuierlich auslesen, 
+lässt sie sich als lazy-stream darstellen, welcher für einige Verarbeitungen genutzt werden kann.
+<br><strong>Anmerkung</strong>: Verarbeitungen, welche den ganzen Stream benötigen würden, funktionieren weiterhin nicht.</p>
+<p>Eine Beispielfunktion wäre also das Finden des ersten Elements des endlosen Streams für das eine gewisse Bedingung gilt. </p>
+<h3 id="code">Code</h3>
+<pre><code><span class="hljs-comment">; Stream Logik:</span>
+
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> the-empty-stream '())
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> head car)
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> stream-empty? empty?)
+
+(<span class="hljs-name"><span class="hljs-builtin-name">define-syntax</span></span> stream-cons
+  (<span class="hljs-name"><span class="hljs-builtin-name">syntax-rules</span></span> ()
+      ((<span class="hljs-name">cons-stream</span> x y)
+       (<span class="hljs-name"><span class="hljs-builtin-name">cons</span></span> x (<span class="hljs-name"><span class="hljs-builtin-name">delay</span></span> y)))))
+
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">tail</span> s) (<span class="hljs-name"><span class="hljs-builtin-name">force</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">cdr</span></span> s)))
+
+<span class="hljs-comment">; Funktion für endlose Menge</span>
+<span class="hljs-comment">; findet das erste Element des streams für das "bedingung" gilt</span>
+<span class="hljs-comment">; ist die abbruchbedingung erfüllt, wird die suche abgebrochen. (const #f) falls man sich 100% sicher ist, dass element existiert.</span>
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">findf-endlos</span> steam bedingung abbruchbedingung)
+  (<span class="hljs-name"><span class="hljs-builtin-name">cond</span></span>
+    ((<span class="hljs-name">abbruchbedingung</span> (<span class="hljs-name">head</span> steam)) <span class="hljs-literal">#f</span>)
+    ((<span class="hljs-name">bedingung</span> (<span class="hljs-name">head</span> steam)) (<span class="hljs-name">head</span> steam))
+    (<span class="hljs-name"><span class="hljs-builtin-name">else</span></span> (<span class="hljs-name">findf-endlos</span> (<span class="hljs-name">tail</span> steam) bedingung abbruchbedingung))))
+
+<span class="hljs-comment">; endlose Menge</span>
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">natürliche-zahlen</span>)
+  (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">natürliche-zahlen-inner</span> a)
+    (<span class="hljs-name">stream-cons</span> a (<span class="hljs-name">natürliche-zahlen-inner</span> (<span class="hljs-name"><span class="hljs-builtin-name">+</span></span> a <span class="hljs-number">1</span>))))
+
+  (<span class="hljs-name">natürliche-zahlen-inner</span> <span class="hljs-number">1</span>))
+
+<span class="hljs-comment">; Testfunktion</span>
+(<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">prim?</span> n)
+  (<span class="hljs-name"><span class="hljs-builtin-name">define</span></span> (<span class="hljs-name">iterate</span> i)
+    (<span class="hljs-name"><span class="hljs-builtin-name">cond</span></span>
+      ((<span class="hljs-name"><span class="hljs-builtin-name">&gt;</span></span> (<span class="hljs-name">sqr</span> i)  n) <span class="hljs-literal">#t</span>) 
+      ((<span class="hljs-name"><span class="hljs-builtin-name">=</span></span> (<span class="hljs-name"><span class="hljs-builtin-name">modulo</span></span> n i) <span class="hljs-number">0</span>) <span class="hljs-literal">#f</span>)
+      (<span class="hljs-name"><span class="hljs-builtin-name">else</span></span> (<span class="hljs-name">iterate</span> (<span class="hljs-name"><span class="hljs-builtin-name">+</span></span> i <span class="hljs-number">2</span>)))))
+
+  (<span class="hljs-name"><span class="hljs-builtin-name">cond</span></span> ((<span class="hljs-name"><span class="hljs-builtin-name">&lt;=</span></span> n <span class="hljs-number">1</span>) <span class="hljs-literal">#f</span>) 
+        ((<span class="hljs-name"><span class="hljs-builtin-name">=</span></span> n <span class="hljs-number">2</span>) <span class="hljs-literal">#t</span>)  
+        ((<span class="hljs-name"><span class="hljs-builtin-name">even?</span></span> n) <span class="hljs-literal">#f</span>) 
+        (<span class="hljs-name"><span class="hljs-builtin-name">else</span></span> (<span class="hljs-name">iterate</span> <span class="hljs-number">3</span>))))
+
+<span class="hljs-comment">; Erste Primzahl &gt; 100</span>
+(<span class="hljs-name">findf-endlos</span> (<span class="hljs-name">natürliche-zahlen</span>)
+              (<span class="hljs-name">conjoin</span> prim? (<span class="hljs-name"><span class="hljs-builtin-name">lambda</span></span> (n) (<span class="hljs-name"><span class="hljs-builtin-name">&gt;</span></span> n <span class="hljs-number">100</span>)))
+              (<span class="hljs-name">const</span> <span class="hljs-literal">#f</span>))
+</code></pre>

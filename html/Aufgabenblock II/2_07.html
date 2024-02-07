@@ -1,0 +1,19 @@
+<p>Nehmen Sie zum Zitat &quot;Objects are a poor man’s closures. Closures are a poor man’s objects.&quot; Stellung 
+und vergleichen die vorgestellten Möglichkeiten der Objektorientierung mit einer Ihnen bekannten objektorientierten Programmiersprache.</p>
+<h3 id="stellungnahme">Stellungnahme</h3>
+<p>Das Zitat vermittelt, dass es eine gewisse Gemeinsamkeit zwischen Abschlussobjekten und normalen Objekten besteht und sie mehr oder weniger das gleiche Repräsentieren und austauschbar sind.</p>
+<p>Durch den Abschnitt &quot;a poor man’s&quot; wird jedoch zusätzlich impliziert, dass normale Objekte und Abschlussobjekte keineswegs gleich sind. 
+So wird beschrieben, dass ein Entwickler welche Objekte nutzen möchte, jedoch nur Abschlussobjekte hat, diese zwar als alternative nutzen kann, es jedoch einige Unterschiede gibt, welche zu Anpassungen bei der Implementierung führen können.
+Dasselbe gilt für Objekte statt Abschlussobjekte.</p>
+<h3 id="vergleich">Vergleich</h3>
+<p>Objekte in Java sind Instanzen von Klassen, welche Daten (Attribute) bündeln und zugehörige Methoden, die auf diesen Daten operieren. 
+Durch die jeweiligen Konzepte der Sprache unterstützen Objekte Datenkapselung, Vererbung und Polymorphismus.</p>
+<p>Abschlussobjekte in Racket hingegen sind eigentlich nur Funktionen, die auf einen bestimmten Kontext bezugnehmen.
+Durch den Bezug auf ihr Umfeld können sie lokale Variablen erfassen und diese innerhalb ihres Gültigkeitsbereichs verwenden und mittels Zustandsorientierung auch manipulieren. </p>
+<p>Wie das Zitat vermittelt, kann man Abschlussobjekte als &quot;Objekte&quot; nutzen, dessen lokale Variablen die Attribute repräsentieren und dessen Unterfunktionen die Methoden.
+<br>Beide Konzepte ermöglichen somit Organisation und Strukturierung von Code.</p>
+<p>Jedoch gibt es auch ein paar Unterschiede:</p>
+<p>Objekte in Java dienen meist dazu, Daten und Methoden zu kapseln um Entitäten (der realen Welt) und deren Beziehungen untereinander zu modellieren.</p>
+<p>Abschlussobjekte in Racket sind allerdings darauf ausgelegt, Funktionalitäten mit Kontextbezug zu schaffen. 
+Entitäten zu modellieren ist damit zwar möglich, doch vor allem bei größeren Strukturen auch deutlich aufwendiger.
+<br>Da sie allerdings ihren kompletten Kontext erfassen, ermöglichen sie teilweise flexiblere und abstraktere Lösungen als es mit Objekten möglich wäre.</p>
